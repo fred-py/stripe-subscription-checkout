@@ -29,6 +29,7 @@ static_dir = str(os.path.abspath(os.path.join(
 app = Flask(__name__, static_folder=static_dir,
             static_url_path="", template_folder=static_dir)
 
+port = int(os.environ.get("PORT", 4242))  # This is needed to deploy on fl0
 
 @app.route('/', methods=['GET'])
 def get_example():
@@ -122,7 +123,7 @@ def webhook_received():
     else:
         data = request_data['data']
         event_type = request_data['type']
-    data_object = data['object']
+        data_object = data['object']
 
     print('event ' + event_type)
 
@@ -133,4 +134,4 @@ def webhook_received():
 
 
 if __name__ == '__main__':
-    app.run(port=4242)
+    app.run(port=port)
