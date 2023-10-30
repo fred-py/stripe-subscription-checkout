@@ -24,12 +24,17 @@ stripe.set_app_info(
 stripe.api_version = '2020-08-27'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
-static_dir = str(os.path.abspath(os.path.join(
-    __file__, "..", os.getenv("STATIC_DIR"))))
-app = Flask(__name__, static_folder=static_dir,
-            static_url_path="", template_folder=static_dir)
+#static_dir = str(os.path.abspath(os.path.join(
+#    __file__, "..", os.getenv("STATIC_DIR"))))
+
+#app = Flask(__name__, static_folder=static_dir,
+#            static_url_path="", template_folder=static_dir)
+
+app = Flask(__name__, static_folder='client',
+            static_url_path="", template_folder='client')
 
 port = int(os.environ.get("PORT", 4242))  # This is needed to deploy on fl0
+
 
 @app.route('/', methods=['GET'])
 def get_example():
