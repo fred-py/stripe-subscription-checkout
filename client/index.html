@@ -20,7 +20,7 @@
         <header class="sr-header">
           <div class="sr-header__logo"></div>
         </header>
-        <h1>Choose a collaboration plan</h1>
+        <h1>Choose your plan</h1>
 
         <div class="price-table-container">
           <section>
@@ -31,8 +31,8 @@
                 width="120"
                 height="120"
                 />
-              <div class="name">Starter</div>
-              <div class="price">$12</div>
+              <div class="name">Basic Wheelie Wash(1 Bin)</div>
+              <div class="price">$15</div>
               <div class="duration">per month</div>
               <button id="basic-plan-btn">Select</button>
             </form>
@@ -45,12 +45,25 @@
                 width="120"
                 height="120"
                 />
-              <div class="name">Professional</div>
-              <div class="price">$18</div>
+              <div class="name">Standard Wheelie Wash(2 Bins)</div>
+              <div class="price">$25</div>
               <div class="duration">per month</div>
               <button id="pro-plan-btn">Select</button>
             </form>
           </section>
+          <section>
+            <form action="/create-checkout-session" method="POST">
+              <input type="hidden" id="premPrice" name="priceId">
+              <img
+                src="/img/professional.png"
+                width="120"
+                height="120"
+                />
+              <div class="name">Premium Wheelie Wash(3 Bins)</div>
+              <div class="price">$30</div>
+              <div class="duration">per month</div>
+              <button id="pram-plan-btn">Select</button>
+            </form>
         </div>
       </div>
     </div>

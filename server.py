@@ -24,14 +24,18 @@ stripe.set_app_info(
 stripe.api_version = '2020-08-27'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
-#static_dir = str(os.path.abspath(os.path.join(
-#    __file__, "..", os.getenv("STATIC_DIR"))))
+static_dir = str(os.path.abspath(os.path.join(
+    __file__, "..", os.getenv("STATIC_DIR"))))
 
-#app = Flask(__name__, static_folder=static_dir,
-#            static_url_path="", template_folder=static_dir)
+app = Flask(__name__, static_folder=static_dir,
+            static_url_path="", template_folder=static_dir)
 
-app = Flask(__name__, static_folder='client',
-            static_url_path="", template_folder='client')
+#app = Flask(
+#        __name__, 
+#        static_folder='client',
+#        static_url_path="",
+#        template_folder='client',
+#)
 
 port = int(os.environ.get("PORT", 4242))  # This is needed to deploy on fl0
 
@@ -46,7 +50,8 @@ def get_publishable_key():
     return jsonify({
         'publishableKey': os.getenv('STRIPE_PUBLISHABLE_KEY'),
         'basicPrice': os.getenv('BASIC_PRICE_ID'),
-        'proPrice': os.getenv('PRO_PRICE_ID')
+        'proPrice': os.getenv('STANDARD_PRICE_ID'),
+        'premPrice': os.getenv('PREMIUM_PRICE_ID'),
     })
 
 
@@ -74,6 +79,7 @@ def create_checkout_session():
 
         # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
         checkout_session = stripe.checkout.Session.create(
+            # ui_mode='embedded',
             success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
             cancel_url=domain_url + '/canceled.html',
             mode='subscription',
@@ -82,7 +88,28 @@ def create_checkout_session():
                 'price': price,
                 'quantity': 1
             }],
-            ui_mode='embedded',
+            custom_fields=[
+                {
+                    "key": "collection_date",
+                    "label": {"type": "custom", "custom": "Bin Collection Day"},
+                    "type": "dropdown",
+                    "dropdown": {
+                        "options": [
+                            {"label": "Monday", "value": "monday"},
+                            {"label": "Tuesday", "value": "tuesday"},
+                            {"label": "Wednesday", "value": "wednesday"},
+                            {"label": "Thursday", "value": "thursday"},
+                            {"label": "Friday", "value": "friday"},
+                        ],
+                    },
+                },
+
+                {
+                    "key": "address",
+                    "label": {"type": "custom", "custom": "Address"},
+                    "type": "text",
+                }
+            ],
         )
         return redirect(checkout_session.url, code=303)
     except Exception as e:
@@ -139,4 +166,4 @@ def webhook_received():
 
 
 if __name__ == '__main__':
-    app.run(port=port)
+    app.run(debug=True, port=port)

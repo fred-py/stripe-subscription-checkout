@@ -407,6 +407,16 @@ pre {
   border-right: 1px solid #efefef;
 }
 
+.price-table-container section:nth-of-type(2) {
+  border-top-right-radius: 0%;
+  border-bottom-right-radius: 0px;
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+  border-right: 1px solid #efefef;
+}
+
+
+
 .price-table-container section:last-of-type {
   border-bottom-left-radius: 0px;
   border-top-left-radius: 0px;
@@ -427,7 +437,7 @@ pre {
 
 .price-table-container .name {
   color: #7F7F7F;
-  font-size: large;
+  font-size:  medium;
   margin-top: 8px;
   text-align: center;
 }
