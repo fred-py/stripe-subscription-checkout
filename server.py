@@ -88,6 +88,7 @@ def create_checkout_session():
                 'price': price,
                 'quantity': 1
             }],
+            phone_number_collection={"enabled": True},
             custom_fields=[
                 {
                     "key": "collection_date",
