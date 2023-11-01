@@ -438,18 +438,22 @@ pre {
 }
 
 .price-table-container button {
-  background-color: #F0F0F0;
-  color: #000000;
+  background-color: #00BF63;
+  color: #ffffff;
   border-radius: 64px;
   padding-top: 8px;
   padding-bottom: 8px;
 }
 
 .price-table-container button:hover {
-  background-color: #d6d6d6;
+  background-color: #E52E3D;
   filter: none;
 }
 
+/*red:E52E3D
+  dark_green:048D4B
+  light_green: 00BF63
+  yellow:FFDE32  */
 .price-table-container .name {
   color: #7F7F7F;
   font-size:  medium;
@@ -458,7 +462,7 @@ pre {
 }
 
 .price-table-container .price {
-  color: #000000;
+  color: #00BF63;
   font-size: xx-large;
   font-weight: 600;
   margin-bottom: 8px;
