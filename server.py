@@ -49,7 +49,6 @@ def get_example():
 def get_publishable_key():
     return jsonify({
         'publishableKey': os.getenv('STRIPE_PUBLISHABLE_KEY'),
-        'secretKey': os.getenv('STRIPE_SECRET_KEY'),
         'basicPrice': os.getenv('BASIC_PRICE_ID'),
         'proPrice': os.getenv('STANDARD_PRICE_ID'),
         'premPrice': os.getenv('PREMIUM_PRICE_ID'),
