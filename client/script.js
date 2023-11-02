@@ -1,4 +1,6 @@
 /* Fetch prices and update the form */
+
+
 fetch("/config")
   .then(r => r.json())
   .then(({basicPrice, proPrice, premPrice}) => {

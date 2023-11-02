@@ -83,7 +83,7 @@ def create_checkout_session():
             success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
             cancel_url=domain_url + '/canceled.html',
             mode='subscription',
-            #billing_address_collection='auto',
+            billing_address_collection='required',
             # automatic_tax={'enabled': True},
             line_items=[{
                 'price': price,
@@ -106,11 +106,11 @@ def create_checkout_session():
                     },
                 },
 
-                {
-                    "key": "address",
-                    "label": {"type": "custom", "custom": "Address"},
-                    "type": "text",
-                }
+                #{
+                #    "key": "address",
+                #    "label": {"type": "custom", "custom": "Address"},
+                ##    "type": "text",
+                #}
             ],
         )
         return redirect(checkout_session.url, code=303)
