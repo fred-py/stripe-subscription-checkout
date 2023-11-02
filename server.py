@@ -127,7 +127,7 @@ def customer_portal():
 
     # This is the URL to which the customer will be redirected after they are
     # done managing their billing with the portal.
-    return_url = os.getenv("DOMAIN")
+    return_url = os.getenv("CUSTOMER_PORTAL")
 
     session = stripe.billing_portal.Session.create(
         customer=checkout_session.customer,
