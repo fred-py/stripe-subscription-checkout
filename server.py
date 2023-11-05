@@ -106,11 +106,17 @@ def create_checkout_session():
                     },
                 },
 
-                #{
-                #    "key": "address",
-                #    "label": {"type": "custom", "custom": "Address"},
-                ##    "type": "text",
-                #}
+                {
+                    "key": "Confirm region",
+                    "label": {"type": "custom", "custom": "Is your residence located in Margaret River?"},
+                    "type": "dropdown",
+                    "dropdown": {
+                        "options": [
+                            {"label": "Yes", "value": "yes"},
+                            {"label": "No", "value": "no"}
+                        ]
+                    }
+                }
             ],
         )
         return redirect(checkout_session.url, code=303)
