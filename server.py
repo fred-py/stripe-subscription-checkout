@@ -32,15 +32,20 @@ stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 #            static_url_path="", template_folder=static_dir)
 
 app = Flask(
-        __name__, 
-        static_folder='client',
-        static_url_path="",
-        template_folder='client',
+    __name__, 
+    static_folder='client',
+    static_url_path="",
+    template_folder='client',
 )
 
-CORS(app, origins='https://unitedpropertyservices.au/', 'https://unitedpropertyservices.au/wheelie-bin-clean')
+CORS(app, origins=[
+    'https://unitedpropertyservices.au/',
+    'https://unitedpropertyservices.au/wheelie-bin-clean'
+    ]
+)
 
 port = int(os.environ.get("PORT", 4242))  # This is needed to deploy on fl0
+
 
 
 @app.route('/', methods=['GET'])
