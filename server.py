@@ -11,6 +11,7 @@ import json
 import os
 
 from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
+from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
 
 # Setup Stripe python client library
@@ -36,6 +37,8 @@ app = Flask(
         static_url_path="",
         template_folder='client',
 )
+
+CORS(app)
 
 port = int(os.environ.get("PORT", 4242))  # This is needed to deploy on fl0
 
