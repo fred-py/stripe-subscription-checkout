@@ -38,7 +38,7 @@ app = Flask(
         template_folder='client',
 )
 
-CORS(app)
+CORS(app, origins='https://unitedpropertyservices.au/', 'https://unitedpropertyservices.au/wheelie-bin-clean')
 
 port = int(os.environ.get("PORT", 4242))  # This is needed to deploy on fl0
 
@@ -85,6 +85,7 @@ def create_checkout_session():
             ui_mode='embedded',
             success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
             cancel_url=domain_url + '/canceled.html',
+            #return_url = 'https://example.com/checkout/return?session_id={CHECKOUT_SESSION_ID}',
             mode='subscription',
             billing_address_collection='required',
             # automatic_tax={'enabled': True},
