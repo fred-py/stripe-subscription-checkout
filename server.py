@@ -32,7 +32,7 @@ stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 #            static_url_path="", template_folder=static_dir)
 
 app = Flask(
-    __name__, 
+    __name__,
     static_folder='client',
     static_url_path="",
     template_folder='client',
@@ -45,7 +45,6 @@ CORS(app, origins=[
 )
 
 port = int(os.environ.get("PORT", 4242))  # This is needed to deploy on fl0
-
 
 
 @app.route('/', methods=['GET'])
@@ -87,10 +86,10 @@ def create_checkout_session():
 
         # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
         checkout_session = stripe.checkout.Session.create(
-            ui_mode='embedded',
             success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
+            # Neither return nor cancel URL works with embedded mode
             cancel_url=domain_url + '/canceled.html',
-            #return_url = 'https://example.com/checkout/return?session_id={CHECKOUT_SESSION_ID}',
+            #return_url = 'https://unitedpropertyservices.au/wheelie-bin-clean/checkout/return?session_id={CHECKOUT_SESSION_ID}',
             mode='subscription',
             billing_address_collection='required',
             # automatic_tax={'enabled': True},
@@ -99,6 +98,7 @@ def create_checkout_session():
                 'quantity': 1
             }],
             phone_number_collection={"enabled": True},
+            #ui_mode='embedded',
             custom_fields=[
                 {
                     "key": "collection_date",
@@ -116,17 +116,19 @@ def create_checkout_session():
                 },
 
                 {
-                    "key": "Confirm region",
-                    "label": {"type": "custom", "custom": "Is your residence located in Margaret River?"},
+                    "key": "confirm_region",
+                    "label": {"type": "custom", "custom": "We currently only service Margaret River."},
                     "type": "dropdown",
                     "dropdown": {
                         "options": [
-                            {"label": "Yes", "value": "yes"},
-                            {"label": "No", "value": "no"}
+                            {"label": "My residence is located in Margaret River", "value": "Margaret"},
+                            {"label": "My residence is NOT located in Margaret River", "value": "Not"}
                         ]
                     }
                 }
             ],
+            #return_url=domain_url + '/checkout/return?session_id={CHECKOUT_SESSION_ID}',
+            #return_url='http://localhost:4242/checkout/return?session_id={CHECKOUT_SESSION_ID}',
         )
         return redirect(checkout_session.url, code=303)
     except Exception as e:
