@@ -59,6 +59,12 @@ def get_example():
 
 @app.route('/config', methods=['GET'])
 def get_publishable_key():
+    if request.method == 'OPTIONS':
+        response = app.make_default_options_response()
+        response.headers.add('Access-Control-Allow-Origin', 'https://unitedpropertyservices.au')
+        response.headers.add('Access-Control-Allow-Methods', 'GET, POST')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        return response
     return jsonify({
         'publishableKey': os.getenv('STRIPE_PUBLISHABLE_KEY'),
         'basicPrice': os.getenv('BASIC_PRICE_ID'),
@@ -86,7 +92,7 @@ def create_checkout_session():
         return response
     price = request.form.get('priceId')
     domain_url = os.getenv('DOMAIN')
-    
+
     try:
         # Create new Checkout Session for the order
         # Other optional params include:
