@@ -510,7 +510,29 @@ pre {
   .price-table-container section {
     width: 100%;
   }
+  .price-table-container section:first-of-type {
+  
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    /* Gray divider*/
+    border-bottom: 1px solid #efefef;
+  }
+  .price-table-container section:nth-of-type(2) {
+    border-top-right-radius: 0%;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom: 1px solid #efefef;
+  }
+  .price-table-container section:last-of-type {
+    /* Only specify params taht must be changed
+    bottom radius on parent class has already been set to 6px */
+    border-top-right-radius: 0%;
+    border-top-left-radius: 0px;
+  }
 }
+
+/* ================================== */
 
 
 /* todo: spinner/processing state, errors, animations */
