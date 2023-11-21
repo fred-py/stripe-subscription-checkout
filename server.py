@@ -40,9 +40,17 @@ app = Flask(
 
 CORS(app, origins=[
     'https://unitedpropertyservices.au/',
-    'https://unitedpropertyservices.au/wheelie-bin-clean'
     ]
 )
+
+
+@app.after_request
+def add_cors_headers(response):
+    response.headers.add('Access-Control-Allow-Origin', 'https://unitedpropertyservices.au/')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    return response
+
 
 port = int(os.environ.get("PORT", 4242))  # This is needed to deploy on fl0
 
