@@ -52,19 +52,13 @@ def add_cors_headers(response):
 port = int(os.environ.get("PORT", 4242))  # This is needed to deploy on fl0
 
 
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'OPTIONS'])
 def get_example():
     return render_template('index.html')
 
 
-@app.route('/config', methods=['GET'])
+@app.route('/config', methods=['GET', 'OPTIONS'])
 def get_publishable_key():
-    if request.method == 'OPTIONS':
-        response = app.make_default_options_response()
-        response.headers.add('Access-Control-Allow-Origin', 'https://unitedpropertyservices.au')
-        response.headers.add('Access-Control-Allow-Methods', 'GET, POST')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        return response
     return jsonify({
         'publishableKey': os.getenv('STRIPE_PUBLISHABLE_KEY'),
         'basicPrice': os.getenv('BASIC_PRICE_ID'),
@@ -92,6 +86,7 @@ def create_checkout_session():
         return response
     price = request.form.get('priceId')
     domain_url = os.getenv('DOMAIN')
+    
 
     try:
         # Create new Checkout Session for the order
@@ -104,7 +99,8 @@ def create_checkout_session():
 
         # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
         checkout_session = stripe.checkout.Session.create(
-            success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
+            #success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
+            success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
             # Neither return nor cancel URL works with embedded mode
             cancel_url=domain_url + '/canceled.html',
             #return_url = 'https://unitedpropertyservices.au/wheelie-bin-clean/checkout/return?session_id={CHECKOUT_SESSION_ID}',
