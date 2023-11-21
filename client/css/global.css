@@ -511,7 +511,8 @@ pre {
     width: 100%;
   }
   .price-table-container section:first-of-type {
-  
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
     border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
     /* Gray divider*/
@@ -519,16 +520,16 @@ pre {
   }
   .price-table-container section:nth-of-type(2) {
     border-top-right-radius: 0%;
-    border-bottom-right-radius: 0px;
     border-top-left-radius: 0px;
+    border-bottom-right-radius: 0px;
     border-bottom-left-radius: 0px;
     border-bottom: 1px solid #efefef;
   }
   .price-table-container section:last-of-type {
-    /* Only specify params taht must be changed
-    bottom radius on parent class has already been set to 6px */
     border-top-right-radius: 0%;
     border-top-left-radius: 0px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
   }
 }
 
