@@ -52,6 +52,13 @@ h4 {
   color: var(--gray-light);
 }
 
+/* Text below pricing table */
+.pricing-text {
+  font-size: 15px;
+  color: #ffffff;
+  text-align: center;
+}
+
 /* Layout */
 .sr-root {
   display: flex;
@@ -494,6 +501,17 @@ pre {
   border-radius: 16px;
   padding: 20px;
 }
+
+/* CSS For Mobile Devices <========== */
+@media (max-width: 600px){
+  .price-table-container {
+    flex-direction: column;
+  }
+  .price-table-container section {
+    width: 100%;
+  }
+}
+
 
 /* todo: spinner/processing state, errors, animations */
 
