@@ -75,12 +75,18 @@ def get_checkout_session():
     return jsonify(checkout_session)
 
 
-@app.route('/create-checkout-session', methods=['POST'])
+@app.route('/create-checkout-session', methods=['POST', 'OPTIONS'])
 def create_checkout_session():
+    # CORS Preflight request. Reply successfully:
+    if request.method == 'OPTIONS':
+        response = app.make_default_options_response()
+        response.headers.add('Access-Control-Allow-Origin', 'https://unitedpropertyservices.au')
+        response.headers.add('Access-Control-Allow-Methods', 'GET, POST')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        return response
     price = request.form.get('priceId')
     domain_url = os.getenv('DOMAIN')
-    response = jsonify({})   # Add CORS headers to the response
-
+    
     try:
         # Create new Checkout Session for the order
         # Other optional params include:
@@ -136,11 +142,6 @@ def create_checkout_session():
             #return_url=domain_url + '/checkout/return?session_id={CHECKOUT_SESSION_ID}',
             #return_url='http://localhost:4242/checkout/return?session_id={CHECKOUT_SESSION_ID}',
         )
-        # Add CORS headers to the response
-        response.headers.add('Access-Control-Allow-Origin', 'https://unitedpropertyservices.au')
-        response.headers.add('Access-Control-Allow-Methods', 'GET, POST')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-
         return redirect(checkout_session.url, code=303)
     except Exception as e:
         return jsonify({'error': {'message': str(e)}}), 400
