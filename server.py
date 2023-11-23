@@ -26,15 +26,15 @@ stripe.api_version = '2020-08-27'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 #static_dir = str(os.path.abspath(os.path.join(
-#    __file__, "..", os.getenv("STATIC_DIR"))))
+#    __file__, '..', os.getenv('STATIC_DIR'))))
 
 #app = Flask(__name__, static_folder=static_dir,
-#            static_url_path="", template_folder=static_dir)
+#            static_url_path=', template_folder=static_dir)
 
 app = Flask(
     __name__,
     static_folder='client',
-    static_url_path="",
+    static_url_path='',
     template_folder='client',
 )
 
@@ -49,7 +49,7 @@ def add_cors_headers(response):
     return response"""
 
 
-port = int(os.environ.get("PORT", 4242))  # This is needed to deploy on fl0
+port = int(os.environ.get('PORT', 4242))  # This is needed to deploy on fl0
 
 
 @app.route('/', methods=['GET', 'OPTIONS'])
@@ -77,16 +77,8 @@ def get_checkout_session():
 
 @app.route('/create-checkout-session', methods=['POST', 'OPTIONS'])
 def create_checkout_session():
-    # CORS Preflight request. Reply successfully:
-    if request.method == 'OPTIONS':
-        response = app.make_default_options_response()
-        response.headers.add('Access-Control-Allow-Origin', 'https://unitedpropertyservices.au')
-        response.headers.add('Access-Control-Allow-Methods', 'GET, POST')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type, Authorization')
-        return response
     price = request.form.get('priceId')
     domain_url = os.getenv('DOMAIN')
-    
 
     try:
         # Create new Checkout Session for the order
@@ -102,7 +94,7 @@ def create_checkout_session():
             #success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
             success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
             # Neither return nor cancel URL works with embedded mode
-            cancel_url=domain_url + '/canceled.html',
+            cancel_url=domain_url, # + '/canceled.html',
             #return_url = 'https://unitedpropertyservices.au/wheelie-bin-clean/checkout/return?session_id={CHECKOUT_SESSION_ID}',
             mode='subscription',
             billing_address_collection='required',
@@ -111,36 +103,39 @@ def create_checkout_session():
                 'price': price,
                 'quantity': 1
             }],
-            phone_number_collection={"enabled": True},
+            phone_number_collection={'enabled': True},
             #ui_mode='embedded',
             custom_fields=[
                 {
-                    "key": "collection_date",
-                    "label": {"type": "custom", "custom": "Bin Collection Day"},
-                    "type": "dropdown",
-                    "dropdown": {
-                        "options": [
-                            {"label": "Monday", "value": "monday"},
-                            {"label": "Tuesday", "value": "tuesday"},
-                            {"label": "Wednesday", "value": "wednesday"},
-                            {"label": "Thursday", "value": "thursday"},
-                            {"label": "Friday", "value": "friday"},
+                    'key': 'collection_date',
+                    'label': {'type': 'custom', 'custom': 'Bin Collection Day'},
+                    'type': 'dropdown',
+                    'dropdown': {
+                        'options': [
+                            {'label': 'Monday', 'value': 'monday'},
+                            {'label': 'Tuesday', 'value': 'tuesday'},
+                            {'label': 'Wednesday', 'value': 'wednesday'},
+                            {'label': 'Thursday', 'value': 'thursday'},
+                            {'label': 'Friday', 'value': 'friday'},
                         ],
                     },
                 },
 
                 {
-                    "key": "confirm_region",
-                    "label": {"type": "custom", "custom": "We currently only service Margaret River."},
-                    "type": "dropdown",
-                    "dropdown": {
-                        "options": [
-                            {"label": "My residence is located in Margaret River", "value": "Margaret"},
-                            {"label": "My residence is NOT located in Margaret River", "value": "Not"}
+                    'key': 'confirm_region',
+                    'label': {'type': 'custom', 'custom': 'We currently only service Margaret River.'},
+                    'type': 'dropdown',
+                    'dropdown': {
+                        'options': [
+                            {'label': 'My residence is located in Margaret River', 'value': 'Margaret'},
+                            {'label': 'My residence is NOT located in Margaret River', 'value': 'Not'}
                         ]
                     }
                 }
             ],
+            custom_text={
+                'submit': {'message': 'NOTE: Currently we only service the Margaret River region.'}
+            },   
             #return_url=domain_url + '/checkout/return?session_id={CHECKOUT_SESSION_ID}',
             #return_url='http://localhost:4242/checkout/return?session_id={CHECKOUT_SESSION_ID}',
         )
@@ -158,7 +153,7 @@ def customer_portal():
 
     # This is the URL to which the customer will be redirected after they are
     # done managing their billing with the portal.
-    return_url = os.getenv("CUSTOMER_PORTAL")
+    return_url = os.getenv('CUSTOMER_PORTAL')
 
     session = stripe.billing_portal.Session.create(
         customer=checkout_session.customer,
@@ -171,6 +166,7 @@ def customer_portal():
 def webhook_received():
     # You can use webhooks to receive information about asynchronous payment events.
     # For more about our webhook events check out https://stripe.com/docs/webhooks.
+    # https://stripe.com/docs/payments/checkout/fulfill-orders#create-event-handler
     webhook_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
     request_data = json.loads(request.data)
 
@@ -179,12 +175,23 @@ def webhook_received():
         signature = request.headers.get('stripe-signature')
         try:
             event = stripe.Webhook.construct_event(
-                payload=request.data, sig_header=signature, secret=webhook_secret)
+                payload=request.data,
+                sig_header=signature,
+                secret=webhook_secret)
             data = event['data']
+            event_type = event['type']
+            data_object = data['object']
+        except ValueError as e:
+            # Invalid payload
+            return jsonify(status=400, content=f'Invalid payload: {e}')
+        except stripe.error.SignatureVerificationError as e:
+            # Invalid signature
+            return jsonify(status=400, content=f'Invalid signature: {e}')
         except Exception as e:
-            return e
-        # Get the type of webhook event sent - used to check the status of PaymentIntents.
-        event_type = event['type']
+            # Catch unexpected errors
+            return jsonify(status=500, content=f'Unexpected error: {e}')
+        
+    # Get the type of webhook event sent - used to check the status of PaymentIntents.    
     else:
         data = request_data['data']
         event_type = request_data['type']
@@ -192,10 +199,27 @@ def webhook_received():
 
     print('event ' + event_type)
 
+    # Handle the checkout.session.completed event | Fulfill Order
     if event_type == 'checkout.session.completed':
+        'Needs to return additional data'
+        session = stripe.checkout.Session.retrieve(
+            event['data']['object']['id'],
+            expand=['line_items'],
+            )
+
+        line_items = session.line_items
+
+        # Fulfill Order - Send to servicem8/database <=======*********
+        send_to_db(line_items)
         print('🔔 Payment succeeded!')
 
     return jsonify({'status': 'success'})
+
+
+def send_to_db(line_items):
+    """Send to servicem8/database
+    Add remaining function here"""
+    print(f'{line_items} :: ======> send to servicem8')
 
 
 if __name__ == '__main__':
