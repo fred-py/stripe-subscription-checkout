@@ -17,6 +17,53 @@
     --radius: 6px;
   }
 
+/* Layout */
+.sr-root {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    min-width: 320px;
+    height: auto;
+    min-height: 100vh;
+    padding: 35px 20px;
+  }
+  .sr-header {
+    margin-top: 0px;
+    margin-bottom: 2px;
+  }
+  .sr-payment-summary {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .sr-main,
+  .sr-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+  }
+  .sr-main {
+    width: 100%;
+  }
+  .sr-content {
+    display: none;
+    padding-left: 48px;
+  }
+  
+  .sr-header__logo {
+    position: absolute;
+    top: 5%;   /* Aligns the top edge of the logo with the top of the page */
+    left: 50%; /* Centers the logo horizontally */
+    width: 135px;
+    height: 135px;
+    background-image: url('/img/logo-color.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    transform: translate(-50%); /* Shifts the logo to the left by half its width to center it */
+    z-index: 9999;
+  }
+
 body{
 	padding:0;
 	margin: 0;
@@ -24,8 +71,8 @@ body{
 	color:#fff;
 }
 h2{
-	font-size: 30px;
-	color:var(--green-dark);
+	font-size: 45px;
+	color:var(--red-wheelie);
 }
 p{
 	color:rgb(238, 231, 231);
@@ -38,14 +85,15 @@ p{
 .has-tooltip:not(.tooltip-disabled):hover
 	.tooltip-container {
 	display: block;
+    z-index: 30;
 }
 
 .has-tooltip .tooltip-container {
 	display: none;
 	position: absolute;
-	background-color: var(--red-wheelie);
+	background-color: var(--green-dark);
 	color:#fff;
-	z-index: 20;
+	z-index: 30;
 	bottom: calc(100% + 13px);
 	left: -10px;
 	right: -10px;
@@ -59,7 +107,7 @@ p{
 	height: 0;
 	border-left: 10px solid transparent;
 	border-right: 10px solid transparent;
-	border-top: 10px solid var(--red-wheelie);
+	border-top: 10px solid var(--green-dark);
 	font-size: 0;
 	line-height: 0;
 	content: "";
@@ -101,12 +149,11 @@ p{
 }
 
 
-
 /* Cards */
 
 #pricing-cards {
 	display: flex;
-    flex-shrink: calc(100% - 1);
+    flex-shrink: 1;
 	font-size: 9px;
 }
 
@@ -125,7 +172,7 @@ p{
 	position: relative;
 	margin: 0 10px;
 	flex-grow: 1;
-	flex-shrink: 1;
+	flex-shrink: 0;
 }
 
 .silver-card{
@@ -143,8 +190,9 @@ p{
 
 
 #pricing-container .price-card:hover {
-	transform: translateY(-5px);
-        filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.7));
+	/*transform: translateY(-5px);*/
+    transform: scale(1.52);
+    filter: drop-shadow(1.4px 1.4px 1px rgba(0, 0, 0, 0.7));
 		/*box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.14),
 		0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);*/
 }
@@ -160,7 +208,7 @@ p{
 }
 
 #pricing-container .price-card--header h4 {
-	transform: translate(0px, 25px);
+	transform: translate(0px, 55px);
         filter: drop-shadow(1.5px 1.5px 1.9px rgba(0, 0, 0, 0.7));
     margin: 0;
 	padding: 0;
@@ -180,8 +228,9 @@ p{
 
 #pricing-container .price-card--price-text {
     /* Move price y,x */
-    transform: translate(0px, 12px);
+    transform: translate(0px, 38px);
 	font-size: 40px;
+    filter: drop-shadow(1.5px 1.5px 1.5px rgba(0, 0, 0, 0.7));
 }
 
 #pricing-container .price-card--price-number-month {
@@ -205,7 +254,6 @@ p{
 
 #pricing-container .price-card--price-number-month:before {
 	content: "$";
-    filter: drop-shadow(1.5px 1.5px 1.7px rgba(0, 0, 0, 0.9));
 	font-size: 24px;
 	top: -16px;
 	display: inline-block;
@@ -214,7 +262,6 @@ p{
 
 #pricing-container .price-card--price-number-quarter:before {
 	content: "$";
-    filter: drop-shadow(1.5px 1.5px 1.7px rgba(0, 0, 0, 0.9));
 	font-size: 24px;
 	top: -16px;
 	display: inline-block;
@@ -223,7 +270,6 @@ p{
 
 #pricing-container .price-card--price-number-per-bin:before {
 	content: "$";
-    filter: drop-shadow(1.5px 1.5px 1.7px rgba(0, 0, 0, 0.9));
 	font-size: 24px;
 	top: -16px;
 	display: inline-block;
@@ -253,10 +299,11 @@ p{
 
 /* Starts From - One-Off*/
 #pricing-container .price-card--price-conditions {
-    transform: translate(-18px, -50px);
+    transform: translate(-18px, -24px);
 	padding: 14px 0;
 	color: #fff;
 	line-height: 1.5;
+    filter: drop-shadow(1.5px 1.5px 1.5px rgba(0, 0, 0, 0.7));
 }
 
 
@@ -298,7 +345,7 @@ p{
 	padding-left: 8px;
 	line-height: 1.2;
 	position: relative;
-    transform: translate(60px, 0px);
+    transform: translate(52px, 2px);
     filter: drop-shadow(0.5px 0.5px 0.5px rgba(0, 0, 0, 0.9));
 }
 
@@ -320,8 +367,41 @@ p{
 	/* 	text-decoration: line-through; */
 }
 
+.bottom-text{
+    font-size: 20px;
+    color: black;
+    font-family: "Raleway", Helvetica, Arial, Lucida, sans-serif;
+    font-weight: 700;
+    text-align: center;
+    margin-top: 70px;
+}
 
 
+@media (max-width: 600px) {
+    .has-tooltip .tooltip-container {
+        /* Adjust tooltip size and position for mobile */
+        bottom: calc(100% + 20px); /* adjust as needed */
+        left: 0;
+        right: 0;
+        padding: 12px 15px; /* adjust as needed */
+    }
+
+    #pricing-cards {
+        /* Stack cards vertically on small screens */
+        flex-direction: column;
+    }
+
+    #pricing-container .price-card {
+        /* Adjust card size and margins for mobile */
+        margin: 10px 0; /* adjust as needed */
+        transform: scale(1); /* adjust as needed */
+    }
+
+    #pricing-container .price-card:hover {
+        /* Adjust hover effect for mobile */
+        transform: scale(1.1); /* adjust as needed */
+    }
+}
 
 
 /* - - - - - - - - - Mobile Features Toggle - - - */
@@ -478,7 +558,7 @@ p{
 .btn-silver {
 	width: 110px;
 	height:35px;
-    transform: translate(54px, -2px);
+    transform: translate(50px, -2px);
 	background: #fff;
 	border:2px solid var(--green-mid);
 	color:var(--gray-dark);
@@ -492,7 +572,7 @@ margin:2em 5em;
 .btn-one-off{
 	width: 110px;
 	height:35px;
-    transform: translate(57px, -8px);
+    transform: translate(50px, -12px);
 	background: #fff;
 	border:2px solid var(--yellow-wheelie);
 	color:var(--gray-dark);
@@ -506,7 +586,7 @@ margin:2em 5em;
 .btn-gold{
 	width: 110px;
 	height:35px;
-    transform: translate(57px, 0px);
+    transform: translate(54px, 0px);
 	background: var(--red-wheelie);
 	border:none;
 	color:#fff;
