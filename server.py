@@ -55,16 +55,18 @@ port = int(os.environ.get('PORT', 4242))  # This is needed to deploy on fl0
 @app.route('/', methods=['GET', 'OPTIONS'])
 def get_example():
     # Passing favicon en var to render on deployment
-    return render_template('index.html', favicon=os.getenv('FAVICON'))
+    return render_template('index_trial.html', favicon=os.getenv('FAVICON'))
 
 
 @app.route('/config', methods=['GET', 'OPTIONS'])
 def get_publishable_key():
     return jsonify({
         'publishableKey': os.getenv('STRIPE_PUBLISHABLE_KEY'),
-        'basicPrice': os.getenv('BASIC_PRICE_ID'),
-        'proPrice': os.getenv('STANDARD_PRICE_ID'),
-        'premPrice': os.getenv('PREMIUM_PRICE_ID'),
+        'comboPrice': os.getenv('ANY_COMBO_PRICE_ID'),
+        'silverPrice': os.getenv('SILVER_PRICE_ID'),
+        'silverPrice2': os.getenv('SILVER_PRICE_ID2'),
+        'goldPrice': os.getenv('GOLD_PRICE_ID'),
+        'goldPrice2': os.getenv('GOLD_PRICE_ID2'),
     })
 
 

@@ -59,3 +59,12 @@ python3 -m flask run --port=4242
 ```
 
 4. Go to `localhost:4242` in your browser to see the demo
+
+
+# RESOURCES
+
+
+   BOOTSTRAP PRICING TABLE
+   https://frontendor.com/blog/bootstrap-pricing-table-snippets/
+
+

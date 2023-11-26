@@ -1,0 +1,248 @@
+<!--RESOURCES
+Bootstrap Pricing Table: https://frontendor.com/blog/bootstrap-pricing-table-snippets/
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wheelie Wash Checkout</title>
+    <meta name="description" content="Wheelie Wash Subscription & Stripe Checkout" />
+    <link rel="icon" href={{favicon}} type="image/x-icon" />
+    <link rel="stylesheet" href="css/normalize.css" />
+    <link rel="stylesheet" href="css/subscription.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Load Stripe.js on your website. -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="./script.js"></script>
+  </head>
+  <body>
+    <section id="pricing-container">
+
+        <div id="pricing-switch">
+            <h2>Choose a plan</h2>
+    
+        </div>
+        <!-- end of pricing-switch -->
+    
+        <div id="pricing-cards">
+    
+            <!-- ============================= -->
+            <!-- = Premium Subscription Card = -->
+            <!-- ============================= -->
+            <div class="price-card silver-card">
+                
+                <div class="price-card--header">
+                    <h4>Silver</h4>
+                    <!-- <p>for growing your business</p> -->
+                </div>
+    
+                <div class="price-card--price">
+                    <div class="price-card--price-text">
+                        <div class="price-card--price-number-quarter">47</div>
+                    </div>
+                    <div class="price-card--price-conditions">
+                        <div class="toggle-price-content" data-price-monthly="Billed Monthly" data-price-yearly="Billed Annually"></div>
+  
+                    </div>
+                </div>
+                <div class="price-card--features">
+                    <ul class="price-card--features--list">
+                        <li class="price-card--features--item has-tooltip">3 Bins Cleaned Quarterly
+                            <div class="tooltip-container"><strong>3 Bins Cleaned Every Quarter</strong>
+                                <p>Our Silver plan includes red, yellow & green bin, cleaned & sanitised every 12 weeks We can add more here??.</p>
+                            </div>
+                        </li>
+                        <li class="price-card--features--item has-tooltip">1x Free FOGO Bin Each Cycle
+                            <div class="tooltip-container"><strong>One Free FOGO Bin Clean Each Cycle</strong>
+                                <p> Get a free FOGO bin cleaned on each Cycle. I still don't get this??</p>
+                            </div>
+                        </li>
+                        <li class="price-card--features--item has-tooltip">Wash, Sanisise & Deodorise
+                            <div class="tooltip-container"><strong>Wash, Sanitise & Deodorise</strong>
+                                <p>United Wheelie Wash is all about convenience. We wash, sanitise, deodorise, and even put your bins away. No more hassle, no more icky tasks.</p>
+                            </div>
+                        </li>
+                        <li class="price-card--features--item has-tooltip">99% Water Recycling Rate
+                            <div class="tooltip-container"><strong>We Recycle 99% Of The Water We Use</strong>
+                                <p>Our closed-capture system recycles 99% of the water we use.
+                                    It is an eco-friendly cycle that keeps our planet in mind.</p>
+                            </div>
+                        </li>
+                        <li class="price-card--features--item has-tooltip">Biodegradable Products
+                            <div class="tooltip-container"><strong>Biodegradable Products</strong>
+                                <p>We only use hospital-grade, biodegradable products.
+                                    Your bin and the environment both benefit from our sustainable approach. Worried about leftover mess? Don’t be!</p>
+                            </div>
+                        </li>
+                        <li class="price-card--features--item has-tooltip">No residue left behind
+                            <div class="tooltip-container"><strong>No Residue Left Behind in Your Driveway</strong>
+                                <p>Our innovative filtration system ensures a spotless clean. No residue left behind in your driveway or garden.
+                                    100% Satisfaction is our promise. Fast and friendly service is what we deliver.
+                                    If you’re not thrilled with your wheelie bin clean, we’ll do it again… for free!</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <section>
+                        <form action="/create-checkout-session" method="POST">
+                            <input type="hidden" id="silverPrice" name="priceId">
+                            <button class="btn-silver">Get started</button>
+                        </form>
+                    </section>
+                </div>
+    
+                <div class="price-card--mobile-features-toggle"></div>
+    
+            </div>
+            <!-- End of Card -->
+    
+            <!-- ================================ -->
+            <!-- = Enterprise Subscription Card = -->
+            <!-- ================================ -->
+            <div class="price-card price-card--hero gold-card">
+    
+                <div class="price-card--header">
+                    <h4>Gold</h4>
+               
+                </div>
+                <div class="price-card--hero-text">
+                    <!--Nothing here atm, hero text directly on svg-->
+                </div>
+    
+                <div class="price-card--price">
+                    <div class="price-card--price-text">
+                        <div class="price-card--price-number-month">36</div>
+                    </div>
+                    <div class="price-card--price-conditions">
+                        <div class="toggle-price-content" data-price-monthly="Billed Monthly" data-price-yearly="Billed Annually"></div>
+                   
+                    </div>
+                </div>
+    
+                <div class="price-card--features">
+                    <ul class="price-card--features--list">
+    
+                        <ul class="price-card--features--list">
+                            <li class="price-card--features--item has-tooltip">3 Bins Cleaned Monthly
+                                <div class="tooltip-container"><strong>3 Bins Cleaned Every Quarter</strong>
+                                    <p>Our Silver plan includes red, yellow & green bin, cleaned & sanitised every 12 weeks We can add more here??.</p>
+                                </div>
+                            </li>
+                            <li class="price-card--features--item has-tooltip">1x Free FOGO Bin Clean Cycle
+                                <div class="tooltip-container"><strong>One Free FOGO Bin Clean Each Cycle</strong>
+                                    <p> Get a free FOGO bin cleaned on each Cycle. I still don't get this??</p>
+                                </div>
+                            </li>
+                            <li class="price-card--features--item has-tooltip">Wash, Sanisise & Deodorise
+                                <div class="tooltip-container"><strong>We Wash, Sanitise & Deodorise</strong>
+                                    <p>United Wheelie Wash is all about convenience. We wash, sanitise, deodorise, and even put your bins away. No more hassle, no more icky tasks.</p>
+                                </div>
+                            </li>
+                            <li class="price-card--features--item has-tooltip">99% Water Recycling Rate
+                                <div class="tooltip-container"><strong>We Recycle 99% Of The Water We Use</strong>
+                                    <p>Our closed-capture system recycles 99% of the water we use.
+                                        It is an eco-friendly cycle that keeps our planet in mind.</p>
+                                </div>
+                            </li>
+        
+                            <li class="price-card--features--item has-tooltip">Biodegradable Products
+                                <div class="tooltip-container"><strong>Biodegradable Products</strong>
+                                    <p>We only use hospital-grade, biodegradable products.
+                                        Your bin and the environment both benefit from our sustainable approach. Worried about leftover mess? Don’t be!</p>
+                                </div>
+                            </li>
+                            <li class="price-card--features--item has-tooltip">No residue left behind
+                                <div class="tooltip-container"><strong>No Residue Left Behind in Your Driveway</strong>
+                                    <p>Our innovative filtration system ensures a spotless clean. No residue left behind in your driveway or garden.
+                                        100% Satisfaction is our promise. Fast and friendly service is what we deliver.
+                                        If you’re not thrilled with your wheelie bin clean, we’ll do it again… for free!</p>
+                                </div>
+                            </li>
+                    </ul>
+                    <section>
+                        <form action="/create-checkout-session" method="POST">
+                          <input type="hidden" id="goldPrice" name="priceId">
+                            <button class="btn-gold">Get started</button>
+                        </form>
+                    </section>
+                </div>
+    
+                <div class="price-card--mobile-features-toggle"></div>
+            </div>
+            <div class="price-card one-off-card">
+                <div class="price-card--header">
+                    <h4>One-Off</h4>
+                </div>
+                <div class="price-card--price">
+                    <div class="price-card--price-text only-yearly">
+                        <div class="price-card--price-number-per-bin">33</div>
+                        <div class="only-yearly--text"><span>Only Available Yearly</span></div>
+                    </div>
+                    <div class="price-card--price-conditions">
+                        <div>Starts at</div>
+                    </div>
+                </div>
+                <div class="price-card--features">
+                    <ul class="price-card--features--list">
+    
+                        <li class="price-card--features--item has-tooltip">Clean 1 to 4 bins
+                            <div class="tooltip-container"><strong>One-Off</strong>
+                                <p>Choose any combo up to 4 bins to be cleaned, sanitised and deodorise.</p>
+                            </div>
+                        </li>
+                        <li class="price-card--features--item has-tooltip">Book more units and save
+                            <div class="tooltip-container"><strong>Book more units and save</strong>
+                                <p> $28 per bin when you book 2 <br> $22 per bin when you book 3 <br> $19 per bin when you book 4</p>
+                            </div>
+                        </li>
+                        <li class="price-card--features--item has-tooltip">Wash, Sanisise & Deodorise
+                            <div class="tooltip-container"><strong>We Wash, Sanitise & Deodorise</strong>
+                                <p>United Wheelie Wash is all about convenience. We wash, sanitise, deodorise, and even put your bins away. No more hassle, no more icky tasks.</p>
+                            </div>
+                        </li>
+                        <li class="price-card--features--item has-tooltip">99% Water Recycling Rate
+                            <div class="tooltip-container"><strong>We Recycle 99% Of The Water We Use</strong>
+                                <p>Our closed-capture system recycles 99% of the water we use.
+                                    It is an eco-friendly cycle that keeps our planet in mind.</p>
+                            </div>
+                        </li>
+    
+                        <li class="price-card--features--item has-tooltip">Biodegradable Products
+                            <div class="tooltip-container"><strong>Biodegradable Products</strong>
+                                <p>We only use hospital-grade, biodegradable products.
+                                    Your bin and the environment both benefit from our sustainable approach. Worried about leftover mess? Don’t be!</p>
+                            </div>
+                        </li>
+
+                        <li class="price-card--features--item has-tooltip">No residue left behind
+                            <div class="tooltip-container"><strong>No Residue Left Behind in Your Driveway</strong>
+                                <p>Our innovative filtration system ensures a spotless clean. No residue left behind in your driveway or garden.
+                                    100% Satisfaction is our promise. Fast and friendly service is what we deliver.
+                                    If you’re not thrilled with your wheelie bin clean, we’ll do it again… for free!</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <section>
+                        <form action="/create-checkout-session" method="POST">
+                          <input type="hidden" id="comboPrice" name="priceId">
+                            <button class="btn-one-off">Get started</button>
+                        </form>
+                    </section>
+                </div>
+    
+                <div class="price-card--mobile-features-toggle"></div>
+    
+            </div>
+            <!-- End of Card -->
+    
+        </div>
+        <!--    end of pricing-cards -->
+    
+    
+    </section>
+    <div id="error-message" class="error-message"></div>
+  </body>
+</html>
+
+

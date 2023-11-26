@@ -1,13 +1,27 @@
-/* Fetch prices and update the form */
+
+/* Fetch prices and update the form 
+
+This code will check if the elements exist 
+before trying to update their values
+
+index.html should contain the following elements: 
+comboPrice, silverPrice, goldPrice
+
+If any of these elements are missing, the server will 
+return a POST request with non-type value
+*/
+
 
 
 fetch("/config")
   .then(r => r.json())
-  .then(({basicPrice, proPrice, premPrice}) => {
-    const basicPriceInput = document.querySelector('#basicPrice');
-    basicPriceInput.value = basicPrice;
-    const proPriceInput = document.querySelector('#proPrice');
-    proPriceInput.value = proPrice;
-    const premPriceInput = document.querySelector('#premPrice');
-    premPriceInput.value = premPrice;
+  .then(({comboPrice, silverPrice, goldPrice}) => {
+    const comboPriceInput = document.querySelector('#comboPrice');
+    comboPriceInput.value = comboPrice;
+    const silverPriceInput = document.querySelector('#silverPrice');
+    silverPriceInput.value = silverPrice;
+    const goldPriceInput = document.querySelector('#goldPrice');
+    goldPriceInput.value = goldPrice;
   })
+  
+

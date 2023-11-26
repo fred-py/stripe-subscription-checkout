@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Wheelie Wash Checkout</title>
     <meta name="description" content="Wheelie Wash Subscription & Stripe Checkout" />
-
-    <link rel="icon" href="{{ favicon }}" type="image/x-icon" />
+    <link rel="icon" href={{favicon}} type="image/x-icon" />
     <link rel="stylesheet" href="css/normalize.css" />
     <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/subscription.css" />
     <!-- Load Stripe.js on your website. -->
     <script src="https://js.stripe.com/v3/"></script>
     <script src="./script.js"></script>
@@ -21,48 +21,47 @@
           <div class="sr-header__logo"></div>
         </header>
         <h1>Choose your plan</h1>
-
         <div class="price-table-container">
           <section>
             <form action="/create-checkout-session" method="POST">
-              <input type="hidden" id="basicPrice" name="priceId">
+              <input type="hidden" id="comboPrice" name="priceId">
               <img
                 src="/img/basic.png"
                 width="160"
                 height="80"
                 />
-              <div class="name">Basic Wheelie Wash(1 Bin)</div>
-              <div class="price">$15</div>
-              <div class="duration">per month</div>
-              <button id="basic-plan-btn">Select</button>
+              <div class="name">Any Combo</div>
+              <div class="price">$18</div>
+              <div class="duration">per unit</div>
+              <button id="combo-plan-btn">Select</button>
             </form>
           </section>
           <section>
             <form action="/create-checkout-session" method="POST">
-              <input type="hidden" id="proPrice" name="priceId">
+              <input type="hidden" id="silverPrice" name="priceId">
               <img
                 src="/img/standard.png"
                 width="160"
                 height="80"
                 />
-              <div class="name">Standard Wheelie Wash(2 Bins)</div>
-              <div class="price">$25</div>
-              <div class="duration">per month</div>
-              <button id="pro-plan-btn">Select</button>
+              <div class="name">Silver</div>
+              <div class="price">$47</div>
+              <div class="duration">Every 12 weeks</div>
+              <button id="silver-plan-btn">Select</button>
             </form>
           </section>
           <section>
             <form action="/create-checkout-session" method="POST">
-              <input type="hidden" id="premPrice" name="priceId">
+              <input type="hidden" id="goldPrice" name="priceId">
               <img
                 src="/img/premium.png"
                 width="160"
                 height="80"
                 />
-              <div class="name">Premium Wheelie Wash(3 Bins)</div>
-              <div class="price">$30</div>
+              <div class="name">Gold</div>
+              <div class="price">$36</div>
               <div class="duration">per month</div>
-              <button id="prem-plan-btn">Select</button>
+              <button id="gold-plan-btn">Select</button>
             </form>
           </section>
         </div>
