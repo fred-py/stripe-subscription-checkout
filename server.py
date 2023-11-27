@@ -92,59 +92,114 @@ def create_checkout_session():
         # [automatic_tax] - to automatically calculate sales tax, VAT and GST in the checkout page
         # For full details see https://stripe.com/docs/api/checkout/sessions/create
 
-        # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-        checkout_session = stripe.checkout.Session.create(
-            #success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
-            success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
-            # Neither return nor cancel URL works with embedded mode
-            cancel_url=domain_url, # + '/canceled.html',
-            #return_url = 'https://unitedpropertyservices.au/wheelie-bin-clean/checkout/return?session_id={CHECKOUT_SESSION_ID}',
-            mode='subscription',
-            billing_address_collection='required',
-            # automatic_tax={'enabled': True},
-            line_items=[{
-                'price': price,
-                'quantity': 1
-            }],
-            phone_number_collection={'enabled': True},
-            #ui_mode='embedded',
-            custom_fields=[
-                {
-                    'key': 'collection_date',
-                    'label': {'type': 'custom', 'custom': 'Bin Collection Day'},
-                    'type': 'dropdown',
-                    'dropdown': {
-                        'options': [
-                            {'label': 'Monday', 'value': 'monday'},
-                            {'label': 'Tuesday', 'value': 'tuesday'},
-                            {'label': 'Wednesday', 'value': 'wednesday'},
-                            {'label': 'Thursday', 'value': 'thursday'},
-                            {'label': 'Friday', 'value': 'friday'},
-                        ],
+        # Set adjustable quantity to only be enabled to the combo price
+        # No concise manner of doing this as line_items only takes list of dicts
+        # And one adjustable_quantity is included even if set to false
+        # It fails to return products with no adjustable quantity
+        # Hence the creation of two checkout sessions
+        if price == os.getenv('ANY_COMBO_PRICE_ID'):
+            # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
+            checkout_session = stripe.checkout.Session.create(
+                #success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
+                success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
+                # Neither return nor cancel URL works with embedded mode
+                cancel_url=domain_url, # + '/canceled.html',
+                #return_url = 'https://unitedpropertyservices.au/wheelie-bin-clean/checkout/return?session_id={CHECKOUT_SESSION_ID}',
+                mode='subscription',
+                billing_address_collection='required',
+                # automatic_tax={'enabled': True},
+                line_items=[{
+                    'price': price,
+                    'adjustable_quantity':
+                        {'enabled': True,
+                        'minimum': 1,
+                        'maximum': 4},
+                    'quantity': 1
+                }],
+                phone_number_collection={'enabled': True},
+                #ui_mode='embedded',
+                custom_fields=[
+                    {
+                        'key': 'collection_date',
+                        'label': {'type': 'custom', 'custom': 'Bin Collection Day'},
+                        'type': 'dropdown',
+                        'dropdown': {
+                            'options': [
+                                {'label': 'Monday', 'value': 'monday'},
+                                {'label': 'Tuesday', 'value': 'tuesday'},
+                                {'label': 'Wednesday', 'value': 'wednesday'},
+                                {'label': 'Thursday', 'value': 'thursday'},
+                                {'label': 'Friday', 'value': 'friday'},
+                            ],
+                        },
                     },
-                },
 
-                {
-                    'key': 'confirm_region',
-                    'label': {'type': 'custom', 'custom': 'We currently only service Margaret River.'},
-                    'type': 'dropdown',
-                    'dropdown': {
-                        'options': [
-                            {'label': 'My residence is located in Margaret River', 'value': 'Margaret'},
-                            {'label': 'My residence is NOT located in Margaret River', 'value': 'Not'}
-                        ]
+                    {
+                        'key': 'confirm_region',
+                        'label': {'type': 'custom', 'custom': 'We currently only service Margaret River.'},
+                        'type': 'dropdown',
+                        'dropdown': {
+                            'options': [
+                                {'label': 'My residence is located in Margaret River', 'value': 'Margaret'},
+                                {'label': 'My residence is NOT located in Margaret River', 'value': 'Not'}
+                            ]
+                        }
                     }
-                }
-            ],
-            custom_text={
-                'submit': {'message': 'NOTE: Currently we only service the Margaret River region.'}
-            },   
-            #return_url=domain_url + '/checkout/return?session_id={CHECKOUT_SESSION_ID}',
-            #return_url='http://localhost:4242/checkout/return?session_id={CHECKOUT_SESSION_ID}',
-        )
+                ],
+                custom_text={
+                    'submit': {'message': 'NOTE: Currently we only service the Margaret River region.'}
+                },   
+                #return_url=domain_url + '/checkout/return?session_id={CHECKOUT_SESSION_ID}',
+                #return_url='http://localhost:4242/checkout/return?session_id={CHECKOUT_SESSION_ID}',
+            )
+        else:
+            checkout_session = stripe.checkout.Session.create(
+                success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url, # + '/canceled.html',
+                mode='subscription',
+                billing_address_collection='required',
+                # automatic_tax={'enabled': True},
+                line_items=[{
+                    'price': price,
+                    'quantity': 1
+                }],
+                phone_number_collection={'enabled': True},
+                custom_fields=[
+                    {
+                        'key': 'collection_date',
+                        'label': {'type': 'custom', 'custom': 'Bin Collection Day'},
+                        'type': 'dropdown',
+                        'dropdown': {
+                            'options': [
+                                {'label': 'Monday', 'value': 'monday'},
+                                {'label': 'Tuesday', 'value': 'tuesday'},
+                                {'label': 'Wednesday', 'value': 'wednesday'},
+                                {'label': 'Thursday', 'value': 'thursday'},
+                                {'label': 'Friday', 'value': 'friday'},
+                            ],
+                        },
+                    },
+
+                    {
+                        'key': 'confirm_region',
+                        'label': {'type': 'custom', 'custom': 'We currently only service Margaret River.'},
+                        'type': 'dropdown',
+                        'dropdown': {
+                            'options': [
+                                {'label': 'My residence is located in Margaret River', 'value': 'Margaret'},
+                                {'label': 'My residence is NOT located in Margaret River', 'value': 'Not'}
+                            ]
+                        }
+                    }
+                ],
+                custom_text={
+                    'submit': {'message': 'NOTE: Currently we only service the Margaret River region.'}
+                },
+            )
         return redirect(checkout_session.url, code=303)
     except Exception as e:
         return jsonify({'error': {'message': str(e)}}), 400
+
 
 
 @app.route('/customer-portal', methods=['POST'])
