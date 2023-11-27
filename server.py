@@ -94,11 +94,12 @@ def create_checkout_session():
 
         # Set adjustable quantity to only be enabled to the combo price
         # No concise manner of doing this as line_items only takes list of dicts
-        # And one adjustable_quantity is included even if set to false
-        # It fails to return products with no adjustable quantity
+        # and once adjustable_quantity is included even if set to false,
+        # it fails to return products with no adjustable quantity
         # Hence the creation of two checkout sessions
         if price == os.getenv('ANY_COMBO_PRICE_ID'):
             # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
+            
             checkout_session = stripe.checkout.Session.create(
                 #success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
@@ -111,13 +112,14 @@ def create_checkout_session():
                 line_items=[{
                     'price': price,
                     'adjustable_quantity':
-                        {'enabled': True,
-                        'minimum': 1,
-                        'maximum': 4},
+                        # Ensure max is has the save value on stripe dashboard
+                        {'enabled': True, 'minimum': 1, 'maximum': 3},
                     'quantity': 1
                 }],
                 phone_number_collection={'enabled': True},
                 #ui_mode='embedded',
+                
+                
                 custom_fields=[
                     {
                         'key': 'collection_date',
@@ -135,24 +137,30 @@ def create_checkout_session():
                     },
 
                     {
-                        'key': 'confirm_region',
-                        'label': {'type': 'custom', 'custom': 'We currently only service Margaret River.'},
+                        'key': 'select_bins',
+                        'label': {'type': 'custom', 'custom': 'Select the bin(s)to be cleaned.'},
                         'type': 'dropdown',
                         'dropdown': {
                             'options': [
-                                {'label': 'My residence is located in Margaret River', 'value': 'Margaret'},
-                                {'label': 'My residence is NOT located in Margaret River', 'value': 'Not'}
+                                {'label': 'Red bin', 'value': 'R'},
+                                {'label': 'Yellow bin', 'value': 'Y'},
+                                {'label': 'Green bin', 'value': 'G'},
+                                {'label': 'Red and Green bins', 'value': 'RG'},
+                                {'label': 'Red and Yellow bins', 'value': 'RY'},
+                                {'label': 'Yellow and Green bins', 'value': 'YG'},
+                                {'label': 'All bins', 'value': 'All'},
                             ]
                         }
                     }
                 ],
                 custom_text={
-                    'submit': {'message': 'NOTE: Currently we only service the Margaret River region.'}
-                },   
+                    'submit': {'message': 'NOTE: Currently we only service the Margaret River region.'},
+                },
                 #return_url=domain_url + '/checkout/return?session_id={CHECKOUT_SESSION_ID}',
                 #return_url='http://localhost:4242/checkout/return?session_id={CHECKOUT_SESSION_ID}',
             )
         else:
+
             checkout_session = stripe.checkout.Session.create(
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url=domain_url, # + '/canceled.html',
@@ -180,17 +188,6 @@ def create_checkout_session():
                         },
                     },
 
-                    {
-                        'key': 'confirm_region',
-                        'label': {'type': 'custom', 'custom': 'We currently only service Margaret River.'},
-                        'type': 'dropdown',
-                        'dropdown': {
-                            'options': [
-                                {'label': 'My residence is located in Margaret River', 'value': 'Margaret'},
-                                {'label': 'My residence is NOT located in Margaret River', 'value': 'Not'}
-                            ]
-                        }
-                    }
                 ],
                 custom_text={
                     'submit': {'message': 'NOTE: Currently we only service the Margaret River region.'}
@@ -199,7 +196,6 @@ def create_checkout_session():
         return redirect(checkout_session.url, code=303)
     except Exception as e:
         return jsonify({'error': {'message': str(e)}}), 400
-
 
 
 @app.route('/customer-portal', methods=['POST'])
@@ -282,3 +278,14 @@ def send_to_db(line_items):
 
 if __name__ == '__main__':
     app.run(debug=True, port=port)
+
+
+"""                            'options': [
+                                {'label': 'Red bin', 'value': 'R'},
+                                {'label': 'Yellow bin', 'value': 'Y'},
+                                {'label': 'Green bin', 'value': 'G'},
+                                {'label': 'Red and Green bins', 'value': 'RG'},
+                                {'label': 'Red and Yellow bins', 'value': 'RY'},
+                                {'label': 'Yellow and Green bins', 'value': 'YG'},
+                                {'label': 'All bins', 'value': 'All'},
+                            ]"""

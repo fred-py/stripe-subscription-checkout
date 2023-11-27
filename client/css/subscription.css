@@ -71,8 +71,14 @@ body{
 	color:#fff;
 }
 h2{
-	font-size: 45px;
-	color:var(--red-wheelie);
+	font-size: 35px;
+	color:var(--green-dark);
+}
+
+h4{
+    font-size: 18px;
+    color:var(--gray-mid);
+
 }
 p{
 	color:rgb(238, 231, 231);
@@ -177,14 +183,17 @@ p{
 
 .silver-card{
     background-image: url('/img/green-bin.svg');
+    background-image: prefetch url('/img/green-bin.svg');
 }
 
 .gold-card{
     background-image: url('/img/red-bin.svg');
+    background-image: prefetch url('/img/green-bin.svg');
 }
 
 .one-off-card{
     background-image: url('/img/yellow-bin.svg');
+    background-image: prefetch url('/img/green-bin.svg');
 }
 
 
@@ -232,6 +241,7 @@ p{
 	font-size: 40px;
     filter: drop-shadow(1.5px 1.5px 1.5px rgba(0, 0, 0, 0.7));
 }
+
 
 #pricing-container .price-card--price-number-month {
 	font-weight: 500;
@@ -297,9 +307,17 @@ p{
 	color: #fff;
 }
 
-/* Starts From - One-Off*/
+/* Billing Frequency*/
+#pricing-container .billing-frequency {
+    font-size: 8px;
+    transform: translate(0px, 7px);
+
+}
+
+
+/* Starts at - Bronze*/
 #pricing-container .price-card--price-conditions {
-    transform: translate(-18px, -24px);
+    transform: translate(-18px, -33px);
 	padding: 14px 0;
 	color: #fff;
 	line-height: 1.5;
@@ -324,14 +342,12 @@ p{
 }
 
 
-
-
-
 /* - - - - - - - - - Features Section - - - */
 
 #pricing-container .price-card--features {
 
 	padding: 16px 0 10px;
+    color: var(--yellow-wheelie);
 }
 
 #pricing-container ul.price-card--features--list {
@@ -352,7 +368,7 @@ p{
 #pricing-container
 	li.price-card--features--item:not(.features-disabled):before {
 	content: "✓";
-	color: #fff;
+	color:var(--yellow-wheelie);
 	display: block;
 	position: absolute;
 	left: -3px;
@@ -368,12 +384,10 @@ p{
 }
 
 .bottom-text{
-    font-size: 20px;
-    color: black;
     font-family: "Raleway", Helvetica, Arial, Lucida, sans-serif;
-    font-weight: 700;
+    font-weight: 230;
     text-align: center;
-    margin-top: 70px;
+    margin-top: 50px;
 }
 
 
