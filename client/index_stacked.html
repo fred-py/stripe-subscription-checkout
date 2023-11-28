@@ -17,11 +17,13 @@ Bootstrap Pricing Table: https://frontendor.com/blog/bootstrap-pricing-table-sni
     <!-- Load Stripe.js on your website. -->
     <script src="https://js.stripe.com/v3/"></script>
     <script src="./script.js"></script>
+    <script scr="./faqs.js"></script>
   </head>
   <body>
     <div class="background">
         <header class="header">
             <div class="header__logo"></div>
+            <div class="header__title">Choose a plan</div>
         </header>
         <div class="container">
           <div class="panel pricing-table">
@@ -40,59 +42,72 @@ Bootstrap Pricing Table: https://frontendor.com/blog/bootstrap-pricing-table-sni
                     <span class="pricing-price">$9</span>
                     <div class="billing-frequency">Billed every 6 months</div>
                     <a href="#/" class="pricing-button is-featured">Get Started</a>
-                    <div class="plan-divider"></div>
             </div>
-            
-            <div class="pricing-plan">
-              <img src="/img/silver.png" alt="" class="pricing-img">
-              <h2 class="pricing-header">Silver</h2>
-              <ul class="pricing-features">
-                <li class="pricing-features-item">Includes 3 Bins Cleaned Quarterly</li>
-                <li class="pricing-features-item">Plus 1 Free FOGO Bin Each Clean Cycle</li>
-                <li class="pricing-features-item">Wash, Sanisise & Deodorise</li>
-                <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
-                <li class="pricing-features-item">We Only Use Biodegradable Products</li>
-                <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
-              </ul>
-            <span class="pricing-price">$15</span>            
-              <div class="billing-frequency">Billed Annually</div>
-              <a href="#/" class="pricing-button">Get Started</a>
-              <div class="plan-divider"></div>
-            </div>
-            
-            <div class="pricing-plan">
-              <img src="/img/bronze.png" alt="" class="pricing-img">
-              <h2 class="pricing-header">Bronze</h2>
-              <ul class="pricing-features">
-                <li class="pricing-features-item">Clean 1 to 3 bins</li>
-                <li class="pricing-features-item">Wash, Sanisise & Deodorise</li>
-                <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
-                <li class="pricing-features-item">We Only Use Biodegradable Products</li>
-                <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
-                <li class="pricing-features-item">Cancel Anytime</li>
-              </ul>
-              <span class="pricing-price starts-at">$18</span>
-              <div class="billing-frequency">Billed Monthly</div>
-                <a href="#/" class="pricing-button">Get Started</a>   
-            </div>
-            <div class="plan-divider"></div>
-
-            <div class="pricing-plan">
-                <img src="/img/one-off.png" alt="" class="pricing-img">
-                <h2 class="pricing-header">One-Off</h2>
+        </div>
+        
+        <div class="container">
+            <div class="panel pricing-table">
+                <div class="pricing-plan">
+                <img src="/img/silver.png" alt="" class="pricing-img">
+                <h2 class="pricing-header">Silver</h2>
                 <ul class="pricing-features">
-                  <li class="pricing-features-item">Clean 1 to 3 bins</li>
-                  <li class="pricing-features-item">Wash, Sanisise & Deodorise</li>
-                  <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
-                  <li class="pricing-features-item">We Only Use Biodegradable Products</li>
-                  <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
+                    <li class="pricing-features-item">Includes 3 Bins Cleaned Quarterly</li>
+                    <li class="pricing-features-item">Plus 1 Free FOGO Bin Each Clean Cycle</li>
+                    <li class="pricing-features-item">Wash, Sanisise & Deodorise</li>
+                    <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
+                    <li class="pricing-features-item">We Only Use Biodegradable Products</li>
+                    <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
                 </ul>
-                <span class="pricing-price starts-at">$33</span>
-                <div class="billing-frequency">One-off payment</div>
-                  <a href="#/" class="pricing-button">Book now</a>
-              </div>
-            <div class="plan-divider"></div>   
-          </div>
+                <span class="pricing-price">$15</span>            
+                <div class="billing-frequency">Billed Annually</div>
+                <a href="#/" class="pricing-button">Get Started</a>
+                </div>
+        </div>
+            
+        <div class="container">
+            <div class="panel pricing-table">
+                <div class="pricing-plan">
+                <img src="/img/bronze.png" alt="" class="pricing-img">
+                <h2 class="pricing-header">Bronze</h2>
+                <ul class="pricing-features">
+                    <li class="pricing-features-item">Clean 1 to 3 bins</li>
+                    <li class="pricing-features-item">Wash, Sanisise & Deodorise</li>
+                    <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
+                    <li class="pricing-features-item">We Only Use Biodegradable Products</li>
+                    <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
+                    <li class="pricing-features-item">Cancel Anytime</li>
+                </ul>
+                <span class="pricing-price starts-at">$18</span>
+                <div class="billing-frequency">Billed Monthly</div>
+                    <a href="#/" class="pricing-button">Get Started</a>   
+                </div>
+        </div>
+
+        <div class="container">
+            <div class="panel pricing-table">
+                <div class="pricing-plan">
+                    <img src="/img/one-off.png" alt="" class="pricing-img">
+                    <h2 class="pricing-header">One-Off</h2>
+                    <ul class="pricing-features">
+                    <li class="pricing-features-item">Clean 1 to 3 bins</li>
+                    <li class="pricing-features-item">Wash, Sanisise & Deodorise</li>
+                    <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
+                    <li class="pricing-features-item">We Only Use Biodegradable Products</li>
+                    <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
+                    </ul>
+                    <span class="pricing-price starts-at">$33</span>
+                    <div class="billing-frequency">One-off payment</div>
+                    <a href="#/" class="pricing-button">Book now</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="panel pricing-table">
+                <h3 class="faqs-header">Frequently Asked Questions</h3>
+                <h4 class="faqs-questions">Question one here?</h4>
+                <h5 class="faqs-answers">Answer one here and so forth.</h5>
+        </div>
         </div>
       </div>
   <div id="error-message" class="error-message"></div>

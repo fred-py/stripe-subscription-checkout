@@ -55,6 +55,7 @@ html {
 
 .header {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
@@ -62,12 +63,23 @@ html {
 
 .header__logo {
     position: inherit;
-    transform: translateY(45%);
+    transform: translateY(37%);
     background-image: url('/img/logo.png');
     background-size: contain;
     background-repeat: no-repeat;
     width: 140px;
     height: 140px;
+    padding-bottom: 10%;
+    z-index: 9999;
+}
+
+.header__title {
+    position: inherit;
+    font-family: sans-serif;
+    color: #fff;
+    transform: translateY(72%);
+    letter-spacing: 1px;
+    font-size: 28px;
     z-index: 9999;
 }
   
@@ -106,6 +118,10 @@ html {
     .pricing-table {
       flex-direction: column;
     }
+
+    .pricing-features-item{
+        width: 100%;
+    }
   }
   
   .pricing-table * {
@@ -129,6 +145,10 @@ html {
       /*border-right: 1px solid #e1f1ff;*/
       flex-basis: 100%;
       padding: 25px 50px;
+    }
+
+    .pricing-features-item{
+        width: 100%;
     }
   
     .pricing-plan:last-child {
@@ -155,6 +175,9 @@ html {
   
   .pricing-features {
     color:var(--gray-light);
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center items horizontally */
     font-weight: 350;
     letter-spacing: 1px;
     margin: 50px 0 25px;
@@ -163,7 +186,8 @@ html {
 .pricing-features-item {
     list-style-type: none;
     font-family: sans-serif;
-    border-top: 1px solid var(--gray-transparent);
+    border-top: .7px solid var(--gray-transparent);
+    width: 43%;
     font-size: 12px;
     line-height: 1.5;
     padding: 12px 0;
@@ -171,7 +195,7 @@ html {
 }
   
   .pricing-features-item:last-child {
-    border-bottom: 1px solid var(--gray-transparent);
+    border-bottom: .7px solid var(--gray-transparent);
   }
 
   .pricing-features-item:before {
@@ -229,6 +253,7 @@ html {
     transition: all 150ms ease-in-out;
   }
   
+  
   .pricing-button:hover,
   .pricing-button:focus {
     background-color: var(--green-transparent);
@@ -247,9 +272,31 @@ html {
     color: var(--wheelie-green);
   }
 
-  .plan-divider {
-    stroke: 1px solid var(--gray-border);
-    padding-top: 3%;
-    padding-bottom: 3%;
+
+.break {
+    align-content: center;
     width: 100%;
-  }
+    border-top: .8px solid var(--gray-transparent); /* Adjust color as needed */
+    margin: 5px 5; /* Adjust as needed */
+    padding-left: 0%;
+    padding-right: 0%;
+}
+
+.faqs-header {
+    font-family: sans-serif;
+    color: var(--wheelie-green);
+    filter: drop-shadow(.4px .4px .4px rgba(0, 0, 0, 0.3));
+}
+
+.faqs-questions {
+    font-family: sans-serif;
+    color: var(--wheelie-green);
+    font-size: 16px;
+    padding: 0px 0;
+}
+
+.faqs-answer {
+    font-family: sans-serif;
+    color: var(--gray-transparent);
+
+}
