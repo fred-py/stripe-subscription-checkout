@@ -184,7 +184,7 @@ html {
     list-style-type: none;
     font-family: sans-serif;
     border-top: .7px solid var(--gray-transparent);
-    width: 80%;
+    width: 100%;
     font-size: 12px;
     line-height: 1.5;
     padding: 12px 0;
