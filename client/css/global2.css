@@ -119,9 +119,6 @@ html {
       flex-direction: column;
     }
 
-    .pricing-features-item{
-        width: 100%;
-    }
   }
   
   .pricing-table * {
