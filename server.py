@@ -55,7 +55,7 @@ port = int(os.environ.get('PORT', 4242))  # This is needed to deploy on fl0
 @app.route('/', methods=['GET', 'OPTIONS'])
 def get_example():
     # Passing favicon en var to render on deployment
-    return render_template('index_trial.html', favicon=os.getenv('FAVICON'))
+    return render_template('index_stacked.html', favicon=os.getenv('FAVICON'))
 
 
 @app.route('/config', methods=['GET', 'OPTIONS'])
