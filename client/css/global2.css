@@ -15,7 +15,7 @@
     --body-color: var(--gray-mid);
     --headline-color: var(--gray-dark);
     --accent-color: #0066f0;
-    --body-font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    --body-font-family: Noto Serif Japanese;
     --radius: 6px;
   }
 
@@ -23,7 +23,7 @@
 
 html {
     box-sizing: border-box;
-    font-family: Noto Serif Japanese
+    font-family: var(--body-font-family)
   }
 
 
@@ -122,6 +122,7 @@ html {
   }
   
   .pricing-table * {
+    list-style-type: none;
     font-weight: 400;
     align-items: center;
     text-align: center; 
@@ -212,6 +213,24 @@ html {
   }
 
   .pricing-price:after {
+	content: "/per month";
+    font-family: sans-serif;
+	font-size: 12px;
+    font-weight: 300;
+	display: inline-block;
+	color:var(--gray-light);
+}
+
+.pricing-price.silver:after {
+	content: "/per quarter";
+    font-family: sans-serif;
+	font-size: 12px;
+    font-weight: 300;
+	display: inline-block;
+	color:var(--gray-light);
+}
+
+.pricing-price.one-off:after {
 	content: "/per bin";
     font-family: sans-serif;
 	font-size: 12px;
@@ -279,21 +298,86 @@ html {
     padding-right: 0%;
 }
 
-.faqs-header {
+/* FAQs Section*/
+
+.accordion-body {
     font-family: sans-serif;
-    color: var(--wheelie-green);
-    filter: drop-shadow(.4px .4px .4px rgba(0, 0, 0, 0.3));
+    color: var(--gray-light);
+    margin: 2px auto;
+    padding: 77px 77px;
 }
 
-.faqs-questions {
-    font-family: sans-serif;
-    color: var(--wheelie-green);
-    font-size: 16px;
-    padding: 0px 0;
+.label {
+    font-size: 19px;
+    font-weight: 522;
+    margin-bottom: 12px;
+    text-align: left;
 }
 
-.faqs-answer {
-    font-family: sans-serif;
-    color: var(--gray-transparent);
-
+.content {
+    text-align: left;
 }
+
+/* Break up strokes*/
+hr {
+    border-top: .7px solid var(--gray-transparent);
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*set the position property for each of the 
+containers (holding both the label and content) \
+to relative.*/
+.accordion .container-accord {
+    position: relative;
+    margin: 10px 10px;
+}
+
+/* Positions the labels relative to the .container. 
+Adds padding to the top and bottom, Also makes its cursor a pointer */
+
+.accordion .label {
+    position: relative;
+    padding: 10px 0;
+    cursor: pointer;
+  }
+
+/* Positions the plus sign 5px from the right. 
+Centers it using the transform property. */
+.accordion .label::before {
+    content: "+";
+    position: absolute;
+    top: 50%;
+    right: -5px;
+    font-size: 25px;
+    transform: translateY(-50%);
+}
+
+/* Hides the content (height: 0), decreases font size, 
+justifies text and adds transition */
+
+.accordion .content {
+    position: relative;
+    background: white;
+    height: 0;
+    font-size: 13px;
+    text-align: justify;
+    width: 780px;
+    overflow: hidden;
+    transition: 0.5s;
+  }
+
+/* Unhides the content part when active. Sets the height */
+.accordion .container-accord.active .content {
+    height: 150px;
+  }
+  
+  /* Changes from plus sign to negative sign once active */
+  
+  .accordion .container-accord.active .label::before {
+    content: '-';
+    font-size: 30px;
+  }
+
+
