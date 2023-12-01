@@ -316,12 +316,26 @@ html {
 
 .content {
     text-align: left;
+    max-width: 100%;
+}
+
+@media screen and (max-width: 900px) {
+    .accordion-body {
+        margin: 0px 0px;
+    }
+    .label {
+        font-size: 16px;
+    }
+    h1 {
+        font-size: 22px;
+    }
+    
 }
 
 /* Break up strokes*/
 hr {
     border-top: .7px solid var(--gray-transparent);
-    width: 100%;
+    max-width: 100%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -363,7 +377,7 @@ justifies text and adds transition */
     height: 0;
     font-size: 13px;
     text-align: justify;
-    width: 780px;
+    max-width: 100%;
     overflow: hidden;
     transition: 0.5s;
   }
