@@ -310,12 +310,18 @@ html {
 }
 
 /* FAQs Section*/
+.accordion h1 {
+    margin-bottom: 66px;
+
+
+}
 
 .accordion-body {
     font-family: sans-serif;
     color: var(--gray-light);
     margin: 2px auto;
     padding: 77px 77px;
+
 }
 
 .label {
@@ -332,9 +338,6 @@ html {
 
 /*Desktop Screens*/
 @media (min-width: 900px) {
-    .accordion-body {
-        margin: 0px 0px;
-    }
     /*FAQs Header*/
     h1 {
         font-size: 22px;
@@ -347,9 +350,13 @@ html {
 
 /*Mobile Screens*/
 @media (max-width: 600px) {
-    .accordion-body {
-        margin: 0px 0px;
+    .accordion h1{
+        margin-top: 55px;
     }
+    .accordion-body {
+        padding: 4px 4px;
+    }
+
     /*Cannot group .label and .content 
     as font-size is different*/
     .label {
