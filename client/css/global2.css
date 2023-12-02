@@ -159,6 +159,12 @@ html {
     max-width: 28%;
     filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
   }
+
+  @media (min-width: 900px) {
+    .pricing-img {
+      filter: drop-shadow(0.4px 0.4px 0.4px rgba(0, 0, 0, 0.4));
+    }
+  }
   
 
   .pricing-header {
@@ -257,7 +263,9 @@ html {
     color: var(--gray-light);
 }
 
+
   .pricing-button {
+    background-color: transparent;
     border: 1px solid var(--green-light);
     font-family: sans-serif;
     border-radius: 10px;
@@ -267,7 +275,10 @@ html {
     padding: 15px 35px;
     text-decoration: none;
     transition: all 150ms ease-in-out;
+    cursor: pointer;
   }
+
+  
   
   
   .pricing-button:hover,
@@ -319,18 +330,46 @@ html {
     max-width: 100%;
 }
 
-@media screen and (max-width: 900px) {
+/*Desktop Screens*/
+@media (min-width: 900px) {
     .accordion-body {
         margin: 0px 0px;
     }
-    .label {
-        font-size: 16px;
-    }
+    /*FAQs Header*/
     h1 {
         font-size: 22px;
     }
+    .content {
+        margin: 0px 0px;
+    }
     
 }
+
+/*Mobile Screens*/
+@media (max-width: 600px) {
+    .accordion-body {
+        margin: 0px 0px;
+    }
+    /*Cannot group .label and .content 
+    as font-size is different*/
+    .label {
+        font-size: 16px;
+        margin-left: 3px;
+        margin-right: 3px;
+    }
+    /*FAQs Header*/
+    h1 {
+        font-size: 22px;
+    }
+    .content {
+        margin: 0px 0px;
+        margin-left: 3px;
+        margin-right: 3px;
+    }
+    
+}
+
+
 
 /* Break up strokes*/
 hr {

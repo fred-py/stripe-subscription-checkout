@@ -35,7 +35,7 @@ Bootstrap Pricing Table: https://frontendor.com/blog/bootstrap-pricing-table-sni
                     <ul class="pricing-features">
                         <li class="pricing-features-item">3 Bins Cleaned Monthly</li>
                         <li class="pricing-features-item">Plus 1 Free FOGO Bin Each Clean Cycle</li>
-                        <li class="pricing-features-item">Best Value at $9 per bin</li>
+                        <li class="pricing-features-item">No Transaction Fee</li>
                         <li class="pricing-features-item">Wash, Sanitise & Deodorise</li>
                         <li class="pricing-features-item">We Only Use Biodegradable Products</li>
                         <li class="pricing-features-item">No Residue Left Behind on Your Driveway</li>
@@ -64,24 +64,31 @@ Bootstrap Pricing Table: https://frontendor.com/blog/bootstrap-pricing-table-sni
                 <a href="#/" class="pricing-button">Get Started</a>
                 </div>
         </div>
-            
-        <div class="container">
-            <div class="panel pricing-table">
-                <div class="pricing-plan">
-                <img src="/img/bronze.png" alt="" class="pricing-img">
-                <h2 class="pricing-header">Bronze</h2>
-                <ul class="pricing-features">
-                    <li class="pricing-features-item">Clean 1 to 3 bins</li>
-                    <li class="pricing-features-item">Wash, Sanisise & Deodorise</li>
-                    <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
-                    <li class="pricing-features-item">We Only Use Biodegradable Products</li>
-                    <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
-                    <li class="pricing-features-item">Cancel Anytime</li>
-                </ul>
-                <span class="pricing-price starts-at">$18</span>
-                <div class="billing-frequency">Billed Monthly</div>
-                    <a href="#/" class="pricing-button">Get Started</a>   
+        
+        <form action="/create-checkout-session" method="POST">
+            <input type="hidden" id="comboPrice" name="priceId">
+            <div class="container">
+                <div class="panel pricing-table">
+                    <div class="pricing-plan">
+                        <img src="/img/bronze.png" alt="" class="pricing-img">
+                        <h2 class="pricing-header">Bronze</h2>
+                        <ul class="pricing-features">
+                            <li class="pricing-features-item">Clean 1 to 3 bins</li>
+                            <li class="pricing-features-item">Wash, Sanisise & Deodorise</li>
+                            <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
+                            <li class="pricing-features-item">We Only Use Biodegradable Products</li>
+                            <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
+                            <li class="pricing-features-item">Cancel Anytime</li>
+                        </ul>
+                        <span class="pricing-price starts-at">$18</span>
+                        <div class="billing-frequency">Billed Monthly</div>
+
+                        <button href="#/" class="pricing-button" id="combo-plan-btn">Get Started</button>
+                    </div>
                 </div>
+            </div>
+        </form>
+
         </div>
 
         <div class="container">
@@ -98,6 +105,10 @@ Bootstrap Pricing Table: https://frontendor.com/blog/bootstrap-pricing-table-sni
                     </ul>
                     <span class="pricing-price one-off starts-at">$33</span>
                     <div class="billing-frequency">One-off payment</div>
+                    <!--  href="#/", it might be part of a JavaScript-based routing system
+                        in a single-page application (SPA). In such applications, changes in
+                        the part of the URL after the # are used to dynamically load different 
+                        content without refreshing the page.-->
                     <a href="#/" class="pricing-button">Book now</a>
                 </div>
             </div>
