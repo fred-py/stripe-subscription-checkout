@@ -489,7 +489,7 @@ justifies text and adds transition */
 
   @media (max-width: 600px) {
     .table-header {
-      font-weight: 600;
+      font-weight: 555;
       text-align: left;
       padding: 2%; 
     }
@@ -498,7 +498,7 @@ justifies text and adds transition */
       text-align: left;
       font-weight: 600;
       justify-content: space-around;
-      padding: 1%px 2px;
+      padding: 1% 2%;
     }
   
     .table-value {
