@@ -64,9 +64,8 @@ def get_publishable_key():
         'publishableKey': os.getenv('STRIPE_PUBLISHABLE_KEY'),
         'comboPrice': os.getenv('ANY_COMBO_PRICE_ID'),
         'silverPrice': os.getenv('SILVER_PRICE_ID'),
-        'silverPrice2': os.getenv('SILVER_PRICE_ID2'),
         'goldPrice': os.getenv('GOLD_PRICE_ID'),
-        'goldPrice2': os.getenv('GOLD_PRICE_ID2'),
+        'oneOff': os.getenv('ONE_OFF_PRICE_ID'),
     })
 
 
@@ -159,6 +158,25 @@ def create_checkout_session():
                 #return_url=domain_url + '/checkout/return?session_id={CHECKOUT_SESSION_ID}',
                 #return_url='http://localhost:4242/checkout/return?session_id={CHECKOUT_SESSION_ID}',
             )
+
+        elif price == os.getenv('ONE_OFF_PRICE_ID'):
+            
+            checkout_session = stripe.checkout.Session.create(
+                success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url, # + '/canceled.html',
+                mode='payment',
+                billing_address_collection='required',
+                line_items=[{
+                    'price': price,
+                    'adjustable_quantity':
+                        # Ensure max is has the save value on stripe dashboard
+                        {'enabled': True, 'minimum': 1, 'maximum': 3},
+                    'quantity': 1
+                }],
+                phone_number_collection={'enabled': True},
+
+            )
+
         else:
 
             checkout_session = stripe.checkout.Session.create(
@@ -196,6 +214,7 @@ def create_checkout_session():
         return redirect(checkout_session.url, code=303)
     except Exception as e:
         return jsonify({'error': {'message': str(e)}}), 400
+
 
 
 @app.route('/customer-portal', methods=['POST'])

@@ -27,7 +27,6 @@ html {
   }
 
 
-
 *, *:before, *:after {
     box-sizing: inherit;
 }
@@ -278,9 +277,6 @@ html {
     cursor: pointer;
   }
 
-  
-  
-  
   .pricing-button:hover,
   .pricing-button:focus {
     background-color: var(--green-transparent);
@@ -313,7 +309,6 @@ html {
 .accordion h1 {
     margin-bottom: 66px;
 
-
 }
 
 .accordion-body {
@@ -331,9 +326,30 @@ html {
     text-align: left;
 }
 
-.content {
+
+/*.content {
     text-align: left;
     max-width: 100%;
+    line-height: 1.2;
+}*/
+
+/* <p> tag was inheriting centred alignment
+from pricing-table as .pricing-table * is 
+applying text-align: center; to all
+elements (*) within any element with 
+the class .pricing-table.  */
+.pricing-table .content p {
+    text-align: left;
+    max-width: 100%;
+    line-height: 1.2;
+}
+
+/*h3 is in the cancellation policy*/
+.pricing-table .content h3 {
+    text-align: left;
+    font-weight: 600;
+    max-width: 100%;
+    line-height: 1.2;
 }
 
 /*Desktop Screens*/
@@ -360,6 +376,9 @@ html {
     /*Cannot group .label and .content 
     as font-size is different*/
     .label {
+        /*Sequences of whitespace will collapse into a single whitespace.
+        Text will wrap when necessary, and on line breaks.*/
+        white-space: normal;
         font-size: 16px;
         margin-left: 3px;
         margin-right: 3px;
@@ -422,7 +441,7 @@ justifies text and adds transition */
     background: white;
     height: 0;
     font-size: 13px;
-    text-align: justify;
+    text-align: left;
     max-width: 100%;
     overflow: hidden;
     transition: 0.5s;
@@ -430,7 +449,8 @@ justifies text and adds transition */
 
 /* Unhides the content part when active. Sets the height */
 .accordion .container-accord.active .content {
-    height: 150px;
+    height: auto;
+    margin-bottom: 44px;
   }
   
   /* Changes from plus sign to negative sign once active */
@@ -438,6 +458,30 @@ justifies text and adds transition */
   .accordion .container-accord.active .label::before {
     content: '-';
     font-size: 30px;
+  }
+
+  /*Two-Dimensional Pricing Table under FAQs*/
+  .table-header {
+    font-weight: 600;
+    text-align: left;
+    padding: 5% 2%; 
+  }
+  
+  .table-row {
+    text-align: left;
+    font-weight: 600;
+    justify-content: space-around;
+    padding: 5px 10px;
+  }
+
+  .table-value {
+    text-align: left;
+    justify-content: space-around;
+    padding: 5px 10px;
+  }
+
+  .table-spacer {
+    padding-top: 5%;
   }
 
 

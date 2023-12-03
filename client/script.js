@@ -15,13 +15,15 @@ return a POST request with non-type value
 
 fetch("/config")
   .then(r => r.json())
-  .then(({comboPrice, silverPrice, goldPrice}) => {
+  .then(({comboPrice, silverPrice, goldPrice, oneOff}) => {
     const comboPriceInput = document.querySelector('#comboPrice');
     comboPriceInput.value = comboPrice;
     const silverPriceInput = document.querySelector('#silverPrice');
     silverPriceInput.value = silverPrice;
     const goldPriceInput = document.querySelector('#goldPrice');
     goldPriceInput.value = goldPrice;
+    const oneOffInput = document.querySelector('#oneOff');
+    oneOffInput.value = oneOff;
   })
   
 
