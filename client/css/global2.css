@@ -388,7 +388,7 @@ the class .pricing-table.  */
     }
     /*FAQs Header*/
     h1 {
-        font-size: 22px;
+        font-size: 18px;
     }
     .content {
         margin: 0px 0px;
@@ -413,7 +413,7 @@ containers (holding both the label and content) \
 to relative.*/
 .accordion .container-accord {
     position: relative;
-    margin: 10px 10px;
+    margin: 10% 10%;
 }
 
 /* Positions the labels relative to the .container. 
@@ -498,13 +498,13 @@ justifies text and adds transition */
       text-align: left;
       font-weight: 600;
       justify-content: space-around;
-      padding: 5px 5px;
+      padding: 1%px 2px;
     }
   
     .table-value {
       text-align: left;
       justify-content: space-around;
-      padding: 5px 5px;
+      padding: 1% 2%;
     }
   
     .table-spacer {
