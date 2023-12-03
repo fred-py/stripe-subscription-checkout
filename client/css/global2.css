@@ -366,6 +366,9 @@ the class .pricing-table.  */
 
 /*Mobile Screens*/
 @media (max-width: 600px) {
+    .accordion .content {
+        width: 100%;
+    }
     .accordion h1{
         margin-top: 55px;
     }
@@ -482,6 +485,31 @@ justifies text and adds transition */
 
   .table-spacer {
     padding-top: 5%;
+  }
+
+  @media (max-width: 600px) {
+    .table-header {
+      font-weight: 600;
+      text-align: left;
+      padding: 2%; 
+    }
+    
+    .table-row {
+      text-align: left;
+      font-weight: 600;
+      justify-content: space-around;
+      padding: 5px 5px;
+    }
+  
+    .table-value {
+      text-align: left;
+      justify-content: space-around;
+      padding: 5px 5px;
+    }
+  
+    .table-spacer {
+      padding-top: 3%;
+    }
   }
 
 
