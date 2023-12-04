@@ -373,7 +373,7 @@ the class .pricing-table.  */
         margin-top: 55px;
     }
     .accordion-body {
-        padding: 4px 4px;
+        padding: 0% 0%;
     }
 
     /*Cannot group .label and .content 
@@ -382,18 +382,20 @@ the class .pricing-table.  */
         /*Sequences of whitespace will collapse into a single whitespace.
         Text will wrap when necessary, and on line breaks.*/
         white-space: normal;
-        font-size: 16px;
-        margin-left: 3px;
-        margin-right: 3px;
+        font-weight: 600;
+        font-size: 13px;
+        margin-left: 0%;
+        margin-right: 0%;
     }
     /*FAQs Header*/
     h1 {
         font-size: 18px;
+        font-weight: 600;
     }
-    .content {
-        margin: 0px 0px;
-        margin-left: 3px;
-        margin-right: 3px;
+    /*Cancellation Policy Header*/
+    h3 {
+        font-size: 12px;
+        font-weight: 600;
     }
     
 }
@@ -488,23 +490,39 @@ justifies text and adds transition */
   }
 
   @media (max-width: 600px) {
+
+    .accordion .label::before {
+      content: "+";
+      position: absolute;
+      top: 50%;
+      right: -5px;
+      font-size: 16px;
+      transform: translateY(-50%);
+    }
     .table-header {
-      font-weight: 555;
+      font-size: 9px;
+      font-weight: 600;
       text-align: left;
-      padding: 2%; 
     }
     
     .table-row {
+      font-size: 8px;
       text-align: left;
-      font-weight: 600;
+      font-weight: 555;
       justify-content: space-around;
-      padding: 1% 2%;
+      padding-top: 1%;
+      padding-bottom: 1%;
+      padding-right: 1%;
+      padding-left: 0%;
     }
   
     .table-value {
+      font-size: 8px;
       text-align: left;
       justify-content: space-around;
-      padding: 1% 2%;
+      padding-top: 1%;
+      padding-bottom: 1%;
+      padding-right: 1%;
     }
   
     .table-spacer {
