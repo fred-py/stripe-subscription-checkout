@@ -13,6 +13,7 @@ import os
 from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
+from server.data import create_job
 
 # Setup Stripe python client library
 load_dotenv(find_dotenv())
@@ -103,7 +104,7 @@ def create_checkout_session():
                 #success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
                 # Neither return nor cancel URL works with embedded mode
-                cancel_url=domain_url, # + '/canceled.html',
+                cancel_url=domain_url,  # + '/canceled.html',
                 #return_url = 'https://unitedpropertyservices.au/wheelie-bin-clean/checkout/return?session_id={CHECKOUT_SESSION_ID}',
                 mode='subscription',
                 billing_address_collection='required',
@@ -116,9 +117,6 @@ def create_checkout_session():
                     'quantity': 1
                 }],
                 phone_number_collection={'enabled': True},
-                #ui_mode='embedded',
-                
-                
                 custom_fields=[
                     {
                         'key': 'collection_date',
@@ -165,7 +163,9 @@ def create_checkout_session():
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url=domain_url, # + '/canceled.html',
                 mode='payment',
+                customer_creation='always',  # Create a new customer if one is not provided. Only used in payment mode
                 billing_address_collection='required',
+
                 line_items=[{
                     'price': price,
                     'adjustable_quantity':
@@ -174,6 +174,42 @@ def create_checkout_session():
                     'quantity': 1
                 }],
                 phone_number_collection={'enabled': True},
+                custom_fields=[
+                    {
+                        'key': 'tentative-day',
+                        'label': {'type': 'custom', 'custom': 'When would you like your bin(s) cleaned?'},
+                        'type': 'dropdown',
+                        'dropdown': {
+                            'options': [
+                                {'label': 'Monday', 'value': 'monday'},
+                                {'label': 'Tuesday', 'value': 'tuesday'},
+                                {'label': 'Wednesday', 'value': 'wednesday'},
+                                {'label': 'Thursday', 'value': 'thursday'},
+                                {'label': 'Friday', 'value': 'friday'},
+                            ],
+                        },
+                    },
+
+                    {
+                        'key': 'select_bins',
+                        'label': {'type': 'custom', 'custom': 'Select the bin(s) to be cleaned.'},
+                        'type': 'dropdown',
+                        'dropdown': {
+                            'options': [
+                                {'label': 'Red bin', 'value': 'R'},
+                                {'label': 'Yellow bin', 'value': 'Y'},
+                                {'label': 'Green bin', 'value': 'G'},
+                                {'label': 'Red and Green bins', 'value': 'RG'},
+                                {'label': 'Red and Yellow bins', 'value': 'RY'},
+                                {'label': 'Yellow and Green bins', 'value': 'YG'},
+                                {'label': 'All bins', 'value': 'All'},
+                            ]
+                        }
+                    }
+                ],
+                custom_text={
+                    'submit': {'message': 'NOTE: We will get in touch to confirm a date.'}
+                },
 
             )
 
@@ -181,7 +217,7 @@ def create_checkout_session():
 
             checkout_session = stripe.checkout.Session.create(
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=domain_url, # + '/canceled.html',
+                cancel_url=domain_url,  # + '/canceled.html',
                 mode='subscription',
                 billing_address_collection='required',
                 # automatic_tax={'enabled': True},
@@ -274,37 +310,26 @@ def webhook_received():
 
     # Handle the checkout.session.completed event | Fulfill Order
     if event_type == 'checkout.session.completed':
-        'Needs to return additional data'
+        """Needs to return additional data"""
         session = stripe.checkout.Session.retrieve(
             event['data']['object']['id'],
-            expand=['line_items'],
-            )
+            # Use expand to retrieve additional details from checkout session
+            # Note that retrieving too many items will slow down response time
+            expand=['customer', 'line_items', 'custom_fields'],  # https://stripe.com/docs/api/expanding_objects
+            )                                   # https://stripe.com/docs/expand
 
         line_items = session.line_items
+        for line_items in line_items.data:
+            info = line_items.amount_total, line_items.description
+
+            customer = session.customer
+            custom_field = session.custom_fields
+            # Convert, combine and save to json file
+            create_job(info, customer, custom_field)
 
         # Fulfill Order - Send to servicem8/database <=======*********
-        send_to_db(line_items)
-        print('🔔 Payment succeeded!')
-
     return jsonify({'status': 'success'})
-
-
-def send_to_db(line_items):
-    """Send to servicem8/database
-    Add remaining function here"""
-    print(f'{line_items} :: ======> send to servicem8')
 
 
 if __name__ == '__main__':
     app.run(debug=True, port=port)
-
-
-"""                            'options': [
-                                {'label': 'Red bin', 'value': 'R'},
-                                {'label': 'Yellow bin', 'value': 'Y'},
-                                {'label': 'Green bin', 'value': 'G'},
-                                {'label': 'Red and Green bins', 'value': 'RG'},
-                                {'label': 'Red and Yellow bins', 'value': 'RY'},
-                                {'label': 'Yellow and Green bins', 'value': 'YG'},
-                                {'label': 'All bins', 'value': 'All'},
-                            ]"""
