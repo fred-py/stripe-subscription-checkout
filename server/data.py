@@ -13,7 +13,15 @@ def create_job(info, customer, custom_field):
         data['customer']['address']['state'] + ' ' + \
         data['customer']['address']['postal_code']
     job_description = data['info'][1] # Job Description
+    # Custom_field is a list of dicts
+    # therefore 0 index is required to access the dict
+    # then access the key 'dropdown' which is a dict and so forth
+    # Using param custom field directly for ease of use
+    bin_collection = custom_field[0]['dropdown']['value']
     invoice_amount = data['info'][0] # Total Amount
+    # Concatnate info to go on job description
+    description = job_description + ' ' + bin_collection
+
     # bin_day = data['custom_field']['dropdown']['value'] # Bin Collection Day
 
     # Create new job
@@ -25,7 +33,7 @@ def create_job(info, customer, custom_field):
         "geo_country": "Australia",
         "geo_state": "Western Australia",
         "status": "Quote",
-        "job_description": job_description,
+        "job_description": description,
         "total_invoice_amount": invoice_amount,
         "invoice_sent": "yes",
         "payment_processed": "yes",
@@ -40,6 +48,7 @@ def create_job(info, customer, custom_field):
     try:
         response = requests.post(url, json=payload, headers=headers)
         print(response.text)
+        # Get job uuid to attached contact to job
         job_uuid = response.headers['x-record-uuid']
         create_contact(job_uuid, data)
 
