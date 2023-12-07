@@ -12,17 +12,30 @@ def create_job(info, customer, custom_field):
         data['customer']['address']['city'] + ' ' + \
         data['customer']['address']['state'] + ' ' + \
         data['customer']['address']['postal_code']
-    job_description = data['info'][1] # Job Description
+    job_description = data['info'][1]  # Subscription Plan
     # Custom_field is a list of dicts
     # therefore 0 index is required to access the dict
     # then access the key 'dropdown' which is a dict and so forth
     # Using param custom field directly for ease of use
     bin_collection = custom_field[0]['dropdown']['value']
-    invoice_amount = data['info'][0] # Total Amount
-    # Concatnate info to go on job description
-    description = job_description + ' ' + bin_collection
+    invoice_amount = data['info'][0]  # Total Amount
+    # Convert cents to dollars & int to str
+    invoice_amount = str(invoice_amount / 100)
+    """Check plan type, if Bronze or Any Combo (One-Off),
+    bin selection is passed to Servicem8 description"""
+    plan = data['info'][1]
+    if plan == 'Bronze Subscription' or 'Any Combo':
+        selected_bins = custom_field[1]['dropdown']['value']
+        description = job_description + ' ' \
+            + bin_collection + ' ' \
+            + f'Total paid: ${invoice_amount}' + ' ' \
+            + f'Selected Bin(s): {selected_bins}'
 
-    # bin_day = data['custom_field']['dropdown']['value'] # Bin Collection Day
+    else:
+        # Concatnate info to go on job description
+        description = job_description + ' ' \
+            + bin_collection + ' ' \
+            + f'Total paid: ${invoice_amount}'
 
     # Create new job
     url = "https://api.servicem8.com/api_1.0/job.json"
@@ -69,7 +82,7 @@ def create_contact(job_uuid, data):
         "active": 1,
         "job_uuid": job_uuid,
         "first": name,
-        #"last": name2,
+        # "last": name2,
         "email": email,
         "mobile": mobile,
         "type": "Job Contact",
@@ -85,6 +98,7 @@ def create_contact(job_uuid, data):
         return f'create_contact: {response.text}'
     except Exception as e:
         print(e)
+ 
 
 
 if __name__ == '__main__':
