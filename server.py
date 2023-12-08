@@ -324,8 +324,19 @@ def webhook_received():
 
             customer = session.customer
             custom_field = session.custom_fields
-            # Convert, combine and save to json file
-            create_job(info, customer, custom_field)
+            print(info)
+            # Convert, combine and pass data to ServiceM8
+            uww = os.getenv('UWW_KEY')
+            ups = os.getenv('UPS_KEY')
+
+            create_job(info, customer, custom_field, uww)  # United Wheelie Wash
+
+            for value in info:
+                value = info[1]
+                if value == 'One-Off':
+                    break
+                else:
+                    create_job(info, customer, custom_field, ups)  # United Property Services
 
         # Fulfill Order - Send to servicem8/database <=======*********
     return jsonify({'status': 'success'})

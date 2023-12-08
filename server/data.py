@@ -1,9 +1,12 @@
 # https://developer.servicem8.com/reference/post-jobcontact-create
-import json
 import requests
+import os
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
 
 
-def create_job(info, customer, custom_field):
+def create_job(info, customer, custom_field, servicem8_key):
     """Extract json data & creates new job on ServiceM8."""
 
     data = {'info': info, 'customer': customer, 'custom_filed': custom_field}
@@ -21,10 +24,11 @@ def create_job(info, customer, custom_field):
     invoice_amount = data['info'][0]  # Total Amount
     # Convert cents to dollars & int to str
     invoice_amount = str(invoice_amount / 100)
+
     """Check plan type, if Bronze or Any Combo (One-Off),
     bin selection is passed to Servicem8 description"""
-    plan = data['info'][1]
-    if plan == 'Bronze Subscription' or 'Any Combo':
+    value = info[1]
+    if value == 'Bronze Subscription' or value == 'Any Combo':
         selected_bins = custom_field[1]['dropdown']['value']
         description = job_description + ' ' \
             + bin_collection + ' ' \
@@ -54,7 +58,7 @@ def create_job(info, customer, custom_field):
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "authorization": "Basic bWFya2V0aW5nQHVuaXRlZHByb3BlcnR5c2VydmljZXMuYXU6ODczZmMzMjgtNWM0YS00NjE4LTlmNWUtMjA4YjgyZTFjMzRi",
+        "authorization": servicem8_key,
         "uuid": "x-record-uuid"
     }
 
@@ -63,13 +67,13 @@ def create_job(info, customer, custom_field):
         print(response.text)
         # Get job uuid to attached contact to job
         job_uuid = response.headers['x-record-uuid']
-        create_contact(job_uuid, data)
+        create_contact(job_uuid, data, servicem8_key)
 
     except Exception as e:
-        print(e)
+        print(e)    
 
 
-def create_contact(job_uuid, data):
+def create_contact(job_uuid, data, servicem8_key):
     """Extract json data & creates
     new job contact on ServiceM8."""
 
@@ -82,7 +86,7 @@ def create_contact(job_uuid, data):
         "active": 1,
         "job_uuid": job_uuid,
         "first": name,
-        # "last": name2,
+        #"last": name2,
         "email": email,
         "mobile": mobile,
         "type": "Job Contact",
@@ -91,14 +95,13 @@ def create_contact(job_uuid, data):
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "authorization": "Basic bWFya2V0aW5nQHVuaXRlZHByb3BlcnR5c2VydmljZXMuYXU6ODczZmMzMjgtNWM0YS00NjE4LTlmNWUtMjA4YjgyZTFjMzRi"
+        "authorization": servicem8_key,
     }
     try:
         response = requests.post(url, json=payload, headers=headers)
         return f'create_contact: {response.text}'
     except Exception as e:
         print(e)
- 
 
 
 if __name__ == '__main__':
@@ -106,10 +109,4 @@ if __name__ == '__main__':
 
 
 
-
-
-
-
-
-
-
+# United Property ServiceM8 API Key: 'Basic cmV6ZW5kZS5mQG91dGxvb2suY29tOmQzNDQyZWY2LTk1MmUtNGI1Ny05Mzc0LTIwNTgxN2FhZjg2Yg=='
