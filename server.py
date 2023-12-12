@@ -327,8 +327,6 @@ async def webhook_received():
 
             customer = session.customer
             custom_field = session.custom_fields
-            bin_collection = custom_field[0]['dropdown']['value']
-            selected_bins = custom_field[1]['dropdown']['value']
 
             # Create data object to pass to ServiceM8
             data = {
@@ -337,8 +335,7 @@ async def webhook_received():
                         'amount_paid': info[0],
                         'plan_type': info[1],
                     },
-                    'bin_collection': bin_collection,
-                    'selected_bins': selected_bins,
+                    'booking_details': custom_field,
                 }
             
 
@@ -348,7 +345,6 @@ async def webhook_received():
             # Convert, combine and pass data to ServiceM8
             # Asyncio ensures the function runs in parallel with the main program
             # Start both tasks and gather their results
-            #asyncio.create_task(create_job(data, uww))
             asyncio.create_task(create_job(data, uww))
             asyncio.create_task(create_job(data, ups))
 

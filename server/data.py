@@ -21,6 +21,7 @@ async def create_job(data, servicem8_key):
     plan = data['subscription']['plan_type']  # Subscription Plan
     if servicem8_key == ups and plan == 'One-Off':
         # This ensures One-Off jobs are not created for main ServiceM8 account
+        print('One-Off job not created for main ServiceM8 account')
         pass
     else:
         # Concatnate address
@@ -29,11 +30,12 @@ async def create_job(data, servicem8_key):
             data['customer']['address']['state'] + ' ' + \
             data['customer']['address']['postal_code']
         plan = data['subscription']['plan_type']  # Subscription Plan
-        # Custom_field is a list of dicts
+
+        # Custom_field/booking_details/selected_bins is a list of dicts
         # therefore 0 index is required to access the dict
         # then access the key 'dropdown' which is a dict and so forth
         # Using param custom field directly for ease of use
-        bin_collection = data['bin_collection']
+        bin_collection = data['booking_details'][0]['dropdown']['value']
         total_paid = data['subscription']['amount_paid']  # Total Amount
         # Convert cents to dollars & int to str
         total_paid = str(total_paid / 100)
@@ -41,7 +43,7 @@ async def create_job(data, servicem8_key):
         bin selection is passed to Servicem8 description"""
         plan = data['subscription']['plan_type']  # Subscription Plan
         if plan == 'Bronze Subscription' or plan == 'One-Off':
-            selected_bins = data['selected_bins']
+            selected_bins = data['booking_details'][1]['dropdown']['value']
             description = plan + ' | ' + \
                 bin_collection + '  ' +  \
                 f'| Total paid: ${total_paid}' + ' ' + \
@@ -70,7 +72,9 @@ async def create_job(data, servicem8_key):
         headers = {
             "accept": "application/json",
             "content-type": "application/json",
-            "authorization": servicem8_key,
+            # Fl0 does not take Env Variables with empty spaces
+            # Therefore, Basic + ' ' + key is required
+            "authorization": 'Basic' + ' ' + servicem8_key,
             "uuid": "x-record-uuid"
         }
 
@@ -108,7 +112,9 @@ async def create_contact(job_uuid, data, servicem8_key):
     headers = {
         "accept": "application/json",
         "content-type": "application/json",
-        "authorization": servicem8_key,
+        # Fl0 does not take Env Variables with empty spaces
+        # Therefore, Basic + ' ' + key is required
+        "authorization": 'Basic' + ' ' + servicem8_key,
     }
     try:
         response = requests.post(url, json=payload, headers=headers)
