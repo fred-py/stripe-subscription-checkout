@@ -9,11 +9,11 @@ Python 3.6 or newer required.
 import stripe
 import json
 import os
-import asyncio  # For asyncrounous tasks triggered by webhook
+#import asyncio  # For asyncrounous tasks triggered by webhook
 from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
-from server.data import create_job
+from server.data import ServiceM8
 import time
 
 
@@ -82,7 +82,7 @@ def get_checkout_session():
 
 
 @app.route('/create-checkout-session', methods=['POST', 'OPTIONS'])
-async def create_checkout_session():  # Asynchronous function
+def create_checkout_session():  # Asynchronous function
     price = request.form.get('priceId')
     domain_url = os.getenv('DOMAIN')
 
@@ -255,7 +255,6 @@ async def create_checkout_session():  # Asynchronous function
         return jsonify({'error': {'message': str(e)}}), 400
 
 
-
 @app.route('/customer-portal', methods=['POST'])
 def customer_portal():
     # For demonstration purposes, we're using the Checkout session to retrieve the customer ID.
@@ -281,6 +280,8 @@ async def webhook_received():
     # https://stripe.com/docs/payments/checkout/fulfill-orders#create-event-handler
     webhook_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
     request_data = json.loads(request.data)
+    uww = os.getenv('UWW_KEY')  # ServiceM8 Wheelie Wash Keys
+    ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
 
     if webhook_secret:
         # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
@@ -338,15 +339,18 @@ async def webhook_received():
                     'booking_details': custom_field,
                 }
             
-
-            uww = os.getenv('UWW_KEY')  # ServiceM8 Wheelie Wash Keys
-
-            ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
             # Convert, combine and pass data to ServiceM8
             # Asyncio ensures the function runs in parallel with the main program
             # Start both tasks and gather their results
-            asyncio.create_task(create_job(data, uww))
-            asyncio.create_task(create_job(data, ups))
+            #asyncio.create_task(create_job(data, uww))
+            #asyncio.create_task(create_job(data, ups))
+            ww_acc = ServiceM8(data, uww)
+            uuid = ww_acc.create_job()
+            ww_acc.create_contact(uuid)
+
+            ups_acc = ServiceM8(data, ups)
+            uuid = ups_acc.create_job()
+            ups_acc.create_contact(uuid)
 
         # Fulfill Order - Send to servicem8/database <=======*********
     return jsonify({'status': 'success'})
