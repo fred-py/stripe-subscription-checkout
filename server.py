@@ -9,11 +9,14 @@ Python 3.6 or newer required.
 import stripe
 import json
 import os
-
+import asyncio  # For asyncrounous tasks triggered by webhook
 from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
 from server.data import create_job
+import time
+
+
 
 # Setup Stripe python client library
 load_dotenv(find_dotenv())
@@ -79,7 +82,7 @@ def get_checkout_session():
 
 
 @app.route('/create-checkout-session', methods=['POST', 'OPTIONS'])
-def create_checkout_session():
+async def create_checkout_session():  # Asynchronous function
     price = request.form.get('priceId')
     domain_url = os.getenv('DOMAIN')
 
@@ -272,7 +275,7 @@ def customer_portal():
 
 
 @app.route('/webhook', methods=['POST'])
-def webhook_received():
+async def webhook_received():
     # You can use webhooks to receive information about asynchronous payment events.
     # For more about our webhook events check out https://stripe.com/docs/webhooks.
     # https://stripe.com/docs/payments/checkout/fulfill-orders#create-event-handler
@@ -324,19 +327,30 @@ def webhook_received():
 
             customer = session.customer
             custom_field = session.custom_fields
-            print(info)
+            bin_collection = custom_field[0]['dropdown']['value']
+            selected_bins = custom_field[1]['dropdown']['value']
+
+            # Create data object to pass to ServiceM8
+            data = {
+                    'customer': customer,
+                    'subscription': {
+                        'amount_paid': info[0],
+                        'plan_type': info[1],
+                    },
+                    'bin_collection': bin_collection,
+                    'selected_bins': selected_bins,
+                }
+            
+
+            uww = os.getenv('UWW_KEY')  # ServiceM8 Wheelie Wash Keys
+
+            ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
             # Convert, combine and pass data to ServiceM8
-            uww = os.getenv('UWW_KEY')
-            ups = os.getenv('UPS_KEY')
-
-            create_job(info, customer, custom_field, uww)  # United Wheelie Wash
-
-            for value in info:
-                value = info[1]
-                if value == 'One-Off':
-                    break
-                else:
-                    create_job(info, customer, custom_field, ups)  # United Property Services
+            # Asyncio ensures the function runs in parallel with the main program
+            # Start both tasks and gather their results
+            #asyncio.create_task(create_job(data, uww))
+            asyncio.create_task(create_job(data, uww))
+            asyncio.create_task(create_job(data, ups))
 
         # Fulfill Order - Send to servicem8/database <=======*********
     return jsonify({'status': 'success'})
