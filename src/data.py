@@ -3,7 +3,7 @@ import requests
 import os 
 from dotenv import load_dotenv, find_dotenv
 #from .customer import add_customer  # Relative import with . as NoModuleError was being raised
-import time
+#import time
 #import asyncio
 
 
@@ -66,12 +66,19 @@ class ServiceM8:
             # Create new job
             url = "https://api.servicem8.com/api_1.0/job.json"
 
+            # Ensure jobs created under ups servicem8 account
+            # are marked as unsuccessful
+            if self.servicem8_key == self.ups:
+                job_status = 'Unsuccessful'
+            else:
+                job_status = 'Quote'
+
             payload = {
                 "active": 1,
                 "job_address": address,
                 "geo_country": "Australia",
                 "geo_state": "Western Australia",
-                "status": "Quote",
+                "status": job_status,
                 "job_description": description,
                 "total_invoice_amount": total_paid,
                 "invoice_sent": "yes",
@@ -128,11 +135,8 @@ class ServiceM8:
             raise (e)
 
 
-
-
-
-"""if __name__ == '__main__':
-    create_job()"""
+if __name__ == '__main__':
+    ServiceM8()
 
 
 

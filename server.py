@@ -13,7 +13,7 @@ import os
 from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
-from server.data import ServiceM8
+from src.data import ServiceM8
 import time
 
 
@@ -354,6 +354,12 @@ async def webhook_received():
 
         # Fulfill Order - Send to servicem8/database <=======*********
     return jsonify({'status': 'success'})
+
+
+@app.route('/src/<path:filename>')
+def data_transfer(filename):
+    """Serves any modules in src folder"""
+    return send_from_directory(app.root_path + '/src/', filename)
 
 
 if __name__ == '__main__':
