@@ -13,7 +13,7 @@ import os
 from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
-from src.data import ServiceM8
+from src import data as d
 import time
 
 
@@ -344,11 +344,11 @@ async def webhook_received():
             # Start both tasks and gather their results
             #asyncio.create_task(create_job(data, uww))
             #asyncio.create_task(create_job(data, ups))
-            ww_acc = ServiceM8(data, uww)
+            ww_acc = d.ServiceM8(data, uww)
             uuid = ww_acc.create_job()
             ww_acc.create_contact(uuid)
 
-            ups_acc = ServiceM8(data, ups)
+            ups_acc = d.ServiceM8(data, ups)
             uuid = ups_acc.create_job()
             ups_acc.create_contact(uuid)
 
