@@ -275,7 +275,7 @@ def customer_portal():
 
 
 @app.route('/webhook', methods=['POST'])
-async def webhook_received():
+def webhook_received():
     # You can use webhooks to receive information about asynchronous payment events.
     # For more about our webhook events check out https://stripe.com/docs/webhooks.
     # https://stripe.com/docs/payments/checkout/fulfill-orders#create-event-handler
