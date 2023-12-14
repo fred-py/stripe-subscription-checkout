@@ -19,9 +19,8 @@ class ServiceM8:
         self.servicem8_key = servicem8_key
 
     def create_job(self):
-        """Extract json data & creates new job on ServiceM8.
-        This function runs in parallel with the main program
-        so checkout process speed is not affected."""
+        """Uses checkout json data & creates new job on ServiceM8.
+        """
 
         # Check which key is being used
         plan = self.data['subscription']['plan_type']
