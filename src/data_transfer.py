@@ -21,14 +21,11 @@ class ServiceM8:
     def create_job(self):
         """Uses checkout json data & creates new job on ServiceM8.
         """
-
-        # Check which key is being used
-        plan = self.data['subscription']['plan_type']
         # Check which key is being used
         plan = self.data['subscription']['plan_type']  # Subscription Plan
         if self.servicem8_key == self.ups and plan == 'One-Off':
             # This ensures One-Off jobs are not created for main ServiceM8 account
-            print('One-Off job not created for main ServiceM8 account')
+            #print('One-Off job not created for main ServiceM8 account')
             pass
         else:
             # Concatnate address
@@ -49,7 +46,7 @@ class ServiceM8:
             """Check plan type, if Bronze or Any Combo (One-Off),
             bin selection is passed to Servicem8 description"""
             plan = self.data['subscription']['plan_type']  # Subscription Plan
-            if plan == 'Bronze Subscription' or plan == 'One-Off':
+            if plan == 'Bronze' or plan == 'One-Off':
                 selected_bins = self.data['booking_details'][1]['dropdown']['value']
                 description = plan + ' | ' + \
                     bin_collection + '  ' +  \
