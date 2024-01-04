@@ -93,11 +93,10 @@ def create_checkout_session():  # Asynchronous function
         # [billing_address_collection] - to display billing address details on the page
         # [customer] - if you have an existing Stripe Customer ID
         # [customer_email] - lets you prefill the email input in the form
-        # [automatic_tax] - to automatically calculate sales tax, VAT and GST in the checkout page
         # For full details see https://stripe.com/docs/api/checkout/sessions/create
 
-        # Set adjustable quantity to only be enabled to the combo price
-        # No concise manner of doing this as line_items only takes list of dicts
+        # Set adjustable quantity to only be enabled for the Broze & One-off price
+        # No concise way of doing this as line_items only takes list of dicts
         # and once adjustable_quantity is included even if set to false,
         # it fails to return products with no adjustable quantity
         # Hence the creation of two checkout sessions
@@ -111,6 +110,9 @@ def create_checkout_session():  # Asynchronous function
                 cancel_url=domain_url,  # + '/canceled.html',
                 #return_url = 'https://unitedpropertyservices.au/wheelie-bin-clean/checkout/return?session_id={CHECKOUT_SESSION_ID}',
                 mode='subscription',
+                discounts=[{
+                    'coupon': 'test_coupon',
+                }],
                 billing_address_collection='required',
                 # automatic_tax={'enabled': True},
                 line_items=[{
@@ -169,7 +171,9 @@ def create_checkout_session():  # Asynchronous function
                 mode='payment',
                 customer_creation='always',  # Create a new customer if one is not provided. Only used in payment mode
                 billing_address_collection='required',
-
+                discounts=[{
+                    'coupon': 'test_coupon',
+                }],
                 line_items=[{
                     'price': price,
                     'adjustable_quantity':
@@ -224,6 +228,9 @@ def create_checkout_session():  # Asynchronous function
                 cancel_url=domain_url,  # + '/canceled.html',
                 mode='subscription',
                 billing_address_collection='required',
+                discounts=[{
+                    'coupon': 'test_coupon',
+                }],
                 # automatic_tax={'enabled': True},
                 line_items=[{
                     'price': price,
@@ -285,7 +292,8 @@ def webhook_received():
     ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
 
     if webhook_secret:
-        # Retrieve the event by verifying the signature using the raw body and secret if webhook signing is configured.
+        # Retrieve the event by verifying the signature using 
+        # the raw body and secret if webhook signing is configured.
         signature = request.headers.get('stripe-signature')
         try:
             event = stripe.Webhook.construct_event(
@@ -305,7 +313,8 @@ def webhook_received():
             # Catch unexpected errors
             return jsonify(status=500, content=f'Unexpected error: {e}')
         
-    # Get the type of webhook event sent - used to check the status of PaymentIntents.    
+    # Get the type of webhook event sent - 
+    # used to check the status of PaymentIntents.    
     else:
         data = request_data['data']
         event_type = request_data['type']
@@ -315,13 +324,14 @@ def webhook_received():
 
     # Handle the checkout.session.completed event | Fulfill Order
     if event_type == 'checkout.session.completed':
-        """Needs to return additional data"""
         session = stripe.checkout.Session.retrieve(
             event['data']['object']['id'],
             # Use expand to retrieve additional details from checkout session
             # Note that retrieving too many items will slow down response time
-            expand=['customer', 'line_items', 'custom_fields'],  # https://stripe.com/docs/api/expanding_objects
-            )                                   # https://stripe.com/docs/expand
+            # https://stripe.com/docs/api/expanding_objects
+            # https://stripe.com/docs/expand
+            expand=['customer', 'line_items', 'custom_fields'],
+            )
 
         line_items = session.line_items
         for line_items in line_items.data:
@@ -339,6 +349,9 @@ def webhook_received():
                     },
                     'booking_details': custom_field,
                 }
+
+            print(f"################# Plan type: {data['subscription']['plan_type']}")
+            print(f'====> {data} <====')
             
             # Convert, combine and pass data to ServiceM8
             # Asyncio ensures the function runs in parallel with the main program
@@ -346,13 +359,20 @@ def webhook_received():
             #asyncio.create_task(create_job(data, uww))
             #asyncio.create_task(create_job(data, ups))
             
-            ww_acc = d.ServiceM8(data, uww)
-            uuid = ww_acc.create_job()
-            ww_acc.create_contact(uuid)
+            """NOTE MUST RETAIN SERVICEm8 customer/job ID to 
+            check if job already exists on future data_transfer
+            This will go on the database"""
+            #ww_acc = d.ServiceM8(data, uww)
+            #uuid = ww_acc.create_job()
+            #ww_acc.create_contact(uuid)
 
-            ups_acc = d.ServiceM8(data, ups)
-            uuid = ups_acc.create_job()
-            ups_acc.create_contact(uuid)
+            """USE ASYNCIO AND MEASURE PERFORMANCE AND OUTPUT TIME SAVED
+            TO GO ON DOCUMENTATION eg. x seconds faster y% improvement"""
+
+            """NOTHING TO BE SENT TO UPS UNTIL FURTHER NOTICE"""
+            #ups_acc = d.ServiceM8(data, ups)
+            #uuid = ups_acc.create_job()  # Create job returns uuid
+            #ups_acc.create_contact(uuid)
 
         # Fulfill Order - Send to servicem8/database <=======*********
     return jsonify({'status': 'success'})

@@ -14,13 +14,13 @@ class ServiceM8:
 
     ups = os.getenv('UPS_KEY')
 
-    def __init__(self, data, servicem8_key):
+    def __init__(self, data: dict, servicem8_key: str) -> None:
         self.data = data
         self.servicem8_key = servicem8_key
 
-    def create_job(self):
-        """Uses checkout json data & creates new job on ServiceM8.
-        """
+    def create_job(self) -> str:
+        """Uses checkout data to create 
+        new job on ServiceM8."""
         # Check which key is being used
         plan = self.data['subscription']['plan_type']  # Subscription Plan
         if self.servicem8_key == self.ups and plan == 'One-Off':
@@ -98,9 +98,11 @@ class ServiceM8:
             except Exception as e:
                 raise (e)
 
-    def create_contact(self, job_uuid):
-        """Extract json data & creates
-        new job contact on ServiceM8."""
+    def create_contact(self, job_uuid: str) -> None:
+        """Uses data from checkout session
+        & job_uuid returned from create_job func
+        to create new job contact on ServiceM8,
+        attached to job_uuid."""
 
         name = self.data['customer']['name']
         email = self.data['customer']['email']
@@ -133,9 +135,5 @@ class ServiceM8:
 
 if __name__ == '__main__':
     ServiceM8()
-
-
-
-# United Property ServiceM8 API Key: 'Basic cmV6ZW5kZS5mQG91dGxvb2suY29tOmQzNDQyZWY2LTk1MmUtNGI1Ny05Mzc0LTIwNTgxN2FhZjg2Yg=='
 
 
