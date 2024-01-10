@@ -110,9 +110,9 @@ def create_checkout_session():  # Asynchronous function
                 cancel_url=domain_url,  # + '/canceled.html',
                 #return_url = 'https://unitedpropertyservices.au/wheelie-bin-clean/checkout/return?session_id={CHECKOUT_SESSION_ID}',
                 mode='subscription',
-                discounts=[{
-                    'coupon': 'test_coupon',
-                }],
+                #discounts=[{
+                #    'coupon': 'test_coupon',
+                #}],
                 billing_address_collection='required',
                 # automatic_tax={'enabled': True},
                 line_items=[{
@@ -171,9 +171,9 @@ def create_checkout_session():  # Asynchronous function
                 mode='payment',
                 customer_creation='always',  # Create a new customer if one is not provided. Only used in payment mode
                 billing_address_collection='required',
-                discounts=[{
-                    'coupon': 'test_coupon',
-                }],
+                #discounts=[{
+                #    'coupon': 'test_coupon',
+                #}],
                 line_items=[{
                     'price': price,
                     'adjustable_quantity':
@@ -228,9 +228,9 @@ def create_checkout_session():  # Asynchronous function
                 cancel_url=domain_url,  # + '/canceled.html',
                 mode='subscription',
                 billing_address_collection='required',
-                discounts=[{
-                    'coupon': 'test_coupon',
-                }],
+                #discounts=[{
+                #    'coupon': 'test_coupon',
+                #}],
                 # automatic_tax={'enabled': True},
                 line_items=[{
                     'price': price,
