@@ -110,6 +110,7 @@ def create_checkout_session():  # Asynchronous function
                 cancel_url=domain_url,  # + '/canceled.html',
                 #return_url = 'https://unitedpropertyservices.au/wheelie-bin-clean/checkout/return?session_id={CHECKOUT_SESSION_ID}',
                 mode='subscription',
+                allow_promotion_codes=True,
                 #discounts=[{
                 #    'coupon': 'test_coupon',
                 #}],
@@ -171,6 +172,7 @@ def create_checkout_session():  # Asynchronous function
                 mode='payment',
                 customer_creation='always',  # Create a new customer if one is not provided. Only used in payment mode
                 billing_address_collection='required',
+                allow_promotion_codes=True,
                 #discounts=[{
                 #    'coupon': 'test_coupon',
                 #}],
@@ -228,6 +230,7 @@ def create_checkout_session():  # Asynchronous function
                 cancel_url=domain_url,  # + '/canceled.html',
                 mode='subscription',
                 billing_address_collection='required',
+                allow_promotion_codes=True,
                 #discounts=[{
                 #    'coupon': 'test_coupon',
                 #}],
@@ -350,8 +353,8 @@ def webhook_received():
                     'booking_details': custom_field,
                 }
 
-            print(f"################# Plan type: {data['subscription']['plan_type']}")
-            print(f'====> {data} <====')
+            #print(f"################# Plan type: {data['subscription']['plan_type']}")
+            #print(f'====> {data} <====')
             
             # Convert, combine and pass data to ServiceM8
             # Asyncio ensures the function runs in parallel with the main program
