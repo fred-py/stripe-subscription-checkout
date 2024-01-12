@@ -365,17 +365,17 @@ def webhook_received():
             """NOTE MUST RETAIN SERVICEm8 customer/job ID to 
             check if job already exists on future data_transfer
             This will go on the database"""
-            #ww_acc = d.ServiceM8(data, uww)
-            #uuid = ww_acc.create_job()
-            #ww_acc.create_contact(uuid)
+            ww_acc = d.ServiceM8(data, uww)
+            uuid = ww_acc.create_job()
+            ww_acc.create_contact(uuid)
 
             """USE ASYNCIO AND MEASURE PERFORMANCE AND OUTPUT TIME SAVED
             TO GO ON DOCUMENTATION eg. x seconds faster y% improvement"""
 
             """NOTHING TO BE SENT TO UPS UNTIL FURTHER NOTICE"""
-            #ups_acc = d.ServiceM8(data, ups)
-            #uuid = ups_acc.create_job()  # Create job returns uuid
-            #ups_acc.create_contact(uuid)
+            ups_acc = d.ServiceM8(data, ups)
+            uuid = ups_acc.create_job()  # Create job returns uuid
+            ups_acc.create_contact(uuid)
 
         # Fulfill Order - Send to servicem8/database <=======*********
     return jsonify({'status': 'success'})
