@@ -337,9 +337,9 @@ def webhook_received():
             )
 
         line_items = session.line_items
+
         for line_items in line_items.data:
             info = line_items.amount_total, line_items.description
-
             customer = session.customer
             custom_field = session.custom_fields
 
@@ -373,9 +373,9 @@ def webhook_received():
             TO GO ON DOCUMENTATION eg. x seconds faster y% improvement"""
 
             """NOTHING TO BE SENT TO UPS UNTIL FURTHER NOTICE"""
-            ups_acc = d.ServiceM8(data, ups)
-            uuid = ups_acc.create_job()  # Create job returns uuid
-            ups_acc.create_contact(uuid)
+            #ups_acc = d.ServiceM8(data, ups)
+            #uuid = ups_acc.create_job()  # Create job returns uuid
+            #ups_acc.create_contact(uuid)
 
         # Fulfill Order - Send to servicem8/database <=======*********
     return jsonify({'status': 'success'})
