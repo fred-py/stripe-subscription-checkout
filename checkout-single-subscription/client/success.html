@@ -18,16 +18,18 @@
       <div class="sr-main">
         <div class="sr-payment-summary completed-view">
             <h1>Your payment succeeded</h1>
-            <h4>
-              View CheckoutSession response:
-            </h4>
-          </div>
-          <div class="completed-view-section">
-            <pre>
+            <!--
+                        <h4>
+                          View CheckoutSession response:
+                        </h4>
+                      </div>
+                      <div class="completed-view-section">
+                        <pre>
+            -->
 
             </pre>
-            <button onclick="window.location.href = '/';">Restart demo</button>
-
+            <!--<button onclick="window.location.href = '/';">Restart demo</button>
+            -->
             <form action="/customer-portal" method="POST">
               <!-- In practice, use the Stripe customer ID on the server to redirect to the customer portal. This is for demo: -->
               <input type="hidden" name="sessionId" id="sessionId" />
