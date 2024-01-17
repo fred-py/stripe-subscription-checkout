@@ -284,6 +284,96 @@ def customer_portal():
     return redirect(session.url, code=303)
 
 
+
+""" ====>> Delete event handler from Master branch once tested"""
+def handle_event(event_type, event):
+    """This called from the webhook and
+    handles the event based on its type"""
+    uww = os.getenv('UWW_KEY')  # ServiceM8 Wheelie Wash Keys
+    ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
+    
+    if event_type == 'checkout.session.completed':
+        session = stripe.checkout.Session.retrieve(
+            event['data']['object']['id'],
+            # Use expand to retrieve additional details from checkout session
+            # Note that retrieving too many items will slow down response time
+            # https://stripe.com/docs/api/expanding_objects
+            # https://stripe.com/docs/expand
+            expand=['customer', 'line_items', 'custom_fields'],
+            )
+
+        line_items = session.line_items
+        for line_items in line_items.data:
+            info = line_items.amount_total, line_items.description
+            customer = session.customer
+            custom_field = session.custom_fields
+            # Create data object to pass to ServiceM8
+            data = {
+                    'customer': customer,
+                    'subscription': {
+                        'amount_paid': info[0],
+                        'plan_type': info[1],
+                    },
+                    'booking_details': custom_field,
+                }
+            #print(f"################# Plan type: {data['subscription']['plan_type']}")
+            #print(f'====> {data} <====')
+            
+            # Convert, combine and pass data to ServiceM8
+            # Asyncio ensures the function runs in parallel with the main program
+            # Start both tasks and gather their results
+            #asyncio.create_task(create_job(data, uww))
+            #asyncio.create_task(create_job(data, ups))
+            
+            ww_acc = d.ServiceM8(data, uww)
+            uuid = ww_acc.create_job()
+            ww_acc.create_contact(uuid)
+            """USE ASYNCIO AND MEASURE PERFORMANCE AND OUTPUT TIME SAVED
+            TO GO ON DOCUMENTATION eg. x seconds faster y% improvement"""
+
+            """NOTHING TO BE SENT TO UPS UNTIL FURTHER NOTICE"""
+            #ups_acc = d.ServiceM8(data, ups)
+            #uuid = ups_acc.create_job()  # Create job returns uuid
+            #ups_acc.create_contact(uuid)
+
+    elif event_type == 'invoice.sent':
+        # Triggers Selenium automation
+        #mobile, email, job_uuid = ww_acc.create_contact()
+        pass
+    
+    elif event_type == 'customer.subscription.updated':
+        """Refund part payment if customer cancels or downgrade subscription"""
+        session = stripe.Event.retrieve(
+            event['data']['object']['id'],
+            expand=['customer', 'line_items'],
+            )
+        data = session.data
+        print(data)
+
+        plan = None  # Get plan type from session
+
+        if plan == 'Silver':
+            amount = 1
+        elif plan == 'Gold':
+            amount = 2
+        elif plan == 'Combo':
+            amount = 3
+
+        # Refund part payment
+        # https://stripe.com/docs/refunds?dashboard-or-api=api&shell=true&api=true&resource=refunds&action=create#issuing
+        stripe.Refund.create(
+            payment_intent=f"{data}",
+            amount=amount,
+        )
+
+    
+    #customer.subscription.updated
+    #payment_intent.canceled
+    #subscription_schedule.canceled
+        
+
+
+
 @app.route('/webhook', methods=['POST'])
 def webhook_received():
     # You can use webhooks to receive information about asynchronous payment events.
@@ -291,8 +381,6 @@ def webhook_received():
     # https://stripe.com/docs/payments/checkout/fulfill-orders#create-event-handler
     webhook_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
     request_data = json.loads(request.data)
-    uww = os.getenv('UWW_KEY')  # ServiceM8 Wheelie Wash Keys
-    ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
 
     if webhook_secret:
         # Retrieve the event by verifying the signature using 

@@ -98,7 +98,7 @@ class ServiceM8:
             except Exception as e:
                 raise (e)
 
-    def create_contact(self, job_uuid: str) -> None:
+    def create_contact(self, job_uuid: str) -> tuple:
         """Uses data from checkout session
         & job_uuid returned from create_job func
         to create new job contact on ServiceM8,
@@ -129,6 +129,7 @@ class ServiceM8:
         try:
             response = requests.post(url, json=payload, headers=headers)
             print(f'create_contact: {response.text}')
+            return self.mobile, self.email, job_uuid
         except Exception as e:
             raise (e)
 
