@@ -325,9 +325,9 @@ def handle_event(event_type, event):
             #asyncio.create_task(create_job(data, uww))
             #asyncio.create_task(create_job(data, ups))
             
-            ww_acc = d.ServiceM8(data, uww)
-            uuid = ww_acc.create_job()
-            ww_acc.create_contact(uuid)
+            #ww_acc = d.ServiceM8(data, uww)
+            #uuid = ww_acc.create_job()
+            #ww_acc.create_contact(uuid)
             """USE ASYNCIO AND MEASURE PERFORMANCE AND OUTPUT TIME SAVED
             TO GO ON DOCUMENTATION eg. x seconds faster y% improvement"""
 
@@ -414,58 +414,8 @@ def webhook_received():
     print('event ' + event_type)
 
     # Handle the checkout.session.completed event | Fulfill Order
-    if event_type == 'checkout.session.completed':
-        session = stripe.checkout.Session.retrieve(
-            event['data']['object']['id'],
-            # Use expand to retrieve additional details from checkout session
-            # Note that retrieving too many items will slow down response time
-            # https://stripe.com/docs/api/expanding_objects
-            # https://stripe.com/docs/expand
-            expand=['customer', 'line_items', 'custom_fields'],
-            )
-
-        line_items = session.line_items
-
-        for line_items in line_items.data:
-            info = line_items.amount_total, line_items.description
-            customer = session.customer
-            custom_field = session.custom_fields
-
-            # Create data object to pass to ServiceM8
-            data = {
-                    'customer': customer,
-                    'subscription': {
-                        'amount_paid': info[0],
-                        'plan_type': info[1],
-                    },
-                    'booking_details': custom_field,
-                }
-
-            #print(f"################# Plan type: {data['subscription']['plan_type']}")
-            #print(f'====> {data} <====')
-            
-            # Convert, combine and pass data to ServiceM8
-            # Asyncio ensures the function runs in parallel with the main program
-            # Start both tasks and gather their results
-            #asyncio.create_task(create_job(data, uww))
-            #asyncio.create_task(create_job(data, ups))
-            
-            """NOTE MUST RETAIN SERVICEm8 customer/job ID to 
-            check if job already exists on future data_transfer
-            This will go on the database"""
-            ww_acc = d.ServiceM8(data, uww)
-            uuid = ww_acc.create_job()
-            ww_acc.create_contact(uuid)
-
-            """USE ASYNCIO AND MEASURE PERFORMANCE AND OUTPUT TIME SAVED
-            TO GO ON DOCUMENTATION eg. x seconds faster y% improvement"""
-
-            """NOTHING TO BE SENT TO UPS UNTIL FURTHER NOTICE"""
-            #ups_acc = d.ServiceM8(data, ups)
-            #uuid = ups_acc.create_job()  # Create job returns uuid
-            #ups_acc.create_contact(uuid)
-
-        # Fulfill Order - Send to servicem8/database <=======*********
+    handle_event(event_type, event)  # event from webhook_received()
+  
     return jsonify({'status': 'success'})
 
 
