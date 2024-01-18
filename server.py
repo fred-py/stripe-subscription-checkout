@@ -343,7 +343,7 @@ def handle_event(event_type, event):
     
     elif event_type == 'customer.subscription.updated':
         """Refund part payment if customer cancels or downgrade subscription"""
-        session = stripe.Event.retrieve(
+        session = stripe.SubscriptionSchedule.retrieve(
             event['data']['object']['id'],
             expand=['customer', 'line_items'],
             )
@@ -358,6 +358,11 @@ def handle_event(event_type, event):
             amount = 2
         elif plan == 'Combo':
             amount = 3
+        
+        #stripe.SubscriptionSchedule.retrieve("sub_sched_1Mr3YdLkdIwHu7ixjop3qtff")
+
+        # https://stripe.com/docs/api/subscriptions/cancel
+        #stripe.Subscription.cancel("sub_1MlPf9LkdIwHu7ixB6VIYRyX")
 
         # Refund part payment
         # https://stripe.com/docs/refunds?dashboard-or-api=api&shell=true&api=true&resource=refunds&action=create#issuing
