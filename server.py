@@ -365,11 +365,16 @@ def handle_event(event_type, event):
             payment_intent=f"{data}",
             amount=amount,
         )
-
     
-    #customer.subscription.updated
-    #payment_intent.canceled
-    #subscription_schedule.canceled
+    elif event_type == 'payment_intent.canceled':
+        print('Payment intent canceled')
+
+    elif event_type == 'subscription_schedule.canceled':
+        print('Subscription schedule canceled')
+
+#'ch_3Ln0cK2eZvKYlo2C1QmvaARY',
+#  expand=['customer', 'invoice.subscription']
+#)
         
 
 
