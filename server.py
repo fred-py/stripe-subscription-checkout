@@ -344,38 +344,49 @@ def handle_event(event_type, event):
     elif event_type == 'customer.subscription.updated':
         """Refund part payment if customer cancels or downgrade subscription"""
         session = stripe.SubscriptionSchedule.retrieve(
-            event['data']['object']['id'],
-            expand=['customer', 'line_items'],
-            )
+            event['data']['object'],
+        )
+        subscription_schedule = event['data']['object']
         data = session.data
-        print(data)
+        data2 = subscription_schedule.data
+        print(f'This is the subscription update - USING RETRIEVE METHOD{data}')
+        print(f'DATA2 -> Assinged to subscription_schedule.data {data2}')
+        #plan = None  # Get plan type from session
 
-        plan = None  # Get plan type from session
-
-        if plan == 'Silver':
+        """if plan == 'Silver':
             amount = 1
         elif plan == 'Gold':
             amount = 2
         elif plan == 'Combo':
             amount = 3
-        
-        #stripe.SubscriptionSchedule.retrieve("sub_sched_1Mr3YdLkdIwHu7ixjop3qtff")
+        """
+
 
         # https://stripe.com/docs/api/subscriptions/cancel
         #stripe.Subscription.cancel("sub_1MlPf9LkdIwHu7ixB6VIYRyX")
 
         # Refund part payment
         # https://stripe.com/docs/refunds?dashboard-or-api=api&shell=true&api=true&resource=refunds&action=create#issuing
-        stripe.Refund.create(
-            payment_intent=f"{data}",
-            amount=amount,
-        )
+        #stripe.Refund.create(
+        #    payment_intent=f"{data}",
+        #    amount=amount,
+        #)
     
     elif event_type == 'payment_intent.canceled':
         print('Payment intent canceled')
 
     elif event_type == 'subscription_schedule.canceled':
         print('Subscription schedule canceled')
+
+   # Handle the event
+   
+    # ... handle other event types
+    else:
+      print('Unhandled event type {}'.format(event['type']))
+
+    return jsonify(success=True)
+
+    
 
 #'ch_3Ln0cK2eZvKYlo2C1QmvaARY',
 #  expand=['customer', 'invoice.subscription']
