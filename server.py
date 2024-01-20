@@ -384,6 +384,7 @@ def webhook_received():
     if webhook_secret:
         # Retrieve the event by verifying the signature using 
         # the raw body and secret if webhook signing is configured.
+        # Store a reference to this header value for later use
         signature = request.headers.get('stripe-signature')
         try:
             event = stripe.Webhook.construct_event(
@@ -419,7 +420,7 @@ def webhook_received():
     if event_type == 'customer.subscription.updated':
         subscription = event['data']['object']
         date_canceled = subscription.canceled_at
-        date = datetime.datetime.fromtimestamp(date_canceled)
+        date = datetime.datetime.fromtimestamp(int(date_canceled))
 
         #print(f'This is the THING: {subscription}')
         print(f'{date_canceled} <====> {date}')
