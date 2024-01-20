@@ -413,7 +413,7 @@ def webhook_received():
                 sig_header=signature,
                 secret=webhook_secret)
             data = event['data']
-            event_type = event['type']
+            event_type = event['type']   # Get the type of webhook event sent - used to check the status of PaymentIntents.
             data_object = data['object']
         except ValueError as e:
             # Invalid payload
@@ -432,11 +432,13 @@ def webhook_received():
         event_type = request_data['type']
         data_object = data['object']
 
-    print('event ' + event_type)
+    #print('event ' + event_type)
 
     # Handle the checkout.session.completed event | Fulfill Order
-    handle_event(event_type, event)  # event from webhook_received()
-  
+    #handle_event(event_type, event)  # event from webhook_received()
+        
+    
+
     return jsonify({'status': 'success'})
 
 
