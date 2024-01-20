@@ -386,13 +386,6 @@ def handle_event(event_type, event):
 
     return jsonify(success=True)
 
-    
-
-#'ch_3Ln0cK2eZvKYlo2C1QmvaARY',
-#  expand=['customer', 'invoice.subscription']
-#)
-        
-
 
 
 @app.route('/webhook', methods=['POST'])
@@ -436,7 +429,18 @@ def webhook_received():
 
     # Handle the checkout.session.completed event | Fulfill Order
     #handle_event(event_type, event)  # event from webhook_received()
-        
+    
+     # Handle the event
+    if event_type == 'customer.subscription.updated':
+        subscription = event['data']['object']
+        print(f'This is the THING: {subscription}')
+
+    elif event_type == 'subscription_schedule.canceled':
+        subscription_schedule = event['data']['object']
+        print(f'This is the OTHER THING: {subscription_schedule}')
+
+    else:
+        print('Unhandled event type {}'.format(event['type']))
     
 
     return jsonify({'status': 'success'})
