@@ -1,3 +1,15 @@
+# DOCUMENTATION
+
+Webhooks & Event Listeners
+https://stripe.com/docs/webhooks/quickstart
+https://stripe.com/docs/webhooks?shell=true&api=true
+https://stripe.com/docs/billing/subscriptions/webhooks#events
+https://stripe.com/docs/cli/listen
+
+
+
+# STRIPE READ.md BELOW
+
 # Using Checkout for subscriptions
 
 [Checkout](https://stripe.com/docs/payments/checkout) is a pre-built payment page that lets you accept cards and Apple Pay. [Billing](https://stripe.com/docs/billing) is a suite of APIs that lets you model complex subscription plans. You can combine the two products to get a subscription payment page up and running without the need of a server.

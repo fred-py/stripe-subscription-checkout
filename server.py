@@ -15,7 +15,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
 
 from src import data_transfer as d
-import time
+import datetime
 
 
 
@@ -30,12 +30,6 @@ stripe.set_app_info(
 stripe.api_version = '2020-08-27'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
-#static_dir = str(os.path.abspath(os.path.join(
-#    __file__, '..', os.getenv('STATIC_DIR'))))
-
-#app = Flask(__name__, static_folder=static_dir,
-#            static_url_path=', template_folder=static_dir)
-
 app = Flask(
     __name__,
     static_folder='client',
@@ -43,16 +37,7 @@ app = Flask(
     template_folder='client',
 )
 
-CORS(app, origins=['https://unitedpropertyservices.au/',])
-
-
-"""@app.after_request
-def add_cors_headers(response):
-    response.headers.add('Access-Control-Allow-Origin', 'https://unitedpropertyservices.au/')
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-    return response"""
-
+#CORS(app, origins=['https://unitedpropertyservices.au/',])
 
 port = int(os.environ.get('PORT', 4242))  # This is needed to deploy on fl0
 
@@ -433,12 +418,16 @@ def webhook_received():
      # Handle the event
     if event_type == 'customer.subscription.updated':
         subscription = event['data']['object']
-        print(f'This is the THING: {subscription}')
+        date_canceled = subscription.canceled_at
+        date = datetime.datetime.fromtimestamp(date_canceled)
+
+        #print(f'This is the THING: {subscription}')
+        print(f'{date_canceled} <====> {date}')
 
     elif event_type == 'subscription_schedule.canceled':
         subscription_schedule = event['data']['object']
         print(f'This is the OTHER THING: {subscription_schedule}')
-
+     
     else:
         print('Unhandled event type {}'.format(event['type']))
     
