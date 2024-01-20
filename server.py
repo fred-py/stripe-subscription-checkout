@@ -427,8 +427,8 @@ def webhook_received():
         cancel_req = datetime.datetime.fromtimestamp(date_canceled)
         cancel_at = datetime.datetime.fromtimestamp(date_cancel_at)
         #print(f'This is the THING: {subscription}')
-        print(f'{date_canceled} <====> {cancel_req}')
-        print(f'{date_cancel_at} <====> Cancel at: {cancel_at}')
+        print(f'{date_canceled} <====> {cancel_req} +++++++ {date_cancel_at} Cancel at: {cancel_at} ')
+
 
     elif event_type == 'subscription_schedule.canceled':
         subscription_schedule = event['data']['object']
