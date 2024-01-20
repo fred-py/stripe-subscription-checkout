@@ -419,7 +419,7 @@ def webhook_received():
      # Handle the event
     if event_type == 'customer.subscription.updated':
         subscription = event['data']['object']
-        date_canceled = subscription.canceled_at
+        date_canceled = str(subscription.canceled_at)
         date = datetime.datetime.fromtimestamp(int(date_canceled))
 
         #print(f'This is the THING: {subscription}')
