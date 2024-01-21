@@ -430,6 +430,7 @@ def webhook_received():
         date_canceled = subscription.canceled_at  # Date cancelation was requested
         if date_canceled is None:
             print('Subscription is active')
+            #pass
         else:
             # Response value from subscription.canceled_at
             # is in seconds, convert to datetime
@@ -439,9 +440,9 @@ def webhook_received():
             cancel_at = datetime.datetime.fromtimestamp(date_cancel_at)
             #print(f'This is the THING: {subscription}')
             #print(f'{date_canceled} <====> {cancel_req} +++++++ {date_cancel_at} Cancel at: {cancel_at} ')
-            plan = subscription.items[0].plan.amount
-            cus = subscription.customer
-            print(f'Customer:{cus} requested cancellation of plan: {plan}')
+            plan = subscription['items']['data'][0]['plan']['amount']
+            cus = subscription['customer']
+            print(f'Customer: {cus} requested cancellation of plan: {plan}')
 
     elif event_type == 'subscription_schedule.canceled':
         subscription_schedule = event['data']['object']
