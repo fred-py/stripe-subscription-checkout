@@ -372,6 +372,14 @@ def handle_event(event_type, event):
     return jsonify(success=True)
 
 
+def cancel_refund() -> None:
+    if plan == 'Silver':
+        amount = 1
+    elif plan == 'Gold':
+        amount = 2
+    elif plan == 'Combo':
+        amount = 3
+
 
 @app.route('/webhook', methods=['POST'])
 def webhook_received():
@@ -421,7 +429,7 @@ def webhook_received():
         subscription = event['data']['object']
         date_canceled = subscription.canceled_at  # Date cancelation was requested
         if date_canceled is None:
-            print(f'Subscription is active')
+            print('Subscription is active')
         else:
             # Response value from subscription.canceled_at
             # is in seconds, convert to datetime
@@ -430,13 +438,14 @@ def webhook_received():
             cancel_req = datetime.datetime.fromtimestamp(date_canceled)
             cancel_at = datetime.datetime.fromtimestamp(date_cancel_at)
             #print(f'This is the THING: {subscription}')
-            print(f'{date_canceled} <====> {cancel_req} +++++++ {date_cancel_at} Cancel at: {cancel_at} ')
-
+            #print(f'{date_canceled} <====> {cancel_req} +++++++ {date_cancel_at} Cancel at: {cancel_at} ')
+            plan = subscription.items.data[0].plan.amount
+            print(f'Plan: {plan}')
 
     elif event_type == 'subscription_schedule.canceled':
         subscription_schedule = event['data']['object']
         print(f'This is the OTHER THING: {subscription_schedule}')
-     
+    
     else:
         print('Unhandled event type {}'.format(event['type']))
     
