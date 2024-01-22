@@ -421,11 +421,75 @@ def webhook_received():
 
     #print('event ' + event_type)
 
-    # Handle the checkout.session.completed event | Fulfill Order
-    #handle_event(event_type, event)  # event from webhook_received()
+    uww = os.getenv('UWW_KEY')  # ServiceM8 Wheelie Wash Keys
+    ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
     
-     # Handle the event
-    if event_type == 'customer.subscription.updated':
+    if event_type == 'checkout.session.completed':
+        session = stripe.checkout.Session.retrieve(
+            event['data']['object']['id'],
+            # Use expand to retrieve additional details from checkout session
+            # Note that retrieving too many items will slow down response time
+            # https://stripe.com/docs/api/expanding_objects
+            # https://stripe.com/docs/expand
+            expand=['customer', 'line_items', 'custom_fields'],
+            )
+
+        line_items = session.line_items
+        for line_items in line_items.data:
+            info = line_items.amount_total, line_items.description
+            customer = session.customer
+            custom_field = session.custom_fields
+            # Create data object to pass to ServiceM8
+            data = {
+                    'customer': customer,
+                    'subscription': {
+                        'amount_paid': info[0],
+                        'plan_type': info[1],
+                    },
+                    'booking_details': custom_field,
+                }
+        
+            # Convert, combine and pass data to ServiceM8
+            # Asyncio ensures the function runs in parallel with the main program
+            # Start both tasks and gather their results
+            #asyncio.create_task(create_job(data, uww))
+            #asyncio.create_task(create_job(data, ups))
+            
+            #ww_acc = d.ServiceM8(data, uww)
+            #uuid = ww_acc.create_job()
+            #ww_acc.create_contact(uuid)
+            """USE ASYNCIO AND MEASURE PERFORMANCE AND OUTPUT TIME SAVED
+            TO GO ON DOCUMENTATION eg. x seconds faster y% improvement"""
+
+            """NOTHING TO BE SENT TO UPS UNTIL FURTHER NOTICE"""
+            #ups_acc = d.ServiceM8(data, ups)
+            #uuid = ups_acc.create_job()  # Create job returns uuid
+            #ups_acc.create_contact(uuid)
+
+            # Amount to be attached to payment intent
+            amount = data['subscription']['amount_paid']
+            intent_id = stripe.PaymentIntent.create(
+                amount=amount,
+                currency="aud",
+                automatic_payment_methods={"enabled": True},
+            )
+            # Payment intent id
+            id = intent_id['id']
+            # https://stripe.com/docs/api/metadata
+            cus_id = data['customer']['id']
+            print(cus_id)
+            # Attach payment intent id to customer metadata
+            stripe.Customer.modify(
+                cus_id,
+                metadata={'paymentintent_id': id})
+
+            print(id) # THIS WORKED!!!!
+            print(data)
+
+
+
+    # Handle the event
+    elif event_type == 'customer.subscription.updated':
         subscription = event['data']['object']
         date_canceled = subscription.canceled_at  # Date cancelation was requested
         if date_canceled is None:
@@ -434,15 +498,18 @@ def webhook_received():
         else:
             # Response value from subscription.canceled_at
             # is in seconds, convert to datetime
-            date_canceled = int(subscription.canceled_at)  # Date cancelation was requested
-            date_cancel_at = int(subscription.cancel_at)  # Date cancelation will take effect
-            cancel_req = datetime.datetime.fromtimestamp(date_canceled)
-            cancel_at = datetime.datetime.fromtimestamp(date_cancel_at)
+            #date_canceled = int(subscription.canceled_at)  # Date cancelation was requested
+            #date_cancel_at = int(subscription.cancel_at)  # Date cancelation will take effect
+            #cancel_req = datetime.datetime.fromtimestamp(date_canceled)
+            #cancel_at = datetime.datetime.fromtimestamp(date_cancel_at)
             #print(f'This is the THING: {subscription}')
             #print(f'{date_canceled} <====> {cancel_req} +++++++ {date_cancel_at} Cancel at: {cancel_at} ')
-            plan = subscription['items']['data'][0]['plan']['amount']
+            plan = subscription['items']['data'][0]['plan']['amount']  
             cus = subscription['customer']
             print(f'Customer: {cus} requested cancellation of plan: {plan}')
+            # Cancel subscription\
+            sub_id = subscription['id']
+            stripe.Subscription.cancel(sub_id)
 
     elif event_type == 'subscription_schedule.canceled':
         subscription_schedule = event['data']['object']

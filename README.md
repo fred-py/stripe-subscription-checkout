@@ -1,11 +1,18 @@
-# DOCUMENTATION
+# DOCUMENTATION - United
 
-Webhooks & Event Listeners
+**Webhooks & Event Listeners**
+# Interactice webhook builder: https://stripe.com/docs/webhooks/quickstart
+https://stripe.com/docs/billing/subscriptions/webhooks
 https://stripe.com/docs/webhooks/quickstart
 https://stripe.com/docs/webhooks?shell=true&api=true
 https://stripe.com/docs/billing/subscriptions/webhooks#events
 https://stripe.com/docs/cli/listen
 
+**Cancel Subscription**
+https://stripe.com/docs/api/subscriptions/cancel
+
+**Refunds**
+https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
 
 
 # STRIPE READ.md BELOW
