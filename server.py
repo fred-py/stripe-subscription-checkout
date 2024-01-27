@@ -518,7 +518,6 @@ def webhook_received():
     else:
         print('Unhandled event type {}'.format(event['type']))
     
-
     return jsonify({'status': 'success'})
 
 

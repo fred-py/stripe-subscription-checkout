@@ -1,18 +1,42 @@
-# DOCUMENTATION - United
+# -----> DOCUMENTATION - UNITED <-----
 
-**Webhooks & Event Listeners**
-# Interactice webhook builder: https://stripe.com/docs/webhooks/quickstart
+
+
+# Client Library Fundamentals 
+https://stripe.com/docs/videos/developer-foundations?video=webhook-helpers
+
+# Webhooks & Event Listeners
+**Interactice webhook builder:** https://stripe.com/docs/webhooks/quickstart
 https://stripe.com/docs/billing/subscriptions/webhooks
 https://stripe.com/docs/webhooks/quickstart
 https://stripe.com/docs/webhooks?shell=true&api=true
 https://stripe.com/docs/billing/subscriptions/webhooks#events
 https://stripe.com/docs/cli/listen
 
-**Cancel Subscription**
+# Cancel Subscription
 https://stripe.com/docs/api/subscriptions/cancel
 
-**Refunds**
+# Refunds
 https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
+
+# POSTGRES DATABASE
+https://wiki.postgresql.org/wiki/Psycopg2_Tutorial
+
+-> In order to connect to the postgres db, **psycopg2** must be installed. 
+-> The use of **postgresql://** instead of **postgres://** in the         'SQLALCHEMY_DATABASE_URI' is also needed
+
+  # INTERACT WITH POSTGRES DATABASE USING **psqls**
+
+  Login:
+  $ psql -h localhost -U yourusername -d yourdatabasename
+
+  List all tables:
+  $ \dt
+
+  Check structure/schema of tables:
+  $ \d table_name
+
+
 
 
 # STRIPE READ.md BELOW
