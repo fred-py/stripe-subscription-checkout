@@ -36,6 +36,9 @@ https://wiki.postgresql.org/wiki/Psycopg2_Tutorial
   Check structure/schema of tables:
   $ \d table_name
 
+  # FLASK SQLALQUEMY BLUEPRINT & FILE STRUCTURE
+  https://www.digitalocean.com/community/tutorials/how-to-structure-a-large-flask-application-with-flask-blueprints-and-flask-sqlalchemy#creating-the-main-blueprint-and-rendering-its-templates
+
 
 
 
