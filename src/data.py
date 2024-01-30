@@ -53,6 +53,64 @@ class Customer:
     cus_id: str = None
 
 
+def prepare_session_data(data) -> dict:
+    """Prepare data from checkout session"""
+    # Customer Details
+    name = data['customer']['name']
+    email = data['customer']['email']
+    mobile = data['customer']['phone']
+    cus_id = data['customer']['id']
+    paymentintent_id = data['metadata']['paymentintent_id']
+
+    # Address Details
+    street = data['customer']['address']['line1']
+    city = data['customer']['address']['city']
+    state = data['customer']['address']['state']
+    postal_code = data['customer']['address']['postal_code']
+
+    # Subscription Details
+    plan = data['subscription']['plan_type']  # Subscription Plan
+
+
+    # Bin details 
+
+
+    
+    bin_collection = data['booking_details'][0]['dropdown']['value']
+    total_paid = data['subscription']['amount_paid']
+    # Convert cents to dollars & int to str
+    total_paid = str(total_paid / 100)
+
+
+    """Check plan type, if Bronze or Any Combo (One-Off),
+    bin selection is passed to Servicem8 description"""
+    plan = data['subscription']['plan_type']  # Subscription Plan
+    if plan == 'Bronze' or plan == 'One-Off':
+        selected_bins = data['booking_details'][0]['dropdown']['value']
+        description = plan + ' | ' + \
+            bin_collection + '  ' +  \
+            f'| Total paid: ${total_paid}' + ' ' + \
+            f'| Selected Bin(s): {selected_bins}'
+
+    else:
+        # Concatnate info to go on job description
+        description = plan + ' | ' \
+            + bin_collection + ' ' \
+            + f' | Total paid: ${total_paid}' 
+    # Dict is unpacked when instantiating Customer Class
+    return {
+        'full_address': full_address,
+        'city': city,
+        'postal_code': postal_code,
+        'plan': plan,
+        'bin_collection': bin_collection,
+        'total_paid': total_paid,
+        'name': name,
+        'email': email,
+        'mobile': mobile,
+        'description': description,
+    }
+
 def prepare_data(data) -> dict:
     # Concatnate address for Servicem8
     full_address = data['customer']['address']['line1'] + ' ' + \
@@ -104,7 +162,7 @@ def prepare_data(data) -> dict:
 def main() -> None:
     customer_data = prepare_data(data)
     customer = Customer(**customer_data)  # ** Unpacks dict
-    print(customer)
+    print(customer.full_address)
 
 
 class ServiceM8:

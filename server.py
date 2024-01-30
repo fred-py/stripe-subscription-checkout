@@ -70,8 +70,8 @@ def get_checkout_session():
 @app.route('/create-checkout-session', methods=['POST', 'OPTIONS'])
 def create_checkout_session():  # Asynchronous function
     price = request.form.get('priceId')
-    domain_url = os.getenv('DOMAIN')
-
+    #domain_url = os.getenv('DOMAIN')
+    domain_url = 'http://localhost:4242/'
     try:
         # Create new Checkout Session for the order
         # Other optional params include:
@@ -448,6 +448,8 @@ def webhook_received():
                     },
                     'booking_details': custom_field,
                 }
+            
+            print(f'BEFORE PAYMENT INTENT IS ATTACHED ======>>>>>>>> {data} <<<<=======')
         
             # Convert, combine and pass data to ServiceM8
             # Asyncio ensures the function runs in parallel with the main program

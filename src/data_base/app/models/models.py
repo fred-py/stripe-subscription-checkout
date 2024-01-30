@@ -32,7 +32,12 @@ class Customer(db.Model):
     invoices: Mapped['Invoice'] = db.relationship(back_populates='customer')
 
     def __repr__(self) -> str:
-        pass
+        return f'Customer {self.name}, ID: {self.id}, Phone: {self.phone}, ' \
+               f'Email: {self.email}, Customer ID: {self.cus_id}, ' \
+               f'PaymentIntent ID: {self.paymentintent_id}, Active: {self.active}, ' \
+               f'Test: {self.test}, In ServiceM8: {self.in_serviceM8}, ' \
+               f'Customer ServiceM8 ID: {self.cus_serviceM8_id}, ' \
+               f'Order Date: {self.order_date}'
 
 
 class Address(db.Model):
@@ -49,6 +54,11 @@ class Address(db.Model):
     # ForeignKey() provides a low-level database constraint that ensures data integrity.
     customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
 
+    def __repr__(self) -> str:
+        return f'Address {self.street}, {self.city}, {self.state}, {self.postcode}, ' \
+                f'Customer ID: {self.customer_id}, ' \
+                f'Customer: {self.customers}'
+
 
 class Bin(db.Model):
     __tablename__ = 'bin'
@@ -64,6 +74,12 @@ class Bin(db.Model):
     # ForeignKey() provides a low-level database constraint that ensures data integrity.
     customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
 
+    def __repr__(self) -> str:
+        return f'Bin Collection: {self.bin_collection}, Selected Bins: {self.selected_bins}, ' \
+                f'Clean Date: {self.clean_date}, Clean Cycle: {self.clean_cycle}, ' \
+                f'Customer ID: {self.customer_id}, ' \
+                f'Customer: {self.customers}'
+
 
 class Subscription(db.Model):
     __tablename__ = 'subscription'
@@ -75,6 +91,11 @@ class Subscription(db.Model):
     # One to one relationship
     customers: Mapped['Customer'] = db.relationship(back_populates='subscription', lazy=True)
     customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+
+    def __repr__(self) -> str:
+        return f'Subscription Plan: {self.plan}, Total Paid: {self.total_paid}, ' \
+                f'Active: {self.active}, Customer ID: {self.customer_id}, ' \
+                f'Customer: {self.customers}'
 
 
 class Invoice(db.Model):
@@ -88,6 +109,10 @@ class Invoice(db.Model):
     customers: Mapped['Customer'] = db.relationship(back_populates='invoice', lazy=True)
     customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
 
+    def __repr__(self) -> str:
+        return f'Invoice ID: {self.invoice_id}, Invoice Date: {self.invoice_date}, ' \
+                f'Invoice Total: {self.invoice_total}, Customer ID: {self.customer_id}, ' \
+                f'Customer: {self.customers}'
 
 if __name__ == '__main__':
     db.create_all()
