@@ -70,8 +70,8 @@ def get_checkout_session():
 @app.route('/create-checkout-session', methods=['POST', 'OPTIONS'])
 def create_checkout_session():  # Asynchronous function
     price = request.form.get('priceId')
-    #domain_url = os.getenv('DOMAIN')
-    domain_url = 'http://localhost:4242/'
+    domain_url = os.getenv('DOMAIN')
+
     try:
         # Create new Checkout Session for the order
         # Other optional params include:
@@ -423,8 +423,27 @@ def webhook_received():
 
     uww = os.getenv('UWW_KEY')  # ServiceM8 Wheelie Wash Keys
     ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
-    
-    if event_type == 'checkout.session.completed':
+
+    # NOTE: PaymentIntent is created automatically however it is not
+    # automatically attached to cus_id\
+    # Listen to PaymentIntent events, and use stripe.Customer.modify
+    # To attached PaymentIntent customer metadata
+    if event_type == 'payment_intent.created' and 'payment_intend.payment_failed':
+        # Follow up abandoned carts
+        print('Use this to follow up abandoned carts? add to the db under a new table?')
+
+    elif event_type == 'payment_intent.succeeded':
+        cus_id = data_object['customer']  # Get cus_id from data_object
+        intent_id = data_object['id']  # Get PaymentIntent_id from data_object
+        # https://stripe.com/docs/api/metadata
+        # Attach payment intent id to customer metadata
+        stripe.Customer.modify(
+            cus_id,
+            metadata={'paymentintent_id': intent_id}
+        )
+        print(data_object)
+
+    elif event_type == 'checkout.session.completed':
         session = stripe.checkout.Session.retrieve(
             event['data']['object']['id'],
             # Use expand to retrieve additional details from checkout session
@@ -448,8 +467,6 @@ def webhook_received():
                     },
                     'booking_details': custom_field,
                 }
-            
-            print(f'BEFORE PAYMENT INTENT IS ATTACHED ======>>>>>>>> {data} <<<<=======')
         
             # Convert, combine and pass data to ServiceM8
             # Asyncio ensures the function runs in parallel with the main program
@@ -467,25 +484,6 @@ def webhook_received():
             #ups_acc = d.ServiceM8(data, ups)
             #uuid = ups_acc.create_job()  # Create job returns uuid
             #ups_acc.create_contact(uuid)
-
-            # Amount to be attached to payment intent
-            amount = data['subscription']['amount_paid']
-            intent_id = stripe.PaymentIntent.create(
-                amount=amount,
-                currency="aud",
-                automatic_payment_methods={"enabled": True},
-            )
-            # Payment intent id
-            id = intent_id['id']
-            # https://stripe.com/docs/api/metadata
-            cus_id = data['customer']['id']
-            print(cus_id)
-            # Attach payment intent id to customer metadata
-            stripe.Customer.modify(
-                cus_id,
-                metadata={'paymentintent_id': id})
-
-            print(id) # THIS WORKED!!!!
             print(data)
 
 
