@@ -99,7 +99,6 @@ if __name__ == "__main__":
     main()
 
 
-
 # SAMPLE JSON CHECKOUT RESPONSE
 # data2 = {'customer': <Customer customer id=cus_PTFx24gnUM1XiE at 0x105321850> JSON: {
 #   "address": {

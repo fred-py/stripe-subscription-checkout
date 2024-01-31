@@ -6,7 +6,7 @@ from app import db
 # https://realpython.com/python-sqlite-sqlalchemy/#table-creates-associations
 
 
-class Customer(db.Model):
+class CustomerDB(db.Model):
     __tablename__ = 'customer'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     name: Mapped[str] = db.Column(db.String, nullable=False)

@@ -14,9 +14,8 @@ from flask import Flask, render_template, jsonify, request, send_from_directory,
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
 from src import data_transfer as d
-from src.data import prepare_session_data, Customer
-
-
+from src.data_base.app.database_operations.prepare_data import prepare_session_data, Customer
+#from src.generate_checkout_module.generate_checkout import check_id_create_checkout
 
 # Setup Stripe python client library
 load_dotenv(find_dotenv())
@@ -36,10 +35,7 @@ app = Flask(
     template_folder='client',
 )
 
-#CORS(app, origins=['https://unitedpropertyservices.au/',])
-
 port = int(os.environ.get('PORT', 4242))  # This is needed to deploy on fl0
-
 
 @app.route('/', methods=['GET', 'OPTIONS'])
 def get_example():
@@ -70,7 +66,6 @@ def get_checkout_session():
 def create_checkout_session():  # Asynchronous function
     price = request.form.get('priceId')
     domain_url = os.getenv('DOMAIN')
-
     try:
         # Create new Checkout Session for the order
         # Other optional params include:
@@ -78,15 +73,12 @@ def create_checkout_session():  # Asynchronous function
         # [customer] - if you have an existing Stripe Customer ID
         # [customer_email] - lets you prefill the email input in the form
         # For full details see https://stripe.com/docs/api/checkout/sessions/create
-
         # Set adjustable quantity to only be enabled for the Broze & One-off price
         # No concise way of doing this as line_items only takes list of dicts
         # and once adjustable_quantity is included even if set to false,
         # it fails to return products with no adjustable quantity
         # Hence the creation of two checkout sessions
         if price == os.getenv('ANY_COMBO_PRICE_ID'):
-            # ?session_id={CHECKOUT_SESSION_ID} means the redirect will have the session ID set as a query param
-            
             checkout_session = stripe.checkout.Session.create(
                 #success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
@@ -144,12 +136,9 @@ def create_checkout_session():  # Asynchronous function
                 custom_text={
                     'submit': {'message': 'NOTE: Currently we only service the Margaret River region.'},
                 },
-                #return_url=domain_url + '/checkout/return?session_id={CHECKOUT_SESSION_ID}',
-                #return_url='http://localhost:4242/checkout/return?session_id={CHECKOUT_SESSION_ID}',
             )
 
         elif price == os.getenv('ONE_OFF_PRICE_ID'):
-            
             checkout_session = stripe.checkout.Session.create(
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url=domain_url, # + '/canceled.html',
@@ -208,7 +197,6 @@ def create_checkout_session():  # Asynchronous function
             )
 
         else:
-
             checkout_session = stripe.checkout.Session.create(
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url=domain_url,  # + '/canceled.html',
@@ -485,8 +473,8 @@ def webhook_received():
                 }
 
             session_info = prepare_session_data(data)
-            session_data = Customer(**session_info)  # Unpacks Dict
-            print(session_data)
+            session_data = Customer(**session_info)  # Dataclas Unpacks Dict
+            print(user)
             # Convert, combine and pass data to ServiceM8
             # Asyncio ensures the function runs in parallel with the main program
             # Start both tasks and gather their results
