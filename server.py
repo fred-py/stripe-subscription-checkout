@@ -13,9 +13,8 @@ import os
 from flask import Flask, render_template, jsonify, request, send_from_directory, redirect
 from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
-
 from src import data_transfer as d
-import datetime
+from src.data import prepare_session_data, Customer
 
 
 
@@ -417,7 +416,7 @@ def webhook_received():
     else:
         data = request_data['data']
         event_type = request_data['type']
-        data_object = data['object']
+        data_object = data['object'] # Values added to metadata can be accessed from data_object - print(data_object)
 
     #print('event ' + event_type)
 
@@ -441,7 +440,24 @@ def webhook_received():
             cus_id,
             metadata={'paymentintent_id': intent_id}
         )
-        print(data_object)
+
+    elif event_type == 'invoice.paid':
+        cus_id = data_object['customer']
+        # Data Object contains json from any given event
+        invoice_id = data_object['id']
+        amount_paid = data_object['amount_paid']
+        invoice_url = data_object['hosted_invoice_url']
+        inv_description = data_object['lines']['data'][0]['description']
+        # Add invoice information to customer metadata
+        stripe.Customer.modify(
+            cus_id,
+            metadata={
+                'invoice_id': invoice_id,
+                'amount_paid': amount_paid,
+                'invoice_url': invoice_url,
+                'inv_description': inv_description,
+            }
+        )
 
     elif event_type == 'checkout.session.completed':
         session = stripe.checkout.Session.retrieve(
@@ -467,7 +483,10 @@ def webhook_received():
                     },
                     'booking_details': custom_field,
                 }
-        
+
+            session_info = prepare_session_data(data)
+            session_data = Customer(**session_info)  # Unpacks Dict
+            print(session_data)
             # Convert, combine and pass data to ServiceM8
             # Asyncio ensures the function runs in parallel with the main program
             # Start both tasks and gather their results
@@ -484,10 +503,6 @@ def webhook_received():
             #ups_acc = d.ServiceM8(data, ups)
             #uuid = ups_acc.create_job()  # Create job returns uuid
             #ups_acc.create_contact(uuid)
-            print(data)
-
-
-
     # Handle the event
     elif event_type == 'customer.subscription.updated':
         subscription = event['data']['object']

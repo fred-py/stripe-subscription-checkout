@@ -85,7 +85,6 @@ class Subscription(db.Model):
     __tablename__ = 'subscription'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     plan: Mapped[str] = db.Column(db.String)
-    total_paid: Mapped[str] = db.Column(db.String)
     active: Mapped[bool] = db.Column(db.Boolean, default=True)
 
     # One to one relationship
@@ -102,8 +101,9 @@ class Invoice(db.Model):
     __tablename__ = 'invoice'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     invoice_id: Mapped[str] = db.Column(db.String)
-    invoice_date: Mapped[str] = db.Column(db.String)
-    invoice_total: Mapped[str] = db.Column(db.String)
+    amount_paid: Mapped[str] = db.Column(db.String)
+    invoice_url: Mapped[str] = db.Column(db.String)
+    inv_description: Mapped[str] = db.Column(db.String)
     
     # One to many relationship
     customers: Mapped['Customer'] = db.relationship(back_populates='invoice', lazy=True)
