@@ -7,8 +7,9 @@ combined into one application"""
 
 # Importing necessary modules
 from flask import Flask
-from config import Config
-from app.extensions import db
+# Absolute imports beins used to serve.py can locate these modules
+from src.data_base.config import Config
+from src.data_base.app.extensions import db  # Impord db object from extentions module
 
 
 # Creating the Flask application factory function
@@ -27,6 +28,9 @@ def create_app(config_class=Config):
 
     from app.users import bp as users_bp
     app.register_blueprint(users_bp)
+
+    from app.models import bp as models_bp
+    app.register_blueprint(models_bp)
 
     # Defining a test route
     @app.route('/test/')

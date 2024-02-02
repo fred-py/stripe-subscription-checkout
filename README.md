@@ -1,7 +1,5 @@
 # -----> DOCUMENTATION - UNITED <-----
 
-
-
 # Client Library Fundamentals 
 https://stripe.com/docs/videos/developer-foundations?video=webhook-helpers
 
@@ -19,22 +17,42 @@ https://stripe.com/docs/api/subscriptions/cancel
 # Refunds
 https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
 
-# POSTGRES DATABASE
-https://wiki.postgresql.org/wiki/Psycopg2_Tutorial
+###### DATABASE ######
+  
+  # POSTGRES DATABASE
+  https://wiki.postgresql.org/wiki/Psycopg2_Tutorial
 
--> In order to connect to the postgres db, **psycopg2** must be installed. 
--> The use of **postgresql://** instead of **postgres://** in the         'SQLALCHEMY_DATABASE_URI' is also needed
+  -> In order to connect to the postgres db, **psycopg2** must be installed. 
+  -> The use of **postgresql://** instead of **postgres://** in the         'SQLALCHEMY_DATABASE_URI' is also needed
 
   # INTERACT WITH POSTGRES DATABASE USING **psqls**
 
-  Login:
+  > Login:
   $ psql -h localhost -U yourusername -d yourdatabasename
 
-  List all tables:
+  > List all tables:
   $ \dt
 
   Check structure/schema of tables:
   $ \d table_name
+
+  # FLASK SHELL
+
+  > Open Shell
+  $ flask shell
+  > Import db object from extensions module to interact with database
+  $ from app.extensions import db
+  > Print db to check connection
+  $ print(db)
+  > Import modules to be created
+  $ from app.models.all_models import CustomerDB, Address, Bin, Subscription, Invoice
+  > Create modules - expect no output
+  $ db.create_all()
+  > Inspect database tables
+  $ from sqlalchemy import inspect
+  $ inspector = inspect(db.engine)
+  $ print(inspector.get_table_names())
+
 
   # FLASK SQLALQUEMY BLUEPRINT & FILE STRUCTURE
   https://www.digitalocean.com/community/tutorials/how-to-structure-a-large-flask-application-with-flask-blueprints-and-flask-sqlalchemy#creating-the-main-blueprint-and-rendering-its-templates

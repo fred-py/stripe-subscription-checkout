@@ -88,6 +88,7 @@ def prepare_session_data(data) -> dict:
         'selected_bins': selected_bins,
     }
 
+
 """The below had been added for future testing only
 when the module is run directly"""
 def main() -> None:
