@@ -14,14 +14,14 @@ With Slots"""
 class Customer:
     name: str
     email: str
-    mobile: str
+    phone: str
     cus_id: str
     paymentintent_id: str
     # => Address Details
     street: str
     city: str
     state: str
-    postal_code: str
+    postcode: str
     # => Subscription Details
     plan: str
     # => Invoice Details
@@ -39,14 +39,14 @@ def prepare_session_data(data) -> dict:
     # => Customer Details
     name = data['customer']['name']
     email = data['customer']['email']
-    mobile = data['customer']['phone']
+    phone = data['customer']['phone']
     cus_id = data['customer']['id']
     paymentintent_id = data['customer']['metadata']['paymentintent_id']
     # => Address Details
     street = data['customer']['address']['line1']
     city = data['customer']['address']['city']
     state = data['customer']['address']['state']
-    postal_code = data['customer']['address']['postal_code']
+    postcode = data['customer']['address']['postal_code']
     # => Subscription Details
     plan = data['subscription']['plan_type']
     # => Invoice Details
@@ -68,14 +68,14 @@ def prepare_session_data(data) -> dict:
         # Customer model
         'name': name,
         'email': email,
-        'mobile': mobile,
+        'phone': phone,
         'cus_id': cus_id,
         'paymentintent_id': paymentintent_id,
         # Address Model
         'street': street,
         'city': city,
         'state': state,
-        'postal_code': postal_code,
+        'postcode': postcode,
         # Subscription Model
         'plan': plan,
         # Invoice Model

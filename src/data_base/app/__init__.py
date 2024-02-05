@@ -38,4 +38,3 @@ def create_app(config_class=Config):
         return '<h1>Testing the Flask Application Factory Pattern</h1>'
 
     return app  # Returning the Flask app instance
-

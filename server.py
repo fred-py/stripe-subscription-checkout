@@ -15,7 +15,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv, find_dotenv
 from src import data_transfer as d
 from src.data_base.app.database_operations.prepare_data import prepare_session_data, Customer
-from src.data_base.app.database_operations.database_operations import add_customer 
+from src.data_base.app.database_operations.database_operations import add_user
 #from src.generate_checkout_module.generate_checkout import check_id_create_checkout
 
 # Setup Stripe python client library
@@ -474,9 +474,11 @@ def webhook_received():
                 }
 
             session_info = prepare_session_data(data)
-            session_data = Customer(**session_info)  # Dataclass Unpacks Dict
+            user = Customer(**session_info)  # Dataclass Unpacks Dict
             # Add customer to the database
-            add_customer(**session_info)
+            add_user(user)
+            print(user.name)
+            #add_customer(**)
             # Convert, combine and pass data to ServiceM8
             # Asyncio ensures the function runs in parallel with the main program
             # Start both tasks and gather their results
