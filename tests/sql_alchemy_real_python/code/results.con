@@ -1,0 +1,16 @@
+$ python flat_counts.py
+Authors:
+   Isaac Asimov:1
+   Richard Bachman:1
+   Pearl Buck:2
+   Tom Clancy:2
+   Stephen King:4
+   John Le Carre:1
+   Alex Michaelides:1
+   Carol Shaben:1
+Publishers:
+   Random House:4
+   Signet:1
+   Simon & Schuster:4
+   Berkley:2
+   Penguin Random House:2

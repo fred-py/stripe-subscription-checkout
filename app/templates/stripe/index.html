@@ -1,0 +1,243 @@
+
+
+<!--RESOURCES
+Bootstrap Pricing Table: https://frontendor.com/blog/bootstrap-pricing-table-snippets/
+FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-html-css-and-javascript/
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wheelie Wash Checkout</title>
+    <meta name="description" content="Wheelie Wash Subscription & Stripe Checkout" />
+    <link rel="icon" href={{favicon}} type="image/x-icon" />
+    <link rel="stylesheet" href="static/stripe/css/normalize.css" />
+    <link rel="stylesheet" href="static/stripe/css/global2.css" />
+    <!-- Load Stripe.js on your website. -->
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="static/stripe/js/script.js"></script>
+  </head>
+  <body>
+    <div class="background">
+        <header class="header">
+            <div class="header__logo"></div>
+            <div class="header__title">Choose a plan</div>
+        </header>
+        <form action="/create-checkout-session" method="POST">
+        <input type="hidden" id="goldPrice" name="priceId">
+          <div class="container">
+            <div class="panel pricing-table">
+              <div class="pricing-plan">
+              <div id="anchor-gold"></div> <!-- Anchor Point -->
+                <img src="static/stripe/img/gold.png" alt="" class="pricing-img">
+                      <h2 class="pricing-header">Gold</h2>
+                      <ul class="pricing-features">
+                          <li class="pricing-features-item">3 Bins Cleaned Monthly</li>
+                          <li class="pricing-features-item">Plus 1 Free FOGO Bin Each Clean Cycle</li>
+                          <li class="pricing-features-item">No Transaction Fee</li>
+                          <li class="pricing-features-item">Wash, Sanitise & Deodorise</li>
+                          <li class="pricing-features-item">We Only Use Biodegradable Products</li>
+                          <li class="pricing-features-item">No Residue Left Behind on Your Driveway</li>
+                      </ul>
+                      <span class="pricing-price">$36</span>
+                      <div class="billing-frequency">Billed every 6 months</div>
+                      <button href="#/" class="pricing-button is-featured" id="gold-plan-btn">Get Started</button>
+              </div>
+          </div>
+        </form>  
+        <form action="/create-checkout-session" method="POST">
+              <input type="hidden" id="silverPrice" name="priceId">
+              <div class="container">
+                  <div class="panel pricing-table">
+                      <div class="pricing-plan">
+                      <img src="static/stripe/img/silver.png" alt="" class="pricing-img">
+                      <h2 class="pricing-header">Silver</h2>
+                      <ul class="pricing-features">
+                          <li class="pricing-features-item">3 Bins Cleaned Quarterly</li>
+                          <li class="pricing-features-item">Plus 1 Free FOGO Bin Each Clean Cycle</li>
+                          <li class="pricing-features-item">Wash, Sanitise & Deodorise</li>
+                          <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
+                          <li class="pricing-features-item">We Only Use Biodegradable Products</li>
+                          <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
+                      </ul>
+                      <span class="pricing-price silver">$46</span>            
+                      <div class="billing-frequency">Billed Annually</div>
+                      <button href="#/" class="pricing-button" id="silver-plan-btn">Get Started</button>
+
+                  </div>
+              </div>
+        </form>      
+        <form action="/create-checkout-session" method="POST">
+            <input type="hidden" id="comboPrice" name="priceId">
+            <div class="container">
+                <div class="panel pricing-table">
+                    <div class="pricing-plan">
+                        <img src="static/stripe/img/bronze.png" alt="" class="pricing-img">
+                        <h2 class="pricing-header">Bronze</h2>
+                        <ul class="pricing-features">
+                            <li class="pricing-features-item">Clean 1 to 3 bins</li>
+                            <li class="pricing-features-item">Wash, Sanitise & Deodorise</li>
+                            <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
+                            <li class="pricing-features-item">We Only Use Biodegradable Products</li>
+                            <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
+                            <li class="pricing-features-item">Cancel Anytime</li>
+                        </ul>
+                        <span class="pricing-price starts-at">$18</span>
+                        <div class="billing-frequency">Billed Monthly</div>
+                        <button href="#/" class="pricing-button" id="combo-plan-btn">Get Started</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        </div>
+
+        <form action="/create-checkout-session" method="POST">
+          <input type="hidden" id="oneOff" name="priceId">
+            <div class="container">
+                <div class="panel pricing-table">
+                    <div class="pricing-plan">
+                        <img src="static/stripe/img/one-off.png" alt="" class="pricing-img">
+                        <h2 class="pricing-header">One-Off</h2>
+                        <ul class="pricing-features">
+                        <li class="pricing-features-item">Clean 1 to 3 bins</li>
+                        <li class="pricing-features-item">Wash, Sanitise & Deodorise</li>
+                        <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
+                        <li class="pricing-features-item">We Only Use Biodegradable Products</li>
+                        <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
+                        </ul>
+                        <span class="pricing-price one-off starts-at">$33</span>
+                        <div class="billing-frequency">One-off payment</div>
+                        <!--  href="#/", it might be part of a JavaScript-based routing system
+                            in a single-page application (SPA). In such applications, changes in
+                            the part of the URL after the # are used to dynamically load different 
+                            content without refreshing the page.-->
+                        <button href="#/" class="pricing-button" id="one-off-btn">Book now</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <!-- ============== FAQs ============== -->
+        <div class="container">
+          <a id="faqs"></a> <!-- Invisible Anchor Point -->
+            <div class="panel pricing-table">
+                <div class="accordion-body">
+                    <div class="accordion">
+                      <h1>Frequently Asked Questions</h1>
+                      <hr>
+                      <div class="container-accord">
+                        <div class="label">What is United Wheelie Wash?</div>
+                        <div class="content">United Wheelie Wash is a professional wheelie bin cleaning service that uses high-pressure technology to clean, sanitize, and deodorize your bins. We also offer a closed-capture system that recycles 99% of the water we use, and we only use hospital-grade, biodegradable products.</div>
+                      </div>
+                      <hr>
+                      <div class="container-accord">
+                        <div class="label">What areas do you service?</div>
+                        <div class="content">We currently service the following postcodes in the Margaret River Region: 6284, 6285, 6286, 6288, 6290. We are always expanding our service area, please register your interest by clicking here and we will keep you updated as we service area expands.
+                            </div>
+                      </div>
+
+                      <hr>
+                      <div class="container-accord">
+                        <div class="label">How often should I have my bins cleaned?</div>
+                        <div class="content">The frequency of wheelie bin cleaning depends on the subscription plan you choose:
+                            <p>Gold Subscription: Monthly cleaning for all bins.</p>
+                            <p>Silver Subscription: Quarterly cleaning for all bins.</p>
+                            <p>Bronze Subscription: Monthly cleaning for your choice of one to three bins.</p>
+                            <p>One-Off Clean: One-time cleaning for your choice of one, two, or three bins.</p>
+                            <p>If you  have a lot of waste or if your bins are particularly dirty, you may need to have them cleaned more often than the recommended frequency for your subscription plan. You can always upgrade your subscription plan or schedule an additional one-off clean at your convenience.</p>
+                        </div>
+                      </div>
+
+                      <hr>
+                      <div class="container-accord">  
+                        <div class="label">Cancellation & refund Policy</div>
+                        <div class="content">You can cancel your United Wheelie Wash subscription at any time. However, the cancellation policy and refund terms vary depending on your subscription plan:
+                            <h3>Gold Subscription (Paid Half-Yearly, Monthly Cleaning Cycle for All Three Bins):</h3>
+                            <p>$0 cancellation Fee, however, cancellations prior to the completion of the initial six cycles, will incur the retention of 50% of the Gold Subscription Plan Free. Cancellations after the 6th cleaning cycle, processed up to 48h prior to the next cleaning cycle will receive the total value of the remaining outstanding cleaning cycles. </p>
+                            
+                            <h3>Silver Subscription (Paid Annually, Quarterly Cleaning Cycle for All Three Bins):</h3>
+                            <p>If you cancel your Silver Subscription prior to the completion of the initial two quarterly cleaning cycles, you will receive a refund of the remaining cleaning cycles, with a retention fee of 50% of the total Silver Subscription Plan fee. This retention fee is to cover the administrative costs associated with your subscription and to ensure fair usage of the annual subscription plan.</p>
+
+                            <h3>Bronze Subscription (Paid Monthly, Monthly Cleaning Cycle for up to 3 bins of your choice):</h3>
+                            <p>You can cancel your subscription at any time. To ensure fair usage of the monthly subscription plan, if you cancel your Bronze Subscription after the first cleaning cycle and before the second cycle, you will still be charged for the second cycle. This is to discourage customers from using the monthly subscription plan for a single cleaning and then canceling to avoid paying  a higher rate for a one-off clean.</p>
+                            
+                            <h3>One-Off Clean (Customers Choose 1-3 Bins):</h3>
+                            <p>Cancellations up to 48h prior to scheduled clean, will receive full refund. if you cancel after the 48-hour window, you will be charged for the full cleaning service. </p>
+                        </div>
+                        </div>
+
+                        <hr>
+                        <div class="container-accord">
+                          <div class="label">What is your cleaning process?</div>
+                          <div class="content"> Our patented high-pressure cleaning technology removes dirt, grime, and bacteria from your bins. We also sanitize and deodorise your bins to leave them smelling fresh and clean.</div>
+                        </div>
+                        <hr>
+                        <div class="container-accord">
+                          <div class="label">What kind of products do you use?</div>
+                          <div class="content">We only use hospital-grade, biodegradable products that are safe for your bins and the environment.</div>
+                        </div>
+
+                        <hr>
+                          <div class="container-accord">
+                              <div class="label">What happens if there is leftover mess after a clean?</div>
+                              <div class="content"> Our innovative filtration system ensures that there is no leftover mess after we clean your bins. However, if there is any leftover mess, we will clean it up at no additional charge.</div>
+                          </div>
+
+                          <hr>
+                          <div class="container-accord">
+                              <div class="label">What is your satisfaction guarantee?</div>
+                              <div class="content"> We are committed to providing you with the best possible service. If you are not satisfied with your wheelie bin clean, we will do it again for free.</div>
+                          </div>
+
+                          <hr>
+                          <div class="container-accord">
+                              <div class="label">What is your different pricing plans</div>
+                              <div class="content"> We offer three different pricing plans to suit your needs. Our Gold plan has the best value costing only $9 per bin (This includes one free FOGO bin clean per cycle). Our Silver plan costs $15 per bin (This includes one free FOGO bin clean per cleaning cycle).
+                                <table>
+                                  <tr> 
+                                    <th></th>
+                                    <th class="table-header">Gold</th>
+                                    <th class="table-header">Silver</th>
+                                    <th class="table-header">Bronze</th>
+                                  </tr>
+                                  <tr>
+                                    <td class="table-row">Cost per Bin</td>
+                                    <td class="table-value">$9</td>
+                                    <td class="table-value">$11.50</td>
+                                    <td class="table-value">$15 - $18</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="table-row">Subscription Cost</td>
+                                    <td class="table-value">$36/month</td>
+                                    <td class="table-value">$45/quarter</td>
+                                    <td class="table-value">$18-$45/month</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="table-row">Cleaning Frequency</td>
+                                    <td class="table-value">Monthly</td>
+                                    <td class="table-value">Quarterly</td>
+                                    <td class="table-value">Monthly</td>
+                                  </tr>
+                                  <tr>
+                                    <td class="table-row">Billing Frequency</td>
+                                    <td class="table-value">Half-Yearly</td>
+                                    <td class="table-value">Annually</td>
+                                    <td class="table-value">Monthly</td>
+                                  </tr>
+                                </table>
+
+                              <div class="content table-spacer">Note that the Gold & Silver cost per bin is calculated based on 4 bins cleaned per cycle, red, yellow, green plus a Free FOGO bin.
+                              </div>
+                          </div>     
+                        
+                        
+                              <a href="#anchor-gold" class="pricing-button"> Choose a plan </a><br />
+                    </div>
+                    <script src="static/stripe/js/faqs.js" type="text/javascript"></script>
+            </div>
+        </div>
+  <div id="error-message" class="error-message"></div>
+  </body>
+</html>
