@@ -7,12 +7,12 @@ import os
 from flask import render_template, redirect, url_for, abort, \
     flash, request, current_app, make_response, send_from_directory, jsonify
 #from flask_login import login_required, current_user
-from flask_sqlalchemy import get_debug_queries
+#from flask_sqlalchemy import get_debug_queries
 from . import main
 from dotenv import load_dotenv, find_dotenv
-import db_operations.servicem8_operations.data_transfer as d
-from db_operations.prepare_data import prepare_session_data, Customer
-from db_operations.database_operations import add_user
+#from ..db_operations.servicem8_operations.data_transfer import data_transfer as d
+from ..db_operations.prepare_data import prepare_session_data, Customer
+from ..db_operations.database_operations import add_user
 
 
 load_dotenv(find_dotenv())
@@ -26,7 +26,7 @@ port = int(os.environ.get('PORT', 4242))  # This is needed to deploy on fl0
 @main.route('/', methods=['GET', 'OPTIONS'])
 def get_example():
     # Passing favicon en var to render on deployment
-    return render_template('index.html', favicon=os.getenv('FAVICON'))
+    return render_template('stripe/index.html', favicon=os.getenv('FAVICON'))
 
 
 @main.route('/config', methods=['GET', 'OPTIONS'])

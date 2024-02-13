@@ -1,5 +1,5 @@
-from src.data_base.app.models.all_models import CustomerDB, Address, Bin, Subscription, Invoice
-from src.data_base.app.extensions import db
+from app.models import CustomerDB, Address, Bin, Subscription, Invoice
+from app.extensions import db
 
 
 # Add new users to the Database

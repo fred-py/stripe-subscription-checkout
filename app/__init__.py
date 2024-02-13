@@ -9,6 +9,11 @@ combined into one application"""
 from flask import Flask
 from config import config
 from app.extensions import db
+from dotenv import load_dotenv, find_dotenv
+
+
+# Setup Stripe python client library
+load_dotenv(find_dotenv())
 
 
 # Creating the Flask application factory function
@@ -17,20 +22,23 @@ def create_app(config_name='production'):  # Change to 'development' for develop
         __name__,
         static_folder='static',
         static_url_path='',
-        template_folder='template',)
+        template_folder='templates',)
     # config is a dictionary that holds the different configurations for the app
-    app.config.from_object(config[config_name])  # Loading configuration from the Config class
+    # Create an instance of Config class
+    config_class = config[config_name]
+    app.config.from_object(config_class())  # Loading configuration from the Config class
+    #app.config.from_object(config[config_name])  # Loading configuration from the Config class
     config[config_name].init_app(app)
+
 
     # Initialize Flask extensions here
     db.init_app(app)  # Initializing the SQLAlchemy database extension
     #mail.init_app(app)  # Initializing the mail extension
 
     # Register blueprints here
-    # Blueprints are located in the main directory
-    #from .main import main as main_bp
+    from .main import main as main_bp
     # Registering the main blueprint for Flask to treat it as part of the application
-    #app.register_blueprint(main_bp)
+    app.register_blueprint(main_bp)
 
     #from app.users import bp as users_bp
     #app.register_blueprint(users_bp)
