@@ -73,5 +73,3 @@ def add_user(data):
     db.session.add(new_bin)
 
     db.session.commit()
-
-

@@ -45,13 +45,17 @@ https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
   > Print db to check connection
   $ print(db)
   > Import modules to be created
-  $ from app.models.all_models import CustomerDB, Address, Bin, Subscription, Invoice
+  $ from app.models import CustomerDB, Address, Bin, Subscription, Invoice
   > Create modules - expect no output
   $ db.create_all()
   > Inspect database tables
   $ from sqlalchemy import inspect
   $ inspector = inspect(db.engine)
   $ print(inspector.get_table_names())
+  > Query data
+  $ from app.models import CustomerDB, Address etc...
+  $ cus = CustomerDB.query.all()
+  $ print(cus)
 
 
   # FLASK SQLALQUEMY BLUEPRINT & FILE STRUCTURE
