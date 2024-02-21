@@ -13,7 +13,7 @@ from dotenv import load_dotenv, find_dotenv
 #from ..db_operations.servicem8_operations.data_transfer import data_transfer as d
 from ..db_operations.prepare_data import prepare_session_data, Customer
 from ..db_operations.crud_operations import add_user
-from ..db_operations.query_ops import QueryOps, get_payment_intent
+from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
 
 
 load_dotenv(find_dotenv())
@@ -390,13 +390,15 @@ def webhook_received():
             stripe.Subscription.cancel(sub_id)
 
             # Process Refunds
-            query = QueryOps()  # Instatiate to create the application context
+            query = cq()  # Instatiate to create the application context
             p_intent_id = query.get_payment_intent(cus_id)  # Get intent_id from db needed for refund
+            order_date = query.get_order_date(cus_id)  # Get order date from db needed for refund
 
             plan_id = subscription['items']['data'][0]['plan']['id']
 
             # Refund Logic - Check website for details!!!!!!!
             if plan_id == os.getenv('GOLD_PRICE_ID'):
+
                 amount = 8000
             elif plan_id == os.getenv('SILVER_PRICE_ID'):
                 amount = 5000
