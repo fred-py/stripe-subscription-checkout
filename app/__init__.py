@@ -40,6 +40,12 @@ def create_app(config_name='production'):  # Change to 'development' for develop
     # Registering the main blueprint for Flask to treat it as part of the application
     app.register_blueprint(main_bp)
 
+    #from .db_views import views as db_views_bp  # DB front-end
+    #app.register_blueprint(db_views_bp)
+
+    from .auth import auth as auth_bp
+    app.register_blueprint(auth_bp)
+
     #from app.users import bp as users_bp
     #app.register_blueprint(users_bp)
 
