@@ -1,0 +1,16 @@
+<!--Base templates define blocks that
+can be overridden by derived templates-->
+<!-- The Jinja2 block and endblock diretives define
+blocks of content that are added to the base template-->
+
+<html>
+<head>
+    {% block head %}
+    <title>{% block title %}{% endblock %} Wheelie Wash Database</title>
+    {% endblock %}
+</head>
+<body>
+    {% block body %}
+    {% endblock %}
+</body>
+</html>

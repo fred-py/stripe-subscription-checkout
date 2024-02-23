@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from flask_login import UserMixin
 from datetime import datetime
 from .extensions import db
 
@@ -113,6 +114,17 @@ class Invoice(db.Model):
         return f'Invoice ID: {self.invoice_id}, Invoice Date: {self.invoice_date}, ' \
                 f'Invoice Total: {self.invoice_total}, Customer ID: {self.customer_id}, ' \
                 f'Customer: {self.customers}'
+    
+
+class User(db.Model):
+    """This model is to be used
+    for internal authentication for
+    access to the database"""
+    __tablename__ = 'users'
+    id: Mapped[int] = db.Column(db.Integer, primary_key=True)
+    
+
+
 
 
 def main() -> None:

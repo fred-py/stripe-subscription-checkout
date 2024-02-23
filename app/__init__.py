@@ -8,7 +8,7 @@ combined into one application"""
 
 from flask import Flask
 from config import config
-from app.extensions import db
+from app.extensions import db, bootstrap
 from dotenv import load_dotenv, find_dotenv
 
 
@@ -33,15 +33,16 @@ def create_app(config_name='production'):  # Change to 'development' for develop
 
     # Initialize Flask extensions here
     db.init_app(app)  # Initializing the SQLAlchemy database extension
+    bootstrap.init_app(app)  # Initializing the bootstrap extension
     #mail.init_app(app)  # Initializing the mail extension
 
     # Register blueprints here
-    from .main import main as main_bp
+    from .main import main as main_bp  # Main refers to Stripe BP
     # Registering the main blueprint for Flask to treat it as part of the application
     app.register_blueprint(main_bp)
 
-    #from .db_views import views as db_views_bp  # DB front-end
-    #app.register_blueprint(db_views_bp)
+    from .db_views import db_views as db_views_bp  # DB front-end
+    app.register_blueprint(db_views_bp)
 
     from .auth import auth as auth_bp
     app.register_blueprint(auth_bp)

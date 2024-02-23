@@ -5,7 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY')
+    SECRET_KEY = os.getenv('SECRET_KEY')  # For flask-wtf
     #SQLALCHEMY_DATABASE_URI = db_url
     # The below is for use later, [page 114-Flask Web Devevelopment Book] 
     MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.googlemail.com')

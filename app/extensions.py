@@ -6,9 +6,12 @@ Flask application constructed in the factory function in:
 app/__init__.py """
 
 from flask_sqlalchemy import SQLAlchemy
+from flask_bootstrap import Bootstrap
 #from flask_mail import Mail
 
 # Create database object with no arguments
 db = SQLAlchemy()
+
+bootstrap = Bootstrap()  # For bootstrap integration
 
 #mail = Mail()  # For email integration
