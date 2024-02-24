@@ -5,10 +5,10 @@ blocks of content that are added to the base template-->
 
 {% extends "bootstrap/base.html" %}
 
-<!--expression allows you to include and 
+<!-- super() expression allows you to include and 
     override specific sections of the parent
-    template while maintaining the overall structure
-    defined in the base template-->
+    template while preserving the original contents
+    of the block defined in the base templates -->
 {% block head %}
     {{ super() }}
     <link rel="icon" href="/stripe/img/favicon.ico" type="image/x-icon" />
@@ -39,4 +39,14 @@ blocks of content that are added to the base template-->
 <div class="container">
     {% block page_content %}{% endblock %}
 </div>
+{% endblock %}
+
+<!--This block includes moment.js on the base.html, since
+    this is a predefined block in the Flask-Bootstrap
+    base template, the location where this block is inserted
+    does not matter
+    For more info refer to Flask WebDev p.99-->
+{% block scripts %}
+{{ super() }}
+{{ moment.include_moment() }}
 {% endblock %}

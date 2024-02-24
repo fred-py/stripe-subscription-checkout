@@ -6,7 +6,7 @@ from flask import render_template, redirect, url_for, abort, \
 #from flask_login import login_required, current_user
 #from flask_sqlalchemy import get_debug_queries
 from . import db_views
-
+from datetime import datetime
 from dotenv import load_dotenv, find_dotenv
 #from ..db_operations.servicem8_operations.data_transfer import data_transfer as d
 from ..db_operations.prepare_data import prepare_session_data, Customer
@@ -21,7 +21,8 @@ load_dotenv(find_dotenv())
 
 @db_views.route('/database')  # Flask WebDev p. 140
 def index():
-    return render_template('/database/index.html')
+    return render_template('/database/index.html',
+                           current_time=datetime.utcnow())
 
 @db_views.route('/user/<name>')
 def user(name):
