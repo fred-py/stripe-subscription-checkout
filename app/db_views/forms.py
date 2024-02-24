@@ -9,9 +9,9 @@ from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 # Flask-WTF web forms is represented in the server by a class
 # The class inherits from FlaskForm
-class SignUp(FlaskForm):  # Flask WebDev p. 114
-    """This class defines a list of fields in the form
-    each field obj can have one of more validators attached."""
+class RegisterAcc(FlaskForm):  # Flask WebDev p. 114
+    """This class defines a list of fields in the form,
+        each field obj can have one of more validators attached."""
     # 1. StringField class represents a HTML <input type="text"> in the rendered form
     # 2. The first argument to the StringField constructor
     #    is the label that will be used when rendering the form

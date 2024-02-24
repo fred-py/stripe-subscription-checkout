@@ -1,13 +1,15 @@
 {% extends "database/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block title %}United Wheelie Wash DB{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>United Wheelie Wash Database</h1>
+    <h1><h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1></h1>
 </div>
 <!--Flask-Moment object os available to templates to work with time-stamps
 Find a better use for this later-->
+{{ wtf.quick_form(form) }}
 <p>The local date and time is {{ moment(current_time).format('LLL') }}.</p>
 <p>That was {{ moment(current_time).fromNow(refresh=True) }}.</p>
 <p>I will find a better use for time-stamp later on, this is here as a reminder</p>

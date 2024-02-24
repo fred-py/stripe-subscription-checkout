@@ -43,7 +43,7 @@ def create_app(config_name='production'):  # Change to 'development' for develop
     # Registering the main blueprint for Flask to treat it as part of the application
     app.register_blueprint(main_bp)
 
-    from .db_views import db_views as db_views_bp  # DB front-end
+    from .db_views import db_views as db_views_bp  # DB front-end  # Passing the app configuration to the blueprint
     app.register_blueprint(db_views_bp)
 
     from .auth import auth as auth_bp
@@ -59,5 +59,6 @@ def create_app(config_name='production'):  # Change to 'development' for develop
     #@app.route('/test/')
     #def test_page():
     #    return '<h1>Testing the Flask Application Factory Pattern</h1>'
+    print(app.config['SECRET_KEY'])
 
     return app  # Returning the Flask app instance

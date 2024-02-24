@@ -1,13 +1,14 @@
 import os
-
+from dotenv import load_dotenv, find_dotenv
 basedir = os.path.abspath(os.path.dirname(__file__))
-#db_url = os.getenv('DATABASE_URL')
+
+load_dotenv(find_dotenv())
 
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')  # For flask-wtf
     #SQLALCHEMY_DATABASE_URI = db_url
-    # The below is for use later, [page 114-Flask Web Devevelopment Book] 
+    # The below is for later use, [page 114-Flask Web Devevelopment Book] 
     MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.googlemail.com')
     MAIL_PORT = int(os.getenv('MAIL_PORT', '587'))
     MAIL_USE_TLS = os.getenv('MAIL_USE_TLS', 'true').lower() in \
@@ -27,8 +28,11 @@ class Config:
 # Different configurations for the app to run in different environments
 class DevelopmentConfig(Config):
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URL') or \
-        'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    #SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URL') or \
+    #    'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
+    
+    def __init__(self):
+        self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 
 class TestingConfig(Config):
