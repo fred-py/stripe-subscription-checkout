@@ -22,7 +22,8 @@ def create_app(config_name='production'):  # Change to 'development' for develop
         __name__,
         static_folder='static',
         static_url_path='',
-        template_folder='templates',)
+        template_folder='templates',
+    )
     # config is a dictionary that holds the different configurations for the app
     # Create an instance of Config class
     config_class = config[config_name]

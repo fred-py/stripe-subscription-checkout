@@ -9,15 +9,14 @@ the app_errorhandler decorator must be used instead.”
 Page 119 of Flask Web Development, 2nd Edition"""
 
 from flask import render_template
-from . import main
+from . import db_views
 
 
-@main.app_errorhandler(404)
+@db_views.app_errorhandler(404)
 def page_not_found(e):
-    #return render_template('404.html'), 404
-    pass
+    return render_template('/database/404.html'), 404
 
-@main.app_errorhandler(500)
+
+@db_views.app_errorhandler(500)
 def internal_server_error(e):
-    #return render_template('500.html'), 500
-    pass
+    return render_template('/database/500.html'), 500

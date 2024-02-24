@@ -19,9 +19,9 @@ load_dotenv(find_dotenv())
 
 #port = int(os.environ.get('PORT', 4242))  # This is needed to deploy on fl0
 
-@db_views.route('/db_home')  # Flask WebDev p. 140
+@db_views.route('/database')  # Flask WebDev p. 140
 def index():
-    return render_template('/database/base.html')
+    return render_template('/database/index.html')
 
 @db_views.route('/user/<name>')
 def user(name):

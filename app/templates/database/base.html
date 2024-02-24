@@ -1,16 +1,42 @@
 <!--Base templates define blocks that
 can be overridden by derived templates-->
-<!-- The Jinja2 block and endblock diretives define
+<!-- The Jinja2 block and endblock directives define
 blocks of content that are added to the base template-->
 
-<html>
-<head>
-    {% block head %}
-    <title>{% block title %}{% endblock %} Wheelie Wash Database</title>
-    {% endblock %}
-</head>
-<body>
-    {% block body %}
-    {% endblock %}
-</body>
-</html>
+{% extends "bootstrap/base.html" %}
+
+<!--expression allows you to include and 
+    override specific sections of the parent
+    template while maintaining the overall structure
+    defined in the base template-->
+{% block head %}
+    {{ super() }}
+    <link rel="icon" href="/stripe/img/favicon.ico" type="image/x-icon" />
+{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Dashboard</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">Customers</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% block page_content %}{% endblock %}
+</div>
+{% endblock %}
