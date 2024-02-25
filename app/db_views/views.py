@@ -1,6 +1,6 @@
 
 import os
-from flask import render_template, redirect, url_for, abort, \
+from flask import render_template, redirect, session, url_for, abort, \
     flash, request, current_app, make_response, send_from_directory, jsonify
 
 #from flask_login import login_required, current_user
@@ -14,7 +14,6 @@ from ..db_operations.crud_operations import add_user
 from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
 from .forms import RegisterAcc
 #from config import Config
-from flask import current_app  # Needed to access config variables from current app instance
 
 
 load_dotenv(find_dotenv())
@@ -27,19 +26,23 @@ load_dotenv(find_dotenv())
 @db_views.route('/database', methods=['GET', 'POST'])  # Flask WebDev p. 140
 def index():
     secret_key = current_app.config['SECRET_KEY']
-    name = None
+    #name = None
     form = RegisterAcc()
     # validate_on_submit() invokes the DataRequired() validator
+    # If it returns True
+    # the session name is assigned to the local var name
     if form.validate_on_submit():  # Flask WebDev p. 118
-        # If it returns True
-        # the session name is assigned to the local var name
-        name = form.name.data
+        old_name = session.get('name')
+        if old_name is not None and old_name != form.name.data:
+            flash('Looks like you have changed your name!')
+        session['name'] = form.name.data
+        return redirect(url_for('db_views.index'))
         # The form field is cleared by setting it to an empty string
         # This is done so the form is blank when the form is rendered again
-        form.name.data = ''
+        #form.name.data = ''
     return render_template(
         '/database/index.html',
-        form=form, name=name,
+        form=form, name=session.get('name'),
         current_time=datetime.utcnow()
     )
 

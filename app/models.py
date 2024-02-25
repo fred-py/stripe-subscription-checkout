@@ -5,10 +5,10 @@ from .extensions import db
 
 # Create association table
 # https://realpython.com/python-sqlite-sqlalchemy/#table-creates-associations
-
+# Flask Web Development 2nd Edition, p. 90
 
 class CustomerDB(db.Model):
-    __tablename__ = 'customer' 
+    __tablename__ = 'customers'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     name: Mapped[str] = db.Column(db.String, nullable=False)
     phone: Mapped[str] = db.Column(db.String, nullable=False)
@@ -42,7 +42,7 @@ class CustomerDB(db.Model):
 
 
 class Address(db.Model):
-    __tablename__ = 'address'
+    __tablename__ = 'addresses'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     street: Mapped[str] = db.Column(db.String)
     city: Mapped[str] = db.Column(db.String)
@@ -53,7 +53,7 @@ class Address(db.Model):
     # relationship() defines the high level relationship between two tables
     customers: Mapped['CustomerDB'] = db.relationship(back_populates='addresses', lazy=True)
     # ForeignKey() provides a low-level database constraint that ensures data integrity.
-    customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customer.id'))
+    customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'))
 
     def __repr__(self) -> str:
         return f'Address {self.street}, {self.city}, {self.state}, {self.postcode}, ' \
@@ -62,7 +62,7 @@ class Address(db.Model):
 
 
 class Bin(db.Model):
-    __tablename__ = 'bin'
+    __tablename__ = 'bins'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     bin_collection: Mapped[str] = db.Column(db.String)
     selected_bins: Mapped[str] = db.Column(db.String)
@@ -73,7 +73,7 @@ class Bin(db.Model):
     # One to one relationship
     customers: Mapped['CustomerDB'] = db.relationship(back_populates='bins', lazy=True)
     # ForeignKey() provides a low-level database constraint that ensures data integrity.
-    customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
 
     def __repr__(self) -> str:
         return f'Bin Collection: {self.bin_collection}, Selected Bins: {self.selected_bins}, ' \
@@ -83,14 +83,14 @@ class Bin(db.Model):
 
 
 class Subscription(db.Model):
-    __tablename__ = 'subscription'
+    __tablename__ = 'subscriptions'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     plan: Mapped[str] = db.Column(db.String)
     active: Mapped[bool] = db.Column(db.Boolean, default=True)
 
     # One to one relationship
     customers: Mapped['CustomerDB'] = db.relationship(back_populates='subscriptions', lazy=True)
-    customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
 
     def __repr__(self) -> str:
         return f'Subscription Plan: {self.plan}, Total Paid: {self.total_paid}, ' \
@@ -99,7 +99,7 @@ class Subscription(db.Model):
 
 
 class Invoice(db.Model):
-    __tablename__ = 'invoice'
+    __tablename__ = 'invoices'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     invoice_id: Mapped[str] = db.Column(db.String)
     amount_paid: Mapped[str] = db.Column(db.String)
@@ -108,7 +108,7 @@ class Invoice(db.Model):
     
     # One to many relationship
     customers: Mapped['CustomerDB'] = db.relationship(back_populates='invoices', lazy=True)
-    customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
 
     def __repr__(self) -> str:
         return f'Invoice ID: {self.invoice_id}, Invoice Date: {self.invoice_date}, ' \
@@ -116,15 +116,31 @@ class Invoice(db.Model):
                 f'Customer: {self.customers}'
     
 
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id: Mapped[int] = db.Column(db.Integer, primary_key=True)
+    name: Mapped[str] = db.Column(db.String(64), unique=True)
+    # One to many relationship
+    users = db.relationship('User', backref='role', lazy=True)
+
+    def __repr__(self) -> str:
+        return f'Role {self.name}'
+
+
 class User(db.Model):
     """This model is to be used
     for internal authentication for
     access to the database"""
     __tablename__ = 'users'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
+    username: Mapped[str] = db.Column(db.String(64), unique=True)
+    email: Mapped[str] = db.Column(db.String(120), unique=True)
     
+    # One to many relationship
+    role_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
-
+    def __repr__(self) -> str:
+        return f'User {self.username}, Email: {self.email}'
 
 
 def main() -> None:

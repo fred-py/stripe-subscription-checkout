@@ -18,6 +18,8 @@ class RegisterAcc(FlaskForm):  # Flask WebDev p. 114
     # 3. The optional validator argument in the StringField constructor
     #    defines a list of checkers applied to the submitted data before it is accepted
     # 4. DataRequired checks that the field is not submitted empty
+    # 5. If the field is submitted empty, the validator will prevent
+    #    the form from being submitted and prompt the used to complete required fields
     name = StringField('Full Name', validators=[DataRequired()])
     email = StringField('Email Address', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=12)])
