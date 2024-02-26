@@ -31,7 +31,6 @@ def create_app(config_name='production'):  # Change to 'development' for develop
     #app.config.from_object(config[config_name])  # Loading configuration from the Config class
     config[config_name].init_app(app)
 
-
     # Initialize Flask extensions here
     db.init_app(app)  # Initializing the SQLAlchemy database extension
     bootstrap.init_app(app)  # Initializing the bootstrap extension
