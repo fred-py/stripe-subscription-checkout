@@ -95,26 +95,30 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
         </div>
 
         <form action="/create-checkout-session" method="POST">
-          <input type="hidden" id="oneOff" name="priceId">
-            <div class="container">
-                <div class="panel pricing-table">
-                    <div class="pricing-plan">
-                        <img src="/stripe/img/one-off.png" alt="" class="pricing-img">
-                        <h2 class="pricing-header">One-Off</h2>
-                        <ul class="pricing-features">
-                        <li class="pricing-features-item">Clean 1 to 4 bins</li>
-                        <li class="pricing-features-item">Wash, Sanitise & Deodorise</li>
-                        <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
-                        <li class="pricing-features-item">We Only Use Biodegradable Products</li>
-                        <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
-                        </ul>
-                        <span class="pricing-price one-off starts-at">$33</span>
-                        <div class="billing-frequency">One-off payment</div>
-                        <!--  href="#/", it might be part of a JavaScript-based routing system
-                            in a single-page application (SPA). In such applications, changes in
-                            the part of the URL after the # are used to dynamically load different 
-                            content without refreshing the page.-->
-                        <button href="#/" class="pricing-button" id="one-off-btn">Book now</button>
+          <input type="hidden" id="priceId" name="priceId">
+          <div class="container">
+            <div class="panel pricing-table">
+              <div class="pricing-plan">
+                <img src="/stripe/img/one-off.png" alt="" class="pricing-img">
+                <h2 class="pricing-header">One-Off</h2>
+                <ul class="pricing-features">
+                  <li class="pricing-features-item">Clean 1 to 4 bins</li>
+                  <li class="pricing-features-item">Wash, Sanitise & Deodorise</li>
+                  <li class="pricing-features-item">We Recycle 99% of the Water We Use</li>
+                  <li class="pricing-features-item">We Only Use Biodegradable Products</li>
+                  <li class="pricing-features-item">No Residue Left Behind in Your Driveway</li>
+                </ul>
+                <span class="pricing-price one-off starts-at">$33</span>
+                <div class="billing-frequency">One-off payment</div>
+                <!--  href="#/", it might be part of a JavaScript-based routing system
+                  in a single-page application (SPA). In such applications, changes in
+                  the part of the URL after the # are used to dynamically load different 
+                  content without refreshing the page.-->
+                <button href="#/" class="pricing-button" id="one-off-btn-1" onclick="fetchPrice('oneOffx1')">Book 1 bin</button>
+                <button href="#/" class="pricing-button" id="one-off-btn-2" onclick="fetchPrice('oneOffx2')">Book 2 bins</button>
+              </div>
+            </div>
+          </div>
                     </div>
                 </div>
             </div>
@@ -171,7 +175,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                         <hr>
                         <div class="container-accord">
                           <div class="label">What is your cleaning process?</div>
-                          <div class="content"> Our patented high-pressure cleaning technology removes dirt, grime, and bacteria from your bins. We also sanitize and deodorise your bins to leave them smelling fresh and clean.</div>
+                          <div class="content"> Our high-pressure cleaning technology removes dirt, grime, and bacteria from your bins. We also sanitize and deodorise your bins to leave them smelling fresh and clean.</div>
                         </div>
                         <hr>
                         <div class="container-accord">
@@ -189,6 +193,16 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                           <div class="container-accord">
                               <div class="label">What is your satisfaction guarantee?</div>
                               <div class="content"> We are committed to providing you with the best possible service. If you are not satisfied with your wheelie bin clean, we will do it again for free.</div>
+                          </div>
+
+                          <hr>
+                          <div class="container-accord">
+                          <div class="label">Terms & Conditions</div>
+                          <div class="content">Service Limitations:
+                              <p>Our service is a roadside service.  While we strive to provide service to all properties, due to operational constraints and the safety of our team and road users, some locations may be deemed unsuitable.</p>                                   
+                              <p>Refunds:</p>
+                              <p>If you property is deemed unsuitable and your payment has already been processed, we will issue a full refund. You will be notified promptly about the service limitation and the complete refund process. Alternatively. You are encouraged to contact us if you have any questions or concerns about the suitability of your property for our service.</p>
+                            </div>
                           </div>
 
                           <hr>
@@ -230,8 +244,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
 
                               <div class="content table-spacer">Note that the Gold & Silver cost per bin is calculated based on 4 bins cleaned per cycle, red, yellow, green plus a Free FOGO bin.
                               </div>
-                          </div>     
-                        
+                          </div>
                         
                               <a href="#anchor-gold" class="pricing-button"> Choose a plan </a><br />
                     </div>

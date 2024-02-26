@@ -37,7 +37,8 @@ def get_publishable_key():
         'comboPrice': os.getenv('ANY_COMBO_PRICE_ID'),
         'silverPrice': os.getenv('SILVER_PRICE_ID'),
         'goldPrice': os.getenv('GOLD_PRICE_ID'),
-        'oneOff': os.getenv('ONE_OFF_PRICE_ID'),
+        'oneOffx1': os.getenv('ONE_OFF_X1_PRICE_ID'),
+        'oneOffx2': os.getenv('ONE_OFF_X2_PRICE_ID'),
     })
 
 
@@ -79,7 +80,7 @@ def create_checkout_session():  # Asynchronous function
                     'price': price,
                     'adjustable_quantity':
                         # Ensure max is has the save value on stripe dashboard
-                        {'enabled': True, 'minimum': 1, 'maximum': 3},
+                        {'enabled': True, 'minimum': 1, 'maximum': 4},
                     'quantity': 1
                 }],
                 phone_number_collection={'enabled': True},
@@ -121,7 +122,7 @@ def create_checkout_session():  # Asynchronous function
                 },
             )
 
-        elif price == os.getenv('ONE_OFF_PRICE_ID'):
+        elif price == os.getenv('ONE_OFF_X1_PRICE_ID'):
             checkout_session = stripe.checkout.Session.create(
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url=domain_url, # + '/canceled.html',
@@ -132,13 +133,65 @@ def create_checkout_session():  # Asynchronous function
                 #discounts=[{
                 #    'coupon': 'test_coupon',
                 #}],
-                line_items=[{
-                    'price': price,
-                    'adjustable_quantity':
-                        # Ensure max is has the save value on stripe dashboard
-                        {'enabled': True, 'minimum': 1, 'maximum': 3},
-                    'quantity': 1
-                }],
+                line_items=[
+                    {
+                        'price': price,
+                        'quantity': 1,
+                    }
+                ],
+                phone_number_collection={'enabled': True},
+                custom_fields=[
+                    {
+                        'key': 'tentative-day',
+                        'label': {'type': 'custom', 'custom': 'When would you like your bin(s) cleaned?'},
+                        'type': 'dropdown',
+                        'dropdown': {
+                            'options': [
+                                {'label': 'Monday', 'value': 'monday'},
+                                {'label': 'Tuesday', 'value': 'tuesday'},
+                                {'label': 'Wednesday', 'value': 'wednesday'},
+                                {'label': 'Thursday', 'value': 'thursday'},
+                                {'label': 'Friday', 'value': 'friday'},
+                            ],
+                        },
+                    },
+
+                    {
+                        'key': 'select_bins',
+                        'label': {'type': 'custom', 'custom': 'Select bin to be cleaned.'},
+                        'type': 'dropdown',
+                        'dropdown': {
+                            'options': [
+                                {'label': 'Red bin', 'value': 'R'},
+                                {'label': 'Yellow bin', 'value': 'Y'},
+                                {'label': 'Green bin', 'value': 'G'},
+                            ]
+                        }
+                    }
+                ],
+                custom_text={
+                    'submit': {'message': 'NOTE: We will get in touch to confirm a date.'}
+                },
+
+            )
+        
+        elif price == os.getenv('ONE_OFF_X2_PRICE_ID'):
+            checkout_session = stripe.checkout.Session.create(
+                success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url, # + '/canceled.html',
+                mode='payment',
+                customer_creation='always',  # Create a new customer if one is not provided. Only used in payment mode
+                billing_address_collection='required',
+                allow_promotion_codes=True,
+                #discounts=[{
+                #    'coupon': 'test_coupon',
+                #}],
+                line_items=[
+                    {
+                        'price': price,
+                        'quantity': 2,
+                    }
+                ],
                 phone_number_collection={'enabled': True},
                 custom_fields=[
                     {
@@ -162,13 +215,9 @@ def create_checkout_session():  # Asynchronous function
                         'type': 'dropdown',
                         'dropdown': {
                             'options': [
-                                {'label': 'Red bin', 'value': 'R'},
-                                {'label': 'Yellow bin', 'value': 'Y'},
-                                {'label': 'Green bin', 'value': 'G'},
                                 {'label': 'Red and Green bins', 'value': 'RG'},
                                 {'label': 'Red and Yellow bins', 'value': 'RY'},
                                 {'label': 'Yellow and Green bins', 'value': 'YG'},
-                                {'label': 'All bins', 'value': 'All'},
                             ]
                         }
                     }
@@ -180,6 +229,7 @@ def create_checkout_session():  # Asynchronous function
             )
 
         else:
+            # Loads both Gold and Silver price
             checkout_session = stripe.checkout.Session.create(
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url=domain_url,  # + '/canceled.html',
