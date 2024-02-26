@@ -7,7 +7,7 @@ load_dotenv(find_dotenv())
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')  # For flask-wtf
-    #SQLALCHEMY_DATABASE_URI = db_url
+    
     # The below is for later use, [page 114-Flask Web Devevelopment Book] 
     MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.googlemail.com')
     MAIL_PORT = int(os.getenv('MAIL_PORT', '587'))
