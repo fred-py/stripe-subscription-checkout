@@ -8,7 +8,7 @@ combined into one application"""
 
 from flask import Flask
 from config import config
-from app.extensions import db, bootstrap, moment
+from app.extensions import db, bootstrap, moment, migrate, mail
 from dotenv import load_dotenv, find_dotenv
 
 
@@ -35,7 +35,8 @@ def create_app(config_name='production'):  # Change to 'development' for develop
     db.init_app(app)  # Initializing the SQLAlchemy database extension
     bootstrap.init_app(app)  # Initializing the bootstrap extension
     moment.init_app(app)  # Initializing the moment extension
-    #mail.init_app(app)  # Initializing the mail extension
+    migrate.init_app(app, db)  # Initializing the migration extension
+    mail.init_app(app)  # Initializing the mail extension
 
     # Register blueprints here
     from .main import main as main_bp  # Main refers to Stripe BP

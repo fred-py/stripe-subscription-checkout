@@ -6,18 +6,16 @@ load_dotenv(find_dotenv())
 
 
 class Config:
-    SECRET_KEY = os.getenv('SECRET_KEY')  # For flask-wtf
-    
-    # The below is for later use, [page 114-Flask Web Devevelopment Book] 
+    SECRET_KEY = os.getenv('SECRET_KEY')  # flask-wtf 
     MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.googlemail.com')
     MAIL_PORT = int(os.getenv('MAIL_PORT', '587'))
     MAIL_USE_TLS = os.getenv('MAIL_USE_TLS', 'true').lower() in \
         ['true', 'on', '1']
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
-    FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
-    FLASKY_MAIL_SENDER = 'Flasky Admin <flasky@example.com>'
-    FLASKY_ADMIN = os.getenv('FLASKY_ADMIN')
+    UNITED_MAIL_SUBJECT_PREFIX = '[United]'
+    UNITED_MAIL_SENDER = 'United Admin <pythonapi2023@gmail.com>'
+    UNITED_ADMIN = os.getenv('UNITED_ADMIN')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PORT = int(os.getenv('PORT', 4242))  # This is needed to deploy on fl0
     

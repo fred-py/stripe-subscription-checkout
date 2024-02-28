@@ -8,7 +8,8 @@ app/__init__.py """
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
-#from flask_mail import Mail
+from flask_migrate import Migrate
+from flask_mail import Mail, Message
 
 # Create database object with no arguments
 db = SQLAlchemy()
@@ -21,5 +22,7 @@ bootstrap = Bootstrap()  # For bootstrap integration
 # dates and times in the browser by accessing locale settings in the user's computer
 moment = Moment()  # For time integration
 
+migrate = Migrate()  # For database migration
 
-#mail = Mail()  # For email integration
+
+mail = Mail()  # For email integration

@@ -11,6 +11,9 @@ from .forms import RegisterAcc
 from app.models import User, Role, CustomerDB, \
     Address, Subscription, Bin, Invoice
 from app.extensions import db
+from flask_migrate import Migrate
+from flask_mail import Message
+from app.extensions import mail
 
 #from ..db_operations.servicem8_operations.data_transfer import data_transfer as d
 #from ..db_operations.prepare_data import prepare_session_data, Customer
@@ -18,6 +21,8 @@ from app.extensions import db
 #from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
 
 load_dotenv(find_dotenv())
+
+#UNITED_ADMIN = os.getenv('UNITED_ADMIN')
 
 #port = int(os.environ.get('PORT', 4242))  # This is needed to deploy on fl0
 
@@ -43,6 +48,15 @@ def index():
             db.session.add(user)
             db.session.commit()
             session['known'] = False
+            if current_app.config['UNITED_ADMIN']:
+                # Sends an email to the admin when a new user is added
+                
+                send_email(
+                    current_app.config['UNITED_ADMIN'],
+                    'New User',
+                    'mail/new_user',
+                    user=user
+                )
         else:
             session['known'] = True
         session['name'] = form.name.data
@@ -67,3 +81,10 @@ def signup():
     #return render_template('/database/auth/signup.html')
     pass
 
+
+def send_email(to, subject, template, **kwargs):
+    msg = Message(current_app.config['UNITED_MAIL_SUBJECT_PREFIX'] + subject,
+                  sender=current_app.config['UNITED_MAIL_SENDER'], recipients=[to])
+    msg.body = render_template(template + '.txt', **kwargs)
+    msg.html = render_template(template + '.html', **kwargs)
+    mail.send(msg)

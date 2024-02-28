@@ -135,7 +135,7 @@ class User(db.Model):
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     username: Mapped[str] = db.Column(db.String(64), unique=True)
     email: Mapped[str] = db.Column(db.String(120), unique=True)
-    
+    password_hash: Mapped[str] = db.Column(db.String(128))
     # One to many relationship
     role_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
