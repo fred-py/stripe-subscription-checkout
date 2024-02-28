@@ -23,12 +23,11 @@ class Config:
     def init_app(app):
         pass
 
+
 # Different configurations for the app to run in different environments
 class DevelopmentConfig(Config):
     DEBUG = True
-    #SQLALCHEMY_DATABASE_URI = os.getenv('DEV_DATABASE_URL') or \
-    #    'sqlite:///' + os.path.join(basedir, 'data-dev.sqlite')
-    
+
     def __init__(self):
         self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
@@ -37,10 +36,8 @@ class TestingConfig(Config):
     TESTING = True
 
     def __init__(self):
-        self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
-    
-    #SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URL') or \
-    #    'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
+        self.SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URL') or \
+        'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
 
 
 class ProductionConfig(Config):
@@ -58,6 +55,6 @@ config = {
     'development': DevelopmentConfig,
     'testing': TestingConfig,
     'production': ProductionConfig,
-    'default': DevelopmentConfig
-}
 
+    'default': DevelopmentConfig,
+}

@@ -27,13 +27,6 @@ load_dotenv(find_dotenv())
 
 #port = int(os.environ.get('PORT', 4242))  # This is needed to deploy on fl0
 
-#with current_app.app_context():
-#    @current_app.shell_context_processor
-#    def make_shell_context():
-#        """This function is used to add the
-#        database instance and models to the shell context"""
-#        return dict(db=db, User=User, Role=Role)
-
 @db_views.route('/database', methods=['GET', 'POST'])  # Flask WebDev p. 140
 def index():
     # Access congig variables using current_app.config
@@ -51,7 +44,7 @@ def index():
             session['known'] = False
             if current_app.config['UNITED_ADMIN']:
                 # Sends an email to the admin when a new user is added
-                
+            
                 send_email(
                     current_app.config['UNITED_ADMIN'],
                     'New User',

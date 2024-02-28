@@ -1,23 +1,25 @@
 # https://www.digitalocean.com/community/tutorials/how-to-structure-a-large-flask-application-with-flask-blueprints-and-flask-sqlalchemy
-# Page 116 of Flask Web Development 2nd Edition
+# Page 110-116 of Flask Web Development 2nd Edition
 """ This file holds code for **Flask factory function** 
 This function is used to set and create the Flask app instance
 where all Flask blueprints are linked together, 
 combined into one application"""
-
 
 from flask import Flask
 from config import config
 from app.extensions import db, bootstrap, moment, migrate, mail
 from dotenv import load_dotenv, find_dotenv
 
-
 # Setup Stripe python client library
 load_dotenv(find_dotenv())
 
 
-# Creating the Flask application factory function
-def create_app(config_name='production'):  # Change to 'development' for development
+def create_app(config_name='development'):  # Change to 'production' before deployment
+    """Flask application factory function configuration
+    settings stored in one of the classes defined in
+    config.py can be imported directly into the app using 
+    the from_object() method of the app.config
+    configuration object"""
     app = Flask(
         __name__,
         static_folder='static',
@@ -25,22 +27,22 @@ def create_app(config_name='production'):  # Change to 'development' for develop
         template_folder='templates',
     )
     # config is a dictionary that holds the different configurations for the app
-    # Create an instance of Config class
+    
+    # Create an instance of Config class / config dict contains the different configurations
     config_class = config[config_name]
-    app.config.from_object(config_class())  # Loading configuration from the Config class
+    app.config.from_object(config_class())  
     #app.config.from_object(config[config_name])  # Loading configuration from the Config class
     config[config_name].init_app(app)
 
     # Initialize Flask extensions here
-    db.init_app(app)  # Initializing the SQLAlchemy database extension
-    bootstrap.init_app(app)  # Initializing the bootstrap extension
-    moment.init_app(app)  # Initializing the moment extension
-    migrate.init_app(app, db)  # Initializing the migration extension
-    mail.init_app(app)  # Initializing the mail extension
+    db.init_app(app)  # SQLAlchemy database extension
+    bootstrap.init_app(app)
+    moment.init_app(app)
+    migrate.init_app(app, db)
+    mail.init_app(app)
 
     # Register blueprints here
     from .main import main as main_bp  # Main refers to Stripe BP
-    # Registering the main blueprint for Flask to treat it as part of the application
     app.register_blueprint(main_bp)
 
     from .db_views import db_views as db_views_bp  # DB front-end  # Passing the app configuration to the blueprint
@@ -54,6 +56,8 @@ def create_app(config_name='production'):  # Change to 'development' for develop
 
     #from app.models import bp as models_bp
     #app.register_blueprint(models_bp)
+
+    # Attached routes and custome error pages here
 
     # Defining a test route
     #@app.route('/test/')

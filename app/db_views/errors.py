@@ -1,7 +1,7 @@
 #  “error handlers in main blueprint”
-"""“A difference when writing error handlers inside a 
-blueprint is that if the errorhandler decorator is used, 
-the handler will be invoked only for errors that originate in 
+"""“A difference when writing error handlers inside a
+blueprint is that if the errorhandler decorator is used,
+the handler will be invoked only for errors that originate in
 the routes defined by the blueprint.
 To install application-wide error handlers,
 the app_errorhandler decorator must be used instead.”
