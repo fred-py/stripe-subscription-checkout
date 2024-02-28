@@ -1,4 +1,5 @@
 import os
+import click
 from flask_migrate import upgrade
 from app import create_app, db
 #from app.models import CustomerDB, Address, Bin, Subscription, Invoice
@@ -19,6 +20,21 @@ def make_shell_context():
     database instance and models
     to the flask shell context"""
     return dict(db=db, User=User, Role=Role)
+
+@app.cli.command()  # The cli.command decorator simplifies the implementation of custom commands
+@click.argument('test_names', nargs=-1)
+def test(test_names):
+    """Run the unit tests.
+    To run on shell:
+    $ export FLASK_APP=server.py
+    $ flask test """
+    
+    import unittest
+    if test_names:
+        tests = unittest.TestLoader().loadTestsFromNames(test_names)
+    else:
+        tests = unittest.TestLoader().discover('tests')
+    unittest.TextTestRunner(verbosity=2).run(tests)
 
 
 if __name__ == '__main__':
