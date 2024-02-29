@@ -10,19 +10,16 @@ from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_migrate import Migrate
 from flask_mail import Mail, Message
+from flask_login import LoginManager
 
 # Create database object with no arguments
 db = SQLAlchemy()
-
 bootstrap = Bootstrap()  # For bootstrap integration
-
 # flask_moment is an extension that makes 
 # it easy to work with moment.js and time
 # moment.js is a JavaScript library that renders
 # dates and times in the browser by accessing locale settings in the user's computer
 moment = Moment()  # For time integration
-
 migrate = Migrate()  # For database migration
-
-
 mail = Mail()  # For email integration
+login_manager = LoginManager()  # For user authentication

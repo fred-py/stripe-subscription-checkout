@@ -2,11 +2,12 @@ from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
 from flask_login import UserMixin
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from .extensions import db
+from .extensions import db, login_manager
 
 # Create association table
 # https://realpython.com/python-sqlite-sqlalchemy/#table-creates-associations
 # Flask Web Development 2nd Edition, p. 90
+
 
 class CustomerDB(db.Model):
     __tablename__ = 'customers'
@@ -128,15 +129,15 @@ class Role(db.Model):
         return f'Role {self.name}'
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
     """This model is to be used
     for internal authentication for
     access to the database"""
     __tablename__ = 'users'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
-    username: Mapped[str] = db.Column(db.String(64), unique=True)
-    email: Mapped[str] = db.Column(db.String(120), unique=True)
-    password_hash: Mapped[str] = db.Column(db.String(128))
+    username: Mapped[str] = db.Column(db.String(64), unique=True, index=True)
+    email: Mapped[str] = db.Column(db.String(120), unique=True, index=True)
+    password_hash: Mapped[str] = db.Column(db.String(512))
     # One to many relationship
     role_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
@@ -165,11 +166,11 @@ class User(db.Model):
         return f'User {self.username}, Email: {self.email}'
 
 
-def main() -> None:
-    with db.app_context():
-        db.create_all()
-
-
-if __name__ == '__main__':
-    main()
-    print('Database created')
+# User loader function
+@login_manager.user_loader
+def load_user(user_id) -> int:
+    """@login_manager.user_loader
+    regiters the function with Flask-Login
+    Function is called when it needs to retrieve
+    info about logged-in user"""
+    return User.query.get(int(user_id))

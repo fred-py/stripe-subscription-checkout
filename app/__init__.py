@@ -7,11 +7,14 @@ combined into one application"""
 
 from flask import Flask
 from config import config
-from app.extensions import db, bootstrap, moment, migrate, mail
+from app.extensions import db, bootstrap, moment, migrate, mail, login_manager
 from dotenv import load_dotenv, find_dotenv
 
 # Setup Stripe python client library
 load_dotenv(find_dotenv())
+# The login view is the endpoint for login
+# Because the route is inside a bp, it needs to be prefixed with the blueprint name
+login_manager.login_view = 'auth.login'
 
 
 def create_app(config_name='development'):  # Change to 'production' before deployment
@@ -40,6 +43,7 @@ def create_app(config_name='development'):  # Change to 'production' before depl
     moment.init_app(app)
     migrate.init_app(app, db)
     mail.init_app(app)
+    login_manager.init_app(app)
 
     # Register blueprints here
     from .main import main as main_bp  # Main refers to Stripe BP
@@ -49,7 +53,7 @@ def create_app(config_name='development'):  # Change to 'production' before depl
     app.register_blueprint(db_views_bp)
 
     from .auth import auth as auth_bp
-    app.register_blueprint(auth_bp)
+    app.register_blueprint(auth_bp, url_prefix='/auth') # prefix adds /auth to all routes in the blueprint
 
     #from app.users import bp as users_bp
     #app.register_blueprint(users_bp)

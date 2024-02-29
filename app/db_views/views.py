@@ -12,9 +12,9 @@ from app.models import User, Role, CustomerDB, \
     Address, Subscription, Bin, Invoice
 from app.extensions import db
 from flask_migrate import Migrate
-from flask_mail import Message
-from app.extensions import mail
-from threading import Thread
+from app.emails import send_email
+
+
 
 #from ..db_operations.servicem8_operations.data_transfer import data_transfer as d
 #from ..db_operations.prepare_data import prepare_session_data, Customer
@@ -70,25 +70,3 @@ def index():
 def user(name):
     return render_template('/database/user/user.html', name=name)
 
-@db_views.route('/signup')
-def signup():
-    #return render_template('/database/auth/signup.html')
-    pass
-
-
-def send_async_email(app, msg):
-    with app.app_context():
-        mail.send(msg)
-
-
-def send_email(to, subject, template, **kwargs):
-    """This function is used to send emails asynchronously
-    Note, for bulk emails using celery task queue is recommended"""
-    app = current_app._get_current_object()  # Get the actual Flask app object
-    msg = Message(current_app.config['UNITED_MAIL_SUBJECT_PREFIX'] + ' ' + subject,
-                  sender=current_app.config['UNITED_MAIL_SENDER'], recipients=[to])
-    msg.body = render_template(template + '.txt', **kwargs)
-    msg.html = render_template(template + '.html', **kwargs)
-    thr = Thread(target=send_async_email, args=[app, msg])
-    thr.start()
-    return thr

@@ -4,8 +4,8 @@ from flask_migrate import upgrade
 from app import create_app, db
 #from app.models import CustomerDB, Address, Bin, Subscription, Invoice
 from dotenv import load_dotenv, find_dotenv
-from app.models import User, Role
-
+from app.models import User, Role, CustomerDB, \
+    Address, Bin, Subscription, Invoice
 # Setup Stripe python client library
 load_dotenv(find_dotenv())
 # Create app instance
@@ -19,7 +19,7 @@ def make_shell_context():
     """This function adds the
     database instance and models
     to the flask shell context"""
-    return dict(db=db, User=User, Role=Role)
+    return dict(db=db, User=User, Role=Role, CustomerDB=CustomerDB, Address=Address, Bin=Bin, Subscription=Subscription, Invoice=Invoice)
 
 @app.cli.command()  # The cli.command decorator simplifies the implementation of custom commands
 @click.argument('test_names', nargs=-1)

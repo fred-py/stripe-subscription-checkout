@@ -1,15 +1,16 @@
 {% extends "database/base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+<!--{% import "bootstrap/wtf.html" as wtf %}-->
 
 {% block title %}United Wheelie Wash DB{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1><h1>Hello, {% if name %}{{ name }}{% else %}Stranger{% endif %}!</h1></h1>
+    <h1><h1>Hello, {% if current_user.is_authenticated %}
+        {{ current_user.username }}
+    {% else %} 
+        Stranger{% endif %}!</h1></h1>
     {% if not known %}
     <p>Looks like you are new here. Welcome to United Wheelie Wash Database.</p>
-    {% else %}
-    <p>Happy to see you again!</p>
     {% endif %}
 </div>
 <!--Flask-Moment object os available to templates to work with time-stamps
