@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
 from flask_login import UserMixin
 from datetime import datetime
+from werkzeug.security import generate_password_hash, check_password_hash
 from .extensions import db
 
 # Create association table
@@ -139,6 +140,27 @@ class User(db.Model):
     # One to many relationship
     role_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
+    @property  # Write-only Property decorator allows the method below to be defined as a property of an object
+    def password(self) -> None:
+        # AttributeError is raised if password is hashed
+        # The password is not meant to be a readable attribute
+        raise AttributeError('password is not a readable attribute')
+
+    # When @password is set, the setter methods calls
+    # Werrkzeug's generate_password_hash() function
+    # And writes the result to the password_hash attribute
+    @password.setter  # Attempting to read the password attribute raises AttributeError
+    def password(self, password: str) -> None:  # As the password cannot be recovered once hashed
+        self.password_hash = generate_password_hash(password)  # password_hash column from db model
+
+    def verify_password(self, password: str) -> bool:
+        """This method takes a password and passes it
+        to Werkzeug's check_password_hash() function
+        for verification against the hashed version
+        stored in the User model, returning a True if
+        password is correct"""
+        return check_password_hash(self.password_hash, password)
+ 
     def __repr__(self) -> str:
         return f'User {self.username}, Email: {self.email}'
 
