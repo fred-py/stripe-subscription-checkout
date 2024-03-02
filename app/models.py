@@ -1,8 +1,12 @@
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from flask import current_app
 from flask_login import UserMixin
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
+from itsdangerous import BadSignature, SignatureExpired
 from .extensions import db, login_manager
+
 
 # Create association table
 # https://realpython.com/python-sqlite-sqlalchemy/#table-creates-associations
@@ -138,6 +142,7 @@ class User(UserMixin, db.Model):
     username: Mapped[str] = db.Column(db.String(64), unique=True, index=True)
     email: Mapped[str] = db.Column(db.String(120), unique=True, index=True)
     password_hash: Mapped[str] = db.Column(db.String(512))
+    confirmed: Mapped[bool] = db.Column(db.Boolean, default=False)
     # One to many relationship
     role_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
@@ -161,7 +166,23 @@ class User(UserMixin, db.Model):
         stored in the User model, returning a True if
         password is correct"""
         return check_password_hash(self.password_hash, password)
- 
+    
+    def generate_confirmation_token(self) -> str:
+        s = Serializer(current_app.config['SECRET_KEY'])
+        return s.dumps({'confirm': self.id})
+    
+    def confirm(self, token: str) -> bool:
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'), max_age=3600)
+        except (BadSignature, SignatureExpired):
+            return False
+        if data.get('confirm') != self.id:
+            return False
+        self.confirmed = True
+        db.session.add(self)
+        return True
+    
     def __repr__(self) -> str:
         return f'User {self.username}, Email: {self.email}'
 

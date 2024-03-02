@@ -5,7 +5,7 @@ from . import auth
 from .. import db
 from app.models import User
 from app.emails import send_email
-from .forms import LoginForm  #RegistrationForm
+from .forms import LoginForm, RegistrationForm
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -22,7 +22,6 @@ def login():
             return redirect(next)
         flash('Invalid email or password.')
     return render_template('/database/auth/login.html', form=form)
-
 
 
 @auth.route('/logout')
@@ -44,4 +43,4 @@ def register():
         db.session.commit()
         flash('You can now login.')
         return redirect(url_for('auth.login'))
-    return render_template('auth/register.html', form=form)
+    return render_template('database/auth/register.html', form=form)

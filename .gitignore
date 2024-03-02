@@ -38,3 +38,8 @@ target/
 
 # Virtual Env
 venv/
+*sqlite
+credentials.json
+token.json
+proton_me_recovery
+client_DELETE_AFTER_TEST/
