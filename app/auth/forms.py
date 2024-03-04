@@ -17,7 +17,7 @@ class LoginForm(FlaskForm):  # Flask WebDev p. 114 / 132
         ]
     )
     password = PasswordField('Password', validators=[
-            DataRequired(), Length(min=12)
+            DataRequired(), Length(min=11)
         ]
     )
     remember_me = BooleanField('Keep me logged in')  # Booleanfield class represents a checkbox
@@ -34,7 +34,7 @@ class RegistrationForm(FlaskForm):
                'Usernames must have only letters, numbers, dots or '
                'underscores')])
     password = PasswordField('Password', validators=[
-        DataRequired(), EqualTo('password2', message='Passwords must match.')])
+        DataRequired(), Length(11), EqualTo('password2', message='Passwords must match.')])
     password2 = PasswordField('Confirm password', validators=[DataRequired()])
     submit = SubmitField('Register')
 
