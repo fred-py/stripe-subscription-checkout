@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, current_app
 from flask_login import login_user, logout_user, login_required, \
     current_user
 from . import auth
@@ -80,6 +80,9 @@ def confirm(token):  # Users will be required to lon in before reaching this vie
     if current_user.confirm(token):  # Token confirmation is done entirely by the User model by calling confirm
         db.session.commit()
         flash('You have confirmed your account. Thanks!')
+        # Send email to admin when a new user confirms their account
+        send_email(current_app.config['UNITED_ADMIN'], 'New User',
+                   'database/auth/email/new_user', user=current_user)
     else:
         flash('The confirmation link is invalid or has expired.')
     return redirect(url_for('db_views.index'))

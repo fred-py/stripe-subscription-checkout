@@ -1,13 +1,1 @@
-Hello {{ user.username }},
-
-Welcome to United Wheelie Wash Database!
-
-To confirm your account please click on the following link:
-
-{{ url_for('auth.confirm', token=token, _external=True) }}
-
-Regards,
-
-The United Team
-
-Note: replies to this email address are not monitored.
+User {{ user.username }} has registered for access to db.
