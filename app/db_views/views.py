@@ -13,6 +13,7 @@ from app.models import User, Role, CustomerDB, \
 from app.extensions import db
 from flask_migrate import Migrate
 from app.emails import send_email
+from app.decorators import admin_required
 
 
 
@@ -65,6 +66,8 @@ def index():
         current_time=datetime.utcnow()
     )
 
+
+#@admin_required # refer to page 340 of Flask Web Development for implementation
 
 @db_views.route('/user/<name>')
 def user(name):
