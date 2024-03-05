@@ -153,6 +153,7 @@ class Role(db.Model):
         To add a new role or change the permission assignments for a role,
         change the roles dictionary at the top of the function
         and then run the function again."""
+        # NOTE: Roles were added via flask shell p.342
         roles = {
             'User': [Permission.USER],
             'Driver': [Permission.USER, Permission.DRIVER],

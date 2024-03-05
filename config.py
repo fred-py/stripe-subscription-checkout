@@ -16,6 +16,11 @@ class Config:
     UNITED_MAIL_SUBJECT_PREFIX = '[United]'
     UNITED_MAIL_SENDER = 'United Admin <pythonapi2023@gmail.com>'
     UNITED_ADMIN = os.getenv('UNITED_ADMIN')
+    UNITED_ADMIN_1 = os.getenv('UNITED_ADMIN_1')
+    UNITED_ADMIN_2 = os.getenv('UNITED_ADMIN_2')
+    UNITED_ADMIN_3 = os.getenv('UNITED_ADMIN_3')
+    UNITED_DRIVER = os.getenv('UNITED_DRIVER')
+    MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     PORT = int(os.getenv('PORT', 4242))  # This is needed to deploy on fl0
     

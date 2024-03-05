@@ -56,6 +56,10 @@ https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
   $ from app.models import CustomerDB, Address etc...
   $ cus = CustomerDB.query.all()
   $ print(cus)
+  > Add Existing Roles in models module
+  $ flask shell
+  $ Role.insert_roles()
+  $ Role.query.all()
 
 
 
