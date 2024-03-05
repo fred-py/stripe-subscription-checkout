@@ -304,7 +304,7 @@ class User(UserMixin, db.Model):
         return self.can(Permission.ADMIN)
 
     def __repr__(self) -> str:
-        return '<User %r>' % self.username, self.email
+        return '<User %r>' % self.username
 
 
 class AnonymousUser(AnonymousUserMixin):
