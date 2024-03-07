@@ -51,7 +51,7 @@ def get_checkout_session():
 
 
 @main.route('/create-checkout-session', methods=['POST', 'OPTIONS'])
-def create_checkout_session():  # Asynchronous function
+def create_checkout_session():
     price = request.form.get('priceId')
     domain_url = os.getenv('DOMAIN')
     try:
@@ -329,8 +329,8 @@ def webhook_received():
 
     #print('event ' + event_type)
 
-    uww = os.getenv('UWW_KEY')  # ServiceM8 Wheelie Wash Keys
-    ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
+    #uww = os.getenv('UWW_KEY')  # ServiceM8 Wheelie Wash Keys
+    #ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
 
     # NOTE: PaymentIntent is created automatically however it is not
     # automatically attached to cus_id\
@@ -396,7 +396,7 @@ def webhook_received():
             session_info = prepare_session_data(data)
             user = Customer(**session_info)  # Dataclass Unpacks Dict
             # Add customer to the database
-            add_user(user)
+            add_user(user, test=True)
             print(user.name)
             #add_customer(**)
             # Convert, combine and pass data to ServiceM8
@@ -454,11 +454,11 @@ def webhook_received():
                 amount = 5000
             elif plan_id == os.getenv('ANY_COMBO_PRICE_ID'):
                 amount = 17900
-            
+
             stripe.Refund.create(
                 payment_intent=p_intent_id,
                 amount=amount
-            ) 
+            )
 
 
 

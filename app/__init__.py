@@ -17,7 +17,7 @@ load_dotenv(find_dotenv())
 login_manager.login_view = 'auth.login'
 
 
-def create_app(config_name='development'):  # Change to 'production' before deployment
+def create_app(config_name='testing'):  # Change to 'production' before deployment
     """Flask application factory function configuration
     settings stored in one of the classes defined in
     config.py can be imported directly into the app using 
@@ -54,6 +54,9 @@ def create_app(config_name='development'):  # Change to 'production' before depl
 
     from .auth import auth as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth') # prefix adds /auth to all routes in the blueprint
+
+    from .customers import customers as customers_bp
+    app.register_blueprint(customers_bp)
 
     #from app.users import bp as users_bp
     #app.register_blueprint(users_bp)

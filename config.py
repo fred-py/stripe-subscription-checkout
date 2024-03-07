@@ -39,9 +39,10 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
+    # Stripe Prices - TEST MODE
 
     def __init__(self):
-        self.SQLALCHEMY_DATABASE_URI = os.getenv('TEST_DATABASE_URL') or \
+        self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
 
 

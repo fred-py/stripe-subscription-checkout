@@ -579,4 +579,9 @@ gold_cus.subscribe()"""
 
 
 if __name__ == '__main__':
-    checkout_test(gold, local)
+    for _ in range(15):
+        checkout_test(gold, local)
+        sleep.sleep(2)
+        checkout_test(silver, local)
+        sleep.sleep(2)
+        #checkout_test(bronze, local)

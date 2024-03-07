@@ -4,13 +4,14 @@ from app.extensions import db
 
 # Add new users to the Database
 """"Refer to real python for with statement or arjan """
-def add_user(data):
+def add_user(data, test=False):
     # Customer details from Customer Dataclass
     name = data.name
     email = data.email
     phone = data.phone
     cus_id = data.cus_id
     paymentintent_id = data.paymentintent_id
+    test = test
     
     # Address
     street = data.street
@@ -37,6 +38,7 @@ def add_user(data):
         phone=phone,
         cus_id=cus_id,
         paymentintent_id=paymentintent_id,
+        test=test,
     )
 
     new_address = Address(
