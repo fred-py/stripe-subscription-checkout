@@ -70,9 +70,7 @@ class Address(db.Model):
     customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'))
 
     def __repr__(self) -> str:
-        return f'Address {self.street}, {self.city}, {self.state}, {self.postcode}, ' \
-                f'Customer ID: {self.customer_id}, ' \
-                f'Customer: {self.customers}'
+        return f'{self.street}, {self.city}, {self.state}, {self.postcode}'
 
 
 class Bin(db.Model):
@@ -90,10 +88,7 @@ class Bin(db.Model):
     customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
 
     def __repr__(self) -> str:
-        return f'Bin Collection: {self.bin_collection}, Selected Bins: {self.selected_bins}, ' \
-                f'Clean Date: {self.clean_date}, Clean Cycle: {self.clean_cycle}, ' \
-                f'Customer ID: {self.customer_id}, ' \
-                f'Customer: {self.customers}'
+        return f'Bin Collection: {self.bin_collection}, Selected Bins: {self.selected_bins}'
 
 
 class Subscription(db.Model):
@@ -107,9 +102,7 @@ class Subscription(db.Model):
     customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
 
     def __repr__(self) -> str:
-        return f'Subscription Plan: {self.plan}, Total Paid: {self.total_paid}, ' \
-                f'Active: {self.active}, Customer ID: {self.customer_id}, ' \
-                f'Customer: {self.customers}'
+        return f'{self.plan}'
 
 
 class Invoice(db.Model):
@@ -126,8 +119,7 @@ class Invoice(db.Model):
 
     def __repr__(self) -> str:
         return f'Invoice ID: {self.invoice_id}, Invoice Date: {self.invoice_date}, ' \
-                f'Invoice Total: {self.invoice_total}, Customer ID: {self.customer_id}, ' \
-                f'Customer: {self.customers}'
+                f'Invoice Total: {self.invoice_total}'
 
 
 class Role(db.Model):

@@ -1,0 +1,52 @@
+{% extends "database/base.html" %}
+<!--{% import "bootstrap/wtf.html" as wtf %}-->
+
+{% block title %}Customer List{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1><h1>Customers List</h1></h1>
+    <style>
+        .align-left {
+            text-align: left;
+        }
+        th {
+            padding: 0 10px;
+        }
+
+        td {
+            padding: 0 10px;
+            margin-bottom: 50%;
+        }
+    </style>
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Bins</th>
+            <th>Subscription</th>
+            <!--<th>Invoice</th>
+            <th>Customer Stripe ID</th>
+            <th>Active</th>
+            <th>Order date</th>
+            <th>Payment</th> -->
+            <!-- Add more headers as needed -->
+        </tr>
+        {% for customer in customers %}
+        <tr>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.phone }}</td>
+            <td>{{ customer.addresses }}</td>
+            <td>{{ customer.bins }}</td>
+            <td>{{ customer.subscriptions }}</td>
+ 
+            <!-- Add more data cells as needed -->
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+{% endblock %}
