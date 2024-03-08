@@ -22,6 +22,8 @@ class Permission:
             1. User: {self.USER}, 2. Admin: {self.ADMIN}'
 
 
+#**************
+# NOTE MIGRATION NEEDS TO HAPPEN TO APPLY to_dict() to all models
 class CustomerDB(db.Model):
     __tablename__ = 'customers'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
@@ -34,7 +36,8 @@ class CustomerDB(db.Model):
     test: Mapped[bool] = db.Column(db.Boolean, default=False)
     in_serviceM8: Mapped[bool] = db.Column(db.Boolean, default=False)
     cus_serviceM8_id: Mapped[str] = db.Column(db.String, default=False)
-    order_date: Mapped[datetime] = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    order_date: Mapped[datetime] = db.Column(db.DateTime, nullable=False,
+                                             default=datetime.utcnow)
 
     # One to one relationship
     # uselist=False means that the relationship will return a 
@@ -46,6 +49,32 @@ class CustomerDB(db.Model):
     subscriptions: Mapped['Subscription'] = db.relationship(back_populates='customers', uselist=False)
     # One to many relationship
     invoices: Mapped['Invoice'] = db.relationship(back_populates='customers')
+
+    def to_dict(self) -> dict:
+        return {
+            # CustomerDB columns
+            'id': self.id,
+            'name': self.name,
+            'phone': self.phone,
+            'email': self.email,
+            'cus_id': self.cus_id,
+            'paymentintent_id': self.paymentintent_id,
+            'active': self.active,
+            'test': self.test,
+            'order_date': self.order_date,
+            # Address columns
+            'address': self.addresses.to_dict_full_address() if self.addresses else None,
+            # Bin columns
+            'bin_collection': self.bins.bin_collection_dict() if self.bins else None,
+            'selected_bins': self.bins.selected_bins_dict() if self.bins else None,
+            'clean_date': self.bins.clean_date_dict() if self.bins else None,
+            # Subscription column
+            'subscription': self.subscriptions.plan_dict() if self.subscriptions else None,
+            # Invoice columns
+            'amount_paid': self.invoices.amount_paid_dict() if self.invoices else None,
+            'invoice_url': self.invoices.invoice_url_dict() if self.invoices else None,
+            'inv_description': self.invoices.inv_description_dict() if self.invoices else None,
+        }
 
     def __repr__(self) -> str:
         return f'Customer {self.name}, ID: {self.id}, Phone: {self.phone}, ' \
@@ -69,8 +98,22 @@ class Address(db.Model):
     # ForeignKey() provides a low-level database constraint that ensures data integrity.
     customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'))
 
+    def to_dict(self) -> dict:
+        return {
+            'id': self.id,
+            'street': self.street,
+            'city': self.city,
+            'state': self.state,
+            'postcode': self.postcode
+        }
+
+    def to_dict_full_address(self) -> dict:
+        return self.street + ' ' + self.city \
+            + ' ' + self.state + ' ' + self.postcode
+
     def __repr__(self) -> str:
-        return f'{self.street}, {self.city}, {self.state}, {self.postcode}'
+        return f'{self.street}, \
+            {self.city}, {self.state}, {self.postcode}'
 
 
 class Bin(db.Model):
@@ -83,23 +126,61 @@ class Bin(db.Model):
     clean_cycle: Mapped[str] = db.Column(db.String) # Weekly, Fortnightly, Monthly, one off  
 
     # One to one relationship
-    customers: Mapped['CustomerDB'] = db.relationship(back_populates='bins', lazy=True)
+    customers: Mapped['CustomerDB'] = db.relationship(
+        back_populates='bins', lazy=True
+    )
     # ForeignKey() provides a low-level database constraint that ensures data integrity.
-    customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
+    customer_id: Mapped[int] = db.Column(
+        db.Integer, db.ForeignKey('customers.id'),
+        nullable=False
+    )
+
+    def to_dict(self) -> dict:
+        return {
+            'id': self.id,
+            'bin_collection': self.bin_collection,
+            'selected_bins': self.selected_bins,
+            'clean_date': self.clean_date,
+            'clean_cycle': self.clean_cycle
+        }
+
+    def bin_collection_dict(self) -> dict:
+        return self.bin_collection
+
+    def selected_bins_dict(self) -> dict:
+        return self.selected_bins
+
+    def clean_date_dict(self) -> dict:
+        return self.clean_date
+
+    def clean_cycle_dict(self) -> dict:
+        return self.clean_cycle
 
     def __repr__(self) -> str:
-        return f'Bin Collection: {self.bin_collection}, Selected Bins: {self.selected_bins}'
+        return f'Bin Collection: {self.bin_collection}, \
+            Selected Bins: {self.selected_bins}'
 
 
 class Subscription(db.Model):
     __tablename__ = 'subscriptions'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     plan: Mapped[str] = db.Column(db.String)
-    active: Mapped[bool] = db.Column(db.Boolean, default=True)
 
     # One to one relationship
     customers: Mapped['CustomerDB'] = db.relationship(back_populates='subscriptions', lazy=True)
     customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
+
+    def to_dict(self) -> dict:
+        return {
+            'id': self.id,
+            'plan': self.plan,
+        }
+
+    def plan_dict(self) -> dict:
+        plan = self.plan
+        if 'Subscription' in plan:
+            plan = plan.replace('Subscription', '')
+        return plan
 
     def __repr__(self) -> str:
         return f'{self.plan}'
@@ -117,6 +198,27 @@ class Invoice(db.Model):
     customers: Mapped['CustomerDB'] = db.relationship(back_populates='invoices', lazy=True)
     customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'), nullable=False)
 
+    def to_dict(self) -> dict:
+        return {
+            'id': self.id,
+            'invoice_id': self.invoice_id,
+            'amount_paid': self.amount_paid,
+            'invoice_url': self.invoice_url,
+            'inv_description': self.inv_description
+        }
+
+    def invoice_id_dict(self) -> dict:
+        return self.invoice_id
+
+    def amount_paid_dict(self) -> dict:
+        return self.amount_paid
+
+    def invoice_url_dict(self) -> dict:
+        return self.invoice_url
+
+    def inv_description_dict(self) -> dict:
+        return self.inv_description
+
     def __repr__(self) -> str:
         return f'Invoice ID: {self.invoice_id}, Invoice Date: {self.invoice_date}, ' \
                 f'Invoice Total: {self.invoice_total}'
@@ -127,7 +229,7 @@ class Role(db.Model):
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     name: Mapped[str] = db.Column(db.String(64), unique=True)
     default: Mapped[bool] = db.Column(db.Boolean, default=False, index=True)  # Default permission
-    permissions: Mapped[int] = db.Column(db.Integer) 
+    permissions: Mapped[int] = db.Column(db.Integer)
     # One to many relationship
     users = db.relationship('User', backref='role', lazy='dynamic')
 

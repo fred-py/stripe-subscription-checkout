@@ -50,6 +50,15 @@ class CustomerQuery(QueryBase):
         order_date = customer.order_date
         print(order_date)
         return order_date
+    
+    def list_bins(self):
+        """Query the bins from the database"""
+        customer = CustomerDB.query.all()
+        bins = customer.bins
+        for customers in customer:
+            for bin in bins:
+                print(bin.bin_collection)
+                return bin.bin_collection
 
 
 class BinQuery(QueryBase):

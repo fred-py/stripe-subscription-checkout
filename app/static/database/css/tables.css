@@ -1,0 +1,4 @@
+.gridjs td {
+    white-space: nowrap;
+    overflow: visible;
+}

@@ -91,7 +91,7 @@ def confirm(token):  # Users will be required to lon in before reaching this vie
                    'database/auth/email/new_user', user=current_user)
     else:
         flash('The confirmation link is invalid or has expired.')
-    return redirect(url_for('db_views.index'))
+    return redirect(url_for('database.index'))
 
 
 @auth.route('/confirm')
