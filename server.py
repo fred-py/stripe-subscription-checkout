@@ -21,6 +21,7 @@ def make_shell_context():
     to the flask shell context"""
     return dict(db=db, User=User, Role=Role, CustomerDB=CustomerDB, Address=Address, Bin=Bin, Subscription=Subscription, Invoice=Invoice)
 
+
 @app.cli.command()  # The cli.command decorator simplifies the implementation of custom commands
 @click.argument('test_names', nargs=-1)
 def test(test_names):

@@ -8,6 +8,7 @@ combined into one application"""
 from flask import Flask
 from config import config
 from app.extensions import db, bootstrap, moment, migrate, mail, login_manager
+    # cus_query, bin_query
 from dotenv import load_dotenv, find_dotenv
 
 # Setup Stripe python client library
@@ -39,6 +40,8 @@ def create_app(config_name='development'):  # Change to 'production' before depl
 
     # Initialize Flask extensions here
     db.init_app(app)  # SQLAlchemy database extension
+    #cus_query.init_app(app)  # Customer query extension
+    #bin_query.init_app(app)  # Bin query extension
     bootstrap.init_app(app)
     moment.init_app(app)
     migrate.init_app(app, db)

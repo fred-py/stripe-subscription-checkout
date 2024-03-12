@@ -58,6 +58,7 @@ blocks of content that are added to the base template-->
 </div>
 {% endblock %}
 
+
 {% block content %}
 <div class="container">
     <!--Flashed messages are displayed in the base template-->
@@ -69,6 +70,11 @@ blocks of content that are added to the base template-->
     {% endfor %}
 
     {% block page_content %}{% endblock %}
+
+    {% if config['DEBUG'] %}
+        {% include 'database/_debug.html' %}
+    {% endif %}
+
 </div>
 {% endblock %}
 
