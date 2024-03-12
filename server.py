@@ -6,6 +6,8 @@ from app import create_app, db
 from dotenv import load_dotenv, find_dotenv
 from app.models import User, Role, CustomerDB, \
     Address, Bin, Subscription, Invoice
+from app.query_ops import CustomerQuery, BinQuery
+
 # Setup Stripe python client library
 load_dotenv(find_dotenv())
 # Create app instance
@@ -19,7 +21,13 @@ def make_shell_context():
     """This function adds the
     database instance and models
     to the flask shell context"""
-    return dict(db=db, User=User, Role=Role, CustomerDB=CustomerDB, Address=Address, Bin=Bin, Subscription=Subscription, Invoice=Invoice)
+    return dict(
+        db=db, User=User, Role=Role,
+        CustomerDB=CustomerDB, Address=Address,
+        Bin=Bin, Subscription=Subscription,
+        Invoice=Invoice, CustomerQuery=CustomerQuery,
+        BinQuery=BinQuery
+    )
 
 
 @app.cli.command()  # The cli.command decorator simplifies the implementation of custom commands

@@ -1,4 +1,6 @@
-<!--NOTE: Unused file at this stage-->
+<!--https://realpython.com/flask-javascript-frontend-for-rest-api/#sprinkle-in-some-javascript-->
+
+
 <html>
 <div class="debug-card">
     <form class="debug-form">
@@ -16,3 +18,67 @@
         white-space: pre-wrap;
     }
 </style>
+
+<script>
+// This function makes a GET HTTP request with the API when getData is called
+// This will clear the <code> element when the button with data-action='clear' is clicked
+// The function below will introduce the first Ajax function to the app
+// Ajax stands for Asynchronous JavaScript & XML
+// Ajax use-case: retrieve data from URL without refreshing entire page
+function getData(endpoint, callback) {  // Define a function that takes an endpoint and a callback
+  const request = new XMLHttpRequest();  // Create a new XMLHttpRequest object, used to make requests
+  // The function below binds the .onreadystatechange() 
+  // event to request. It triggers when you change .readyState()
+  // The value 4 indicates DONE state
+  request.onreadystatechange = () => {  // In this case '=>' is used to declare a function/arrow function
+    if (request.readyState === 4) {  // Checks for the value 4 of .readyState
+        // Calls the callback function with request.response 
+        // when the request operation is complete  
+        callback(request.response);  
+    }
+  };
+  // Ajax method .open Initializes the request with a GET HTTP action
+  // and provided endpoint url
+  request.open("GET", endpoint);
+  // Ajax send() method Sends the request and triggers .onreadystatechange()
+  request.send();
+}
+    class DebugForm {
+      constructor() {
+        this.debugCard = document.querySelector(".debug-card");
+        this.form = this.debugCard.querySelector(".debug-form");
+        this.clearButton = this.form.querySelector("button[data-action='clear']");
+        this.clearButton.addEventListener(
+          "click",
+          this.handleClearClick.bind(this)
+        );
+        this.sendButton = this.form.querySelector("button[data-action='read']");
+        this.sendButton.addEventListener("click", this.handleSendClick.bind(this));
+      }
+      //This method connects to debugCard above
+      handleClearClick(event) {
+        event.preventDefault();
+        let code = this.debugCard.querySelector("code");
+        code.innerText = "";
+      }
+    
+      handleSendClick(event) {
+        event.preventDefault();
+        const input = document.querySelector(".debug-card input");
+        const endpoint = input.value;
+        getData(endpoint, this.showResponse);
+      }
+
+      // showResponse() will be used as a call back function
+      // and be executed one getData() runs successfully
+      // The data received by the .showResponse() method 
+      // will be displayed in the <code> element
+      showResponse(data) {
+        const debugCard = document.querySelector(".debug-card");
+        let code = debugCard.querySelector("code");
+        code.innerText = data;
+      }
+    }
+    
+    new DebugForm();
+    </script>

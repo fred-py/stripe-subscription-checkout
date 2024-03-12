@@ -9,53 +9,45 @@ Refer to Arjan Code ABC abstraction for possible solution.
 
 The classes below are instatiated in the extensions.py file"""
 
-
+from .extensions import db
+from .models import CustomerDB, Bin
 #cus = 'cus_PYUAHiHNnCm0Oe'
 
 
-class ModelBase:
-    def __init__(self, CustomerDB, Bin):
-        from app.models import CustomerDB, Bin
-        self.CustomerDB = CustomerDB
-        self.Bin = Bin
+class CustomerQuery:
 
-
-class CustomerQuery(ModelBase):
-    def __init__(self):
-        super().__init__()
-
-    def get_customer_id(self, cus_id):
+    def get_customer_id(cus_id):
         """This refers to ID (primary_key)
         on the CustomerDB table"""
-        customer = self.CustomerDB.query.filter_by(cus_id=cus_id).first()
+        customer = CustomerDB.query.filter_by(cus_id=cus_id).first()
         id = customer.id
         print(id)
         return id
 
-    def get_cus_id(self, cus_id):
+    def get_cus_id(cus_id):
         """Query the customer ID from the database"""
-        customer = self.CustomerDB.query.filter_by(cus_id=cus_id).first()
+        customer = CustomerDB.query.filter_by(cus_id=cus_id).first()
         customer_id = customer.cus_id
         print(customer_id)
         return customer_id
 
-    def get_payment_intent(self, cus_id):
+    def get_payment_intent(cus_id):
         """Query the payment intent ID from the database"""
-        customer = self.CustomerDB.query.filter_by(cus_id=cus_id).first()
+        customer = CustomerDB.query.filter_by(cus_id=cus_id).first()
         payment_intent = customer.paymentintent_id
         print(payment_intent)
         return payment_intent
 
-    def get_order_date(self, cus_id):
+    def get_order_date(cus_id):
         """Query the order date from the database"""
-        customer = self.CustomerDB.query.filter_by(cus_id=cus_id).first()
+        customer = CustomerDB.query.filter_by(cus_id=cus_id).first()
         order_date = customer.order_date
         print(order_date)
         return order_date
 
-    def list_bins(self):
+    def list_bins():
         """Query the bins from the database"""
-        customer = self.CustomerDB.query.all()
+        customer = CustomerDB.query.all()
         bins = customer.bins
         for customers in customer:
             for bin in bins:
@@ -63,13 +55,11 @@ class CustomerQuery(ModelBase):
                 return bin.bin_collection
 
 
-class BinQuery(ModelBase):
-    def __init__(self):
-        super().__init__()
+class BinQuery:
 
     def get_bin_collection(self, id):
         """Query the bin collection from the database"""
-        bin = self.Bin.query.filter_by(customer_id=id).first()
+        bin = Bin.query.filter_by(customer_id=id).first()
         bin_collection = bin.bin_collection
         print(bin_collection)
         return bin_collection

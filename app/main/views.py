@@ -13,7 +13,7 @@ from dotenv import load_dotenv, find_dotenv
 #from ..db_operations.servicem8_operations.data_transfer import data_transfer as d
 from ..db_operations.prepare_data import prepare_session_data, Customer
 from ..db_operations.crud_operations import add_user
-from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
+#from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
 
 
 load_dotenv(find_dotenv())

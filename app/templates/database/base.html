@@ -70,7 +70,7 @@ blocks of content that are added to the base template-->
     {% endfor %}
 
     {% block page_content %}{% endblock %}
-
+    <!--The below loads _debug.html if config is set='development'-->
     {% if config['DEBUG'] %}
         {% include 'database/_debug.html' %}
     {% endif %}
