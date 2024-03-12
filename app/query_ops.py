@@ -23,6 +23,12 @@ class CustomerQuery:
         id = customer.id
         print(id)
         return id
+    
+    def get_customer_by_email(email):
+        """Query the customer by email"""
+        customer = CustomerDB.query.filter_by(email=email).first()
+        print(customer)
+        return customer
 
     def get_cus_id(cus_id):
         """Query the customer ID from the database"""
@@ -30,6 +36,7 @@ class CustomerQuery:
         customer_id = customer.cus_id
         print(customer_id)
         return customer_id
+
 
     def get_payment_intent(cus_id):
         """Query the payment intent ID from the database"""

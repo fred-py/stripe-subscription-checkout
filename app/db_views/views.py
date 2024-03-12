@@ -45,7 +45,7 @@ def index():
             session['known'] = False
             if current_app.config['UNITED_ADMIN']:
                 # Sends an email to the admin when a new user is added
-            
+
                 send_email(
                     current_app.config['UNITED_ADMIN'],
                     'New User',
