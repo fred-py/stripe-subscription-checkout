@@ -78,7 +78,7 @@ def update():
     if 'id' not in data:
         abort(400)
     customer = CustomerDB.query.get(data['id'])
-    for field in ['name', 'address', 'phone', 'email']:
+    for field in ['name', 'address', 'phone', 'email', 'bin_collection', 'clean_date']:
         if field in data:
             setattr(customer, field, data[field])
     db.session.commit()

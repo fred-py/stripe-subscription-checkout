@@ -44,7 +44,7 @@ const tableDiv = document.getElementById('table');
                 { id: 'name', name: 'Name', 'attributes': editableCellAttributes },
                 { id: 'phone', name: 'Mobile', sort: false, 'attributes': editableCellAttributes },
                 { id: 'email', name: 'Email', 'attributes': editableCellAttributes },
-                { id: 'invoice_url', name: 'Download Invoice', formatter: (cell, row) => gridjs.h('a', { href: cell, target: '_blank' }, 'Download')}
+                { id: 'invoice_url', name: 'Invoice', formatter: (cell, row) => gridjs.h('a', { href: cell, target: '_blank' }, 'Open Invoice')}
             ],
             server: {
                 url: '/search',
@@ -89,7 +89,7 @@ const tableDiv = document.getElementById('table');
                     style: { width: '500px' }, 'attributes': editableCellAttributes });
             }
             if (streetCheckbox.checked) {
-                columns.push({ id: 'street', name: 'Street'});
+                columns.push({ id: 'street', name: 'Street', sort: false});
             }
             if (cityCheckbox.checked) {
                 columns.push({ id: 'city', name: 'City'});
@@ -98,7 +98,7 @@ const tableDiv = document.getElementById('table');
                 columns.push({ id: 'postcode', name: 'Postcode'});
             }
             if (cus_idCheckbox.checked) {
-                columns.push({ id: 'cus_id', name: 'Customer ID'});
+                columns.push({ id: 'cus_id', name: 'Customer ID', sort: false});
             }
             if (subscriptionCheckbox.checked) {
                 columns.push({ id: 'subscription', name: 'Subscription'});
@@ -108,7 +108,7 @@ const tableDiv = document.getElementById('table');
                 'attributes': editableCellAttributes });
             }
             if (cleandateCheckbox.checked) {
-                columns.push({ id: 'cleandate', name: 'Clean Date',
+                columns.push({ id: 'clean_date', name: 'Clean Date',
                 'attributes': editableCellAttributes});
             }
             if (nameCheckbox.checked) {
@@ -124,14 +124,17 @@ const tableDiv = document.getElementById('table');
                 'attributes': editableCellAttributes });
             }
             if (invoiceURLCheckbox.checked) {
-                columns.push({ id: 'invoiceURL', name: 'Invoice',
+                columns.push({ id: 'invoice_url', name: 'Invoice',
                 formatter: (cell, row) => gridjs.h('a', { href: cell, target: '_blank' }, 'Open Invoice')});
             }
             if (amountpaidCheckbox.checked) {
-                columns.push({ id: 'amountpaid', name: 'Amount Paid'});
+                columns.push({ id: 'amount_paid', name: 'Amount Paid'});
             }
-            if (statusCheckbox.checked) {
-                columns.push({ id: 'status', name: 'Status'});
+            if (activeCheckbox.checked) {
+                columns.push({ id: 'active', name: 'Active'});
+            }
+            if (orderdateCheckbox.checked) {
+                columns.push({ id: 'order_date', name: 'Order Date'});
             }
 
             grid.updateConfig({
@@ -155,7 +158,7 @@ const tableDiv = document.getElementById('table');
                     multiColumn: true,
                     server: {
                         url: (prev, columns) => {
-                        const columnIds = ['id', 'address', 'subscriptions', 'name', 'phone', 'email'];
+                        const columnIds = ['id', 'address', 'subscription', 'name', 'email', 'city'];
                         const sort = columns.map(col => (col.direction === 1 ? '+' : '-') + columnIds[col.index]);
                         return updateUrl(prev, {sort});
                         },
@@ -183,7 +186,7 @@ const tableDiv = document.getElementById('table');
             tableDiv.addEventListener('focusout', ev => {
                 if (ev.target.tagName === 'TD') {
                 if (savedValue !== ev.target.textContent) {
-                    fetch('/api/data', {
+                    fetch('/update', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
@@ -225,9 +228,9 @@ const tableDiv = document.getElementById('table');
         binCheckbox.addEventListener('change', updateTable);
         cleandateCheckbox.addEventListener('change', updateTable);
         invoiceURLCheckbox.addEventListener('change', updateTable);
-        amoutpaidCheckbox.addEventListener('change', updateTable);
+        amountpaidCheckbox.addEventListener('change', updateTable);
         orderdateCheckbox.addEventListener('change', updateTable);
-        statusCheckbox.addEventListener('change', updateTable);
+        activeCheckbox.addEventListener('change', updateTable);
 
         // Add event listeners for more checkboxes...
 

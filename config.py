@@ -52,7 +52,7 @@ class ProductionConfig(Config):
     # This has been moved into the __init__ method
     # Tis class definition was running before env variables were loaded
     # Now in create_app() function, an instance of the Config class is created
-    
+
     def __init__(self):
         self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
