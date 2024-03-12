@@ -20,9 +20,9 @@ const tableDiv = document.getElementById('table');
                 { id: 'subscription', name: 'Subscription', 'attributes': editableCellAttributes},
                 { id: 'bin_collection', name: 'Bin Collection', 'attributes': editableCellAttributes},
                 { id: 'name', name: 'Name', 'attributes': editableCellAttributes },
-                { id: 'phone', name: 'Mobile', sort: false, 'attributes': editableCellAttributes },
                 { id: 'email', name: 'Email', 'attributes': editableCellAttributes },
-                { id: 'invoice_url', name: 'Download Invoice', formatter: (cell, row) => gridjs.h('a', { href: cell, target: '_blank' }, 'Download')}
+                { id: 'phone', name: 'Mobile', 'attributes': editableCellAttributes },
+                { id: 'invoice_url', name: 'Invoice', formatter: (cell, row) => gridjs.h('a', { href: cell, target: '_blank' }, 'Open Invoice')}
             ],
             server: {
                 url: '/search',
