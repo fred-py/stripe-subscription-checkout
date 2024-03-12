@@ -62,8 +62,12 @@ class CustomerDB(db.Model):
             'active': self.active,
             'test': self.test,
             'order_date': self.order_date,
-            # Address columns
+            # Address
+            # Address contains the full address
             'address': self.addresses.to_dict_full_address() if self.addresses else None,
+            'street': self.addresses.street_dict() if self.addresses else None,
+            'city': self.addresses.city_dict() if self.addresses else None,
+            'postcode': self.addresses.postcode_dict() if self.addresses else None,
             # Bin columns
             'bin_collection': self.bins.bin_collection_dict() if self.bins else None,
             'selected_bins': self.bins.selected_bins_dict() if self.bins else None,
@@ -106,6 +110,15 @@ class Address(db.Model):
             'state': self.state,
             'postcode': self.postcode
         }
+
+    def street_dict(self) -> dict:
+        return self.street
+
+    def city_dict(self) -> dict:
+        return self.city
+
+    def postcode_dict(self) -> dict:
+        return self.postcode
 
     def to_dict_full_address(self) -> dict:
         return self.street + ' ' + self.city \
