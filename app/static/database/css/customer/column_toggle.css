@@ -1,0 +1,16 @@
+#columnSelection input[type="checkbox"] {
+    margin-right: 5px;
+    vertical-align: center;
+    
+
+}
+
+#columnSelection > div {
+    margin-bottom: 20px;
+}
+
+#columnSelection label {
+    display: inline-table;
+    margin-right: 10px;
+    
+}

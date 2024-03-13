@@ -1,7 +1,0 @@
-.gridjs td {
-    white-space: normal;
-    overflow: hidden;
-    text-overflow:" [more]";
-    min-width: 100px;
-    max-width: 200px;
-}

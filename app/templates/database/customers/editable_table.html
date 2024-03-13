@@ -10,23 +10,32 @@
     <body>
         <!--Check Boxes For Column Display Selection-->
         <div id="columnSelection">
-            <label><input type="checkbox" id="nameCheckbox" checked>Name</label>
-            <label><input type="checkbox" id="emailCheckbox" checked>Email</label>
-            <label><input type="checkbox" id="mobileCheckbox" checked>Phone</label>
-            <label><input type="checkbox" id="cus_idCheckbox" unchecked>Stripe_Cus.ID</label>
+            <div>
+                <label><input type="checkbox" id="nameCheckbox" checked>Name</label>
+                <label><input type="checkbox" id="emailCheckbox" checked>Email</label>
+                <label><input type="checkbox" id="mobileCheckbox" checked>Phone</label>
+                <label><input type="checkbox" id="cus_idCheckbox" unchecked>Stripe_Cus.ID</label>
+            </div>
 
+            <div>
             <label><input type="checkbox" id="addressCheckbox" checked>Full Address</label>
             <label><input type="checkbox" id="streetCheckbox" unchecked>Street</label>
             <label><input type="checkbox" id="cityCheckbox" unchecked>City</label>
             <label><input type="checkbox" id="postcodeCheckbox" unchecked>Postcode</label>
+            </div>
             
-            <label><input type="checkbox" id="subscriptionCheckbox" checked>Subscription</label>
-            <label><input type="checkbox" id="binCheckbox" checked>Bin Collection</label>
-            <label><input type="checkbox" id="cleandateCheckbox" unchecked>Clean Date</label>
-            <label><input type="checkbox" id="invoiceURLCheckbox" checked>Invoice URL</label>
-            <label><input type="checkbox" id="amountpaidCheckbox" unchecked>Amount Paid</label>
-            <label><input type="checkbox" id="orderdateCheckbox" unchecked>Order Date</label>
-            <label><input type="checkbox" id="activeCheckbox" unchecked>Active</label>
+            <div>
+                <label><input type="checkbox" id="subscriptionCheckbox" checked>Subscription</label>
+                <label><input type="checkbox" id="binCheckbox" checked>Bin Collection</label>
+                <label><input type="checkbox" id="cleandateCheckbox" unchecked>Clean Date</label>
+                <label><input type="checkbox" id="orderdateCheckbox" unchecked>Order Date</label>
+            </div>
+            
+            <div>
+                <label><input type="checkbox" id="invoiceURLCheckbox" checked>Invoice URL</label>
+                <label><input type="checkbox" id="amountpaidCheckbox" unchecked>Amount Paid</label>
+                <label><input type="checkbox" id="activeCheckbox" unchecked>Active</label>
+            </div>    
         <div>
             <hr>
             <div id="table"></div>

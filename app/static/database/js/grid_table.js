@@ -1,3 +1,5 @@
+
+// Original Script **Not in Use** replaced by table.js
 const tableDiv = document.getElementById('table');
 
         const updateUrl = (prev, query) => {

@@ -2,6 +2,7 @@
 // The columns of the table are determined by the checkboxes selected
 
 
+
 const tableDiv = document.getElementById('table');
 
         const updateUrl = (prev, query) => {
@@ -30,10 +31,11 @@ const tableDiv = document.getElementById('table');
         const subscriptionCheckbox = document.getElementById('subscriptionCheckbox');
         const binCheckbox = document.getElementById('binCheckbox');
         const cleandateCheckbox = document.getElementById('cleandateCheckbox');
+
         const invoiceURLCheckbox = document.getElementById('invoiceURLCheckbox');
         const amountpaidCheckbox = document.getElementById('amountpaidCheckbox');
         const orderdateCheckbox = document.getElementById('orderdateCheckbox');
-        const statusCheckbox = document.getElementById('statusCheckbox');
+        const activeCheckbox = document.getElementById('activeCheckbox');
 
         let grid = new gridjs.Grid({
             columns: [
@@ -78,6 +80,8 @@ const tableDiv = document.getElementById('table');
                     },
                 },
             },
+            resizable: true,  // Resizable columns
+            
         }).render(tableDiv);
 
 
@@ -165,6 +169,7 @@ const tableDiv = document.getElementById('table');
                     },
                 },
                 pagination: {
+                    limit: 10,
                     enabled: true,
                     server: {
                         url: (prev, page, limit) => {
@@ -172,6 +177,7 @@ const tableDiv = document.getElementById('table');
                         },
                     },
                 },
+                resizable: true,  // Resizable columns
                 
             }).forceRender(tableDiv);
 

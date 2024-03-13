@@ -71,6 +71,9 @@ def search_data():
     }
 
 
+
+
+
 @login_required
 @customers.route('/update', methods=['POST'])
 def update():
