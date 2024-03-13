@@ -89,3 +89,24 @@ h3 {
     max-width: auto;
     width: auto;
 }
+
+/*Mobile Screens*/
+@media (max-width: 600px) {
+    /* Header/Nav Text = 'Dashboard', 'Customers', etc...*/
+    .navbar-inverse .navbar-text {
+        padding-right: 7px;
+        padding-top: 5px;
+    }
+
+    .header_logo {
+        margin-left: -15px;
+        width: 90px;
+        margin-bottom: 15px;
+        position: left;
+        background-size: contain;
+
+    }
+    body {
+        font-size: 11px;
+    }
+}

@@ -54,3 +54,11 @@
 .container .gridjs td:hover {
     color: #000;
 }
+
+/*Mobile Screens*/
+@media (max-width: 600px) {
+    .gridjs td {
+        min-width: 30px;
+        max-width: 200px;
+    }
+}

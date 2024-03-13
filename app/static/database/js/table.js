@@ -219,6 +219,10 @@ const tableDiv = document.getElementById('table');
             });
         }
 
+        //function idFormatter(id) {
+        //    return gridjs.h('div', { 'data-element-id'}, id);
+        //}
+
         // Call updateTable when a checkbox is clicked
         nameCheckbox.addEventListener('change', updateTable);
         emailCheckbox.addEventListener('change', updateTable);
