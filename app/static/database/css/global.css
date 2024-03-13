@@ -11,6 +11,7 @@
     --green-light: #4ed728; 
     --green-mid: #048D4B;
     --green-dark: #048D4B;
+    --beige-grey: #999;
     --white: #fff;
     --green-gradient: linear-gradient(to bottom, #00ff00, #008000);
     --body-color: var(--gray-mid);
@@ -22,6 +23,21 @@
   }
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+h1 {
+    font-weight: 400;
+    text-align: center;
+    font-size: 24px;
+    color: var(--beige-grey);
+}
+
+h3 {
+    font-weight: 400;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: var(--beige-grey);
+    padding-bottom: 10px;
+}
 
 .header_logo {
     position: inherit;

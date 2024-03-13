@@ -1,16 +1,46 @@
+/* Variables */
+:root {
+    --gray-offset: rgba(0, 0, 0, 0.03);
+    --gray-border: rgba(0, 0, 0, 0.15);
+    --gray-light: rgba(0, 0, 0, 0.4);
+    --gray-mid: rgba(0, 0, 0, 0.7);
+    --gray-dark: rgba(0, 0, 0, 0.9);
+    --gray-transparent: rgba(0, 0, 0, 0.12);
+    --wheelie-green: #00BF63;
+    --green-transparent: rgba(13, 246, 133, 0.113);
+    --green-light: #4ed728; 
+    --green-mid: #048D4B;
+    --green-dark: #048D4B;
+    --beige-grey: #999;
+    --white: #fff;
+    --green-gradient: linear-gradient(to bottom, #00ff00, #008000);
+    --body-color: var(--gray-mid);
+    --headline-color: var(--gray-dark);
+    --accent-color: #0066f0;
+    --body-font-family: Noto Serif Japanese;
+    --nav-font-color: var(--white);
+    --radius: 6px;
+  }
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+
 #columnSelection input[type="checkbox"] {
+   
     margin-right: 5px;
-    vertical-align: center;
+    margin-bottom: 7px;
+    vertical-align: middle;
     
-
-}
-
-#columnSelection > div {
-    margin-bottom: 20px;
 }
 
 #columnSelection label {
+    vertical-align: center;
+    margin-bottom: 7px;
+    color: var(--beige-grey);
+    font-weight: 100;
+    font-size: 8pt;
     display: inline-table;
-    margin-right: 10px;
-    
+    margin-right: 5px;
+    min-width: 100px;
 }
