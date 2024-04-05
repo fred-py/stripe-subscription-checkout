@@ -61,6 +61,15 @@ def create_app(config_name='production'):  # Change to 'production' before deplo
     from .customers import customers as customers_bp
     app.register_blueprint(customers_bp)
 
+    from .api import api as api_bp
+    # /v1 helps track version number, this will be usefull when
+    # serving a mobile app, the server can be updated while still
+    # supporting the older version of the app until the users update
+    # Adding the prefix to the blueprint also eliminates
+    # the need to hardcode the version to every blueprint route
+    app.register_blueprint(api_bp, url_prefix='/api/v1')
+
+
     #from app.users import bp as users_bp
     #app.register_blueprint(users_bp)
 
