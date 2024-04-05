@@ -6,7 +6,8 @@ This error handler adapts the response based
 on the format requested by the client."""
 
 from flask import render_template, request, jsonify
-from . import db_views
+from app.exceptions import ValidationError
+from . import db_views, api
 
 
 @db_views.app_errorhandler(404)
@@ -23,6 +24,7 @@ def page_not_found(e):
         return response
     return render_template('/database/404.html'), 404
 
+
 @db_views.app_errorhandler(500)
 def internal_server_error(e):
     if request.accept_mimetypes.accept_json and \
@@ -37,10 +39,27 @@ def internal_server_error(e):
 # inside the blueprint in the errors.py module.
 # View functions in the API blueprint can invoke
 # these helper functions to generate error responses as needed.
-@db_views.app_errorhandler(402)
+
+
 def forbidden(message):
     """Custom error handler for 403 Forbidden errors"""
     response = jsonify({'error': 'forbidden', 'message': message})
     response.status_code = 403
     return response
 
+
+def bad_request(message):
+    response = jsonify({'error': 'bad request', 'message': message})
+    response.status_code = 400
+    return response
+
+
+def unauthorized(message):
+    response = jsonify({'error': 'unauthorized', 'message': message})
+    response.status_code = 401
+    return response
+
+
+@api.errorhandler(ValidationError)
+def validation_error(e):
+    return bad_request(e.args[0])
