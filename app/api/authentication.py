@@ -16,17 +16,29 @@ auth = HTTPBasicAuth()
 
 
 @auth.verify_password
-def verify_password(email, password):
-    """Email l& password verification are carried
+def verify_password(email_or_token, password):  
+    """Email_or_token & password verification are carried
     out using the existing support in the User model.
-    The verification callback returns True when the login
-    is valid and False otherwise."""
-    if email == '':
+    If password is blank, email_or_token is assumed
+    to be an API token and validated as such.
+    If both fields are non-empty then regular
+    email & password authentication is performed
+    Token-based auth is optional(up to each client),
+    g.token_used is added so the view function
+    can distinguish between the two
+    authentication methods."""
+    # FlaskWebDevelopment, 2nd Edition, p. 461
+    if email_or_token == '':
         return False
-    user = User.query.filter_by(email=email).first()
+    if password == '':
+        g.current_user = User.verify_auth_token(email_or_token)
+        g.token_used = True
+        return g.current_user is not None
+    user = User.query.filter_by(email=email_or_token).first()
     if not user:
         return False
     g.current_user = user
+    g.token_used = False
     return user.verify_password(password)
 
 
@@ -48,3 +60,21 @@ def before_request():
     if not g.current_user.is_anonymous and \
             not g.current_user.confirmed:
         return forbidden('Unconfirmed account')
+
+
+@api.route('/tokens/', methods=['POST'])
+def get_token():
+    """Returns an authentication token to the client.
+    Prevents clients from authenticating to this route
+    using previously obtained token instead of an
+    email address and password.
+    g.token_used  var is checked and requests 
+    authenticated with a token are rejected.
+    This prevents users from bypassing the token
+    expiration time by requesting a new token using
+    the old token authentication.
+    Flask WebDev p. 449"""
+    if g.current_user.is_anonymous or g.token_used:
+        return unauthorized('Invalid credentials')
+    return jsonify({'token': g.current_user.generate_auth_token(
+            expiration=3600), 'expiration': 3600})  # 1h validity period

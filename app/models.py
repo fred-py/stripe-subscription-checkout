@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
 from flask import current_app, url_for, request
 from flask_login import UserMixin, AnonymousUserMixin
-from datetime import datetime
+from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
@@ -36,7 +36,7 @@ class CustomerDB(db.Model):
     in_serviceM8: Mapped[bool] = db.Column(db.Boolean, default=False)
     cus_serviceM8_id: Mapped[str] = db.Column(db.String, default=False)
     order_date: Mapped[datetime] = db.Column(db.DateTime,
-            nullable=False, default=datetime.now(datetime.UTC))
+            nullable=False, default=datetime.now(timezone.utc))
     # One to one relationship
     # uselist=False means that the relationship will return a 
     # single item(scalar) instead of a list of items(collection)
@@ -302,9 +302,9 @@ class User(UserMixin, db.Model):
     password_hash: Mapped[str] = db.Column(db.String(512))
     confirmed: Mapped[bool] = db.Column(db.Boolean, default=False)
     member_since: Mapped[datetime] = db.Column(
-        db.DateTime, default=datetime.now(datetime.UTC))
+            db.DateTime, default=datetime.now(timezone.utc))
     last_seen: Mapped[datetime] = db.Column(
-        db.DateTime, default=datetime.now(datetime.UTC))
+            db.DateTime, default=datetime.now(timezone.utc))
     # One to many relationship
     role_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
@@ -423,7 +423,7 @@ class User(UserMixin, db.Model):
             'last_seen': self.last_seen,
         }
         return json_user
-    
+
     def generate_auth_token(self, expiration):
         """Returns a signed token that encodes user id.
         Expiraton time is set in seconds."""
@@ -439,12 +439,12 @@ class User(UserMixin, db.Model):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token)
-        except BadSignature
+        except BadSignature:
             return None
         return User.query.get(data['id'])
 
     def __repr__(self) -> str:
-        return '<User %r>' % self.username=
+        return '<User %r>' % self.username
 
 
 class AnonymousUser(AnonymousUserMixin):
