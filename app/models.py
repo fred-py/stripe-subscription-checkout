@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
-from flask import current_app
+from flask import current_app, url_for, request
 from flask_login import UserMixin, AnonymousUserMixin
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -22,8 +22,7 @@ class Permission:
             1. User: {self.USER}, 2. Admin: {self.ADMIN}'
 
 
-#**************
-# NOTE MIGRATION NEEDS TO HAPPEN TO APPLY to_dict() to all models
+# NOTE Migration needed after changes to the models
 class CustomerDB(db.Model):
     __tablename__ = 'customers'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
@@ -36,19 +35,19 @@ class CustomerDB(db.Model):
     test: Mapped[bool] = db.Column(db.Boolean, default=False)
     in_serviceM8: Mapped[bool] = db.Column(db.Boolean, default=False)
     cus_serviceM8_id: Mapped[str] = db.Column(db.String, default=False)
-    order_date: Mapped[datetime] = db.Column(db.DateTime, nullable=False,
-                                             default=datetime.utcnow)
-
+    order_date: Mapped[datetime] = db.Column(db.DateTime,
+            nullable=False, default=datetime.now(datetime.UTC))
     # One to one relationship
     # uselist=False means that the relationship will return a 
     # single item(scalar) instead of a list of items(collection)
-    addresses: Mapped['Address'] = db.relationship(back_populates='customers', uselist=False, lazy=True) # Lazy is true by default
-    # One to one Bin selection
-    bins: Mapped['Bin'] = db.relationship(back_populates='customers', uselist=False)
-    # One to one relationship
-    subscriptions: Mapped['Subscription'] = db.relationship(back_populates='customers', uselist=False)
-    # One to many relationship
-    invoices: Mapped['Invoice'] = db.relationship(back_populates='customers')
+    addresses: Mapped['Address'] = db.relationship(
+            back_populates='customers', uselist=False, lazy=True) # Lazy is true by default
+    bins: Mapped['Bin'] = db.relationship(
+            back_populates='customers', uselist=False)  # One to one Bin selection
+    subscriptions: Mapped['Subscription'] = db.relationship(
+            back_populates='customers', uselist=False)
+    invoices: Mapped['Invoice'] = db.relationship(
+            back_populates='customers')
 
     def to_dict(self) -> dict:
         return {
@@ -302,8 +301,13 @@ class User(UserMixin, db.Model):
     email: Mapped[str] = db.Column(db.String(120), unique=True, index=True)
     password_hash: Mapped[str] = db.Column(db.String(512))
     confirmed: Mapped[bool] = db.Column(db.Boolean, default=False)
+    member_since: Mapped[datetime] = db.Column(
+        db.DateTime, default=datetime.now(datetime.UTC))
+    last_seen: Mapped[datetime] = db.Column(
+        db.DateTime, default=datetime.now(datetime.UTC))
     # One to many relationship
     role_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('roles.id'))
+
 
     def __init__(self, **kwargs) -> None:
         super(User, self).__init__(**kwargs)
@@ -410,8 +414,37 @@ class User(UserMixin, db.Model):
         """Returns True if the user has the admin role"""
         return self.can(Permission.ADMIN)
 
+    # API methods for Authentication
+    def to_json(self):
+        json_user = {
+            'url': url_for('api.get_user', id=self.id),
+            'username': self.username,
+            'member_since': self.member_since,
+            'last_seen': self.last_seen,
+        }
+        return json_user
+    
+    def generate_auth_token(self, expiration):
+        """Returns a signed token that encodes user id.
+        Expiraton time is set in seconds."""
+        s = Serializer(current_app.config['SECRET_KEY'],
+                       expires_in=expiration)
+        return s.dumps({'id': self.id}).decode('utf-8')
+
+    @staticmethod
+    def verify_auth_token(token):
+        """Takes token and if valid, returns user object.
+        This is a static method, the user will be known 
+        only after the token is decoded."""
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token)
+        except BadSignature
+            return None
+        return User.query.get(data['id'])
+
     def __repr__(self) -> str:
-        return '<User %r>' % self.username
+        return '<User %r>' % self.username=
 
 
 class AnonymousUser(AnonymousUserMixin):
