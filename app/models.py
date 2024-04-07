@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
 from itsdangerous import BadSignature, SignatureExpired
+from app.exceptions import ValidationError
 from .extensions import db, login_manager
 
 
@@ -49,10 +50,11 @@ class CustomerDB(db.Model):
     invoices: Mapped['Invoice'] = db.relationship(
             back_populates='customers')
 
-    def to_dict(self) -> dict:
-        return {
+    def to_json(self) -> dict:
+        """Serialise the CustomerDB object to JSON"""
+        json_customer = {
             # CustomerDB columns
-            'id': self.id,
+            'url': url_for('api.get_customer', id=self.id),
             'name': self.name,
             'phone': self.phone,
             'email': self.email,
@@ -78,6 +80,7 @@ class CustomerDB(db.Model):
             'invoice_url': self.invoices.invoice_url_dict() if self.invoices else None,
             'inv_description': self.invoices.inv_description_dict() if self.invoices else None,
         }
+        return json_customer
 
     def __repr__(self) -> str:
         return f'Customer {self.name}, ID: {self.id}, Phone: {self.phone}, ' \
@@ -414,16 +417,20 @@ class User(UserMixin, db.Model):
         """Returns True if the user has the admin role"""
         return self.can(Permission.ADMIN)
 
-    # API methods for Authentication
+    # Serialising the user object to JSON
     def to_json(self):
+        """Email and role are omitted from response
+        for privacy reasons. The representation
+        of the resource offered to clients does
+        not need to be identical to internal definition
+        of the corresponding database model."""
         json_user = {
             'url': url_for('api.get_user', id=self.id),
             'username': self.username,
-            'member_since': self.member_since,
-            'last_seen': self.last_seen,
         }
         return json_user
 
+    # API methods for Authentication
     def generate_auth_token(self, expiration):
         """Returns a signed token that encodes user id.
         Expiraton time is set in seconds."""
