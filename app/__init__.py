@@ -8,7 +8,7 @@ combined into one application"""
 from flask import Flask
 from config import config
 from app.extensions import db, bootstrap, moment, migrate, mail, login_manager
-    # cus_query, bin_query
+# cus_query, bin_query
 from dotenv import load_dotenv, find_dotenv
 
 # Setup Stripe python client library
