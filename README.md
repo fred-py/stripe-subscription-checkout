@@ -80,7 +80,9 @@ https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
   https://www.digitalocean.com/community/tutorials/how-to-structure-a-large-flask-application-with-flask-blueprints-and-flask-sqlalchemy#creating-the-main-blueprint-and-rendering-its-templates
 
 
-#  TEST API ROUTES USING HTTPie
+#  TEST API ROUTES USING HTTPie Flask WebDev pg 431
+http --json --auth <str:email>:<str:password> GET http://localhost:5000/api/v1/customers
+
 
 # STRIPE READ.md BELOW
 

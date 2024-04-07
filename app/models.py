@@ -50,6 +50,38 @@ class CustomerDB(db.Model):
     invoices: Mapped['Invoice'] = db.relationship(
             back_populates='customers')
 
+    def to_dict(self) -> dict:
+        """NOTE: This method can be revomed once grid.js
+        (First tabular view tried) is no longer in use."""
+        return {
+            # CustomerDB columns
+            'id': self.id,
+            'name': self.name,
+            'phone': self.phone,
+            'email': self.email,
+            'cus_id': self.cus_id,
+            'paymentintent_id': self.paymentintent_id,
+            'active': self.active,
+            'test': self.test,
+            'order_date': self.order_date,
+            # Address
+            # Address contains the full address
+            'address': self.addresses.to_dict_full_address() if self.addresses else None,
+            'street': self.addresses.street_dict() if self.addresses else None,
+            'city': self.addresses.city_dict() if self.addresses else None,
+            'postcode': self.addresses.postcode_dict() if self.addresses else None,
+            # Bin columns
+            'bin_collection': self.bins.bin_collection_dict() if self.bins else None,
+            'selected_bins': self.bins.selected_bins_dict() if self.bins else None,
+            'clean_date': self.bins.clean_date_dict() if self.bins else None,
+            # Subscription column
+            'subscription': self.subscriptions.plan_dict() if self.subscriptions else None,
+            # Invoice columns
+            'amount_paid': self.invoices.amount_paid_dict() if self.invoices else None,
+            'invoice_url': self.invoices.invoice_url_dict() if self.invoices else None,
+            'inv_description': self.invoices.inv_description_dict() if self.invoices else None,
+        }
+
     def to_json(self) -> dict:
         """Serialise the CustomerDB object to JSON"""
         json_customer = {
@@ -80,8 +112,8 @@ class CustomerDB(db.Model):
             'invoice_url': self.invoices.invoice_url_dict() if self.invoices else None,
             'inv_description': self.invoices.inv_description_dict() if self.invoices else None,
         }
-        return 
-    
+        return json_customer
+
 
     @staticmethod
     def from_json(json_customer) -> dict:
