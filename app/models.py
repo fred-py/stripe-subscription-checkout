@@ -80,8 +80,17 @@ class CustomerDB(db.Model):
             'invoice_url': self.invoices.invoice_url_dict() if self.invoices else None,
             'inv_description': self.invoices.inv_description_dict() if self.invoices else None,
         }
-        return json_customer
+        return 
+    
 
+    @staticmethod
+    def from_json(json_customer) -> dict:
+        """Desirialise the JSON object"""
+        name = json_customer.get('name')
+        if name is None or name == '':
+            raise ValidationError('Customer does not have a name')
+        return CustomerDB(name=name)
+    
     def __repr__(self) -> str:
         return f'Customer {self.name}, ID: {self.id}, Phone: {self.phone}, ' \
                f'Email: {self.email}, Customer ID: {self.cus_id}, ' \
