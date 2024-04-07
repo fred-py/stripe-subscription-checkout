@@ -90,7 +90,7 @@ class CustomerDB(db.Model):
         if name is None or name == '':
             raise ValidationError('Customer does not have a name')
         return CustomerDB(name=name)
-    
+
     def __repr__(self) -> str:
         return f'Customer {self.name}, ID: {self.id}, Phone: {self.phone}, ' \
                f'Email: {self.email}, Customer ID: {self.cus_id}, ' \
