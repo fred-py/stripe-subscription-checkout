@@ -7,7 +7,7 @@ combined into one application"""
 
 from flask import Flask
 from config import config
-from app.extensions import db, bootstrap, moment, migrate, mail, login_manager
+from app.extensions import db, bootstrap, moment, migrate, mail, login_manager, CORS
 # cus_query, bin_query
 from dotenv import load_dotenv, find_dotenv
 
@@ -34,7 +34,7 @@ def create_app(config_name='production'):  # Change to 'production' before deplo
     
     # Create an instance of Config class / config dict contains the different configurations
     config_class = config[config_name]
-    app.config.from_object(config_class())  
+    app.config.from_object(config_class())
     #app.config.from_object(config[config_name])  # Loading configuration from the Config class
     config[config_name].init_app(app)
 
@@ -47,6 +47,9 @@ def create_app(config_name='production'):  # Change to 'production' before deplo
     migrate.init_app(app, db)
     mail.init_app(app)
     login_manager.init_app(app)
+    CORS(app,  resources={r'/*': {'origins': 'http://localhost:5173',  # Vue default route
+                            'allow_headers': 'Access-Control-Allow-Origin'}})  # Enables CORS for the entire app - can be changed to allow only specific routes
+
 
     # Register blueprints here
     from .main import main as main_bp  # Main refers to Stripe BP
