@@ -48,9 +48,11 @@ def auth_error():
     generates a 401 response with a JSON body."""
     return unauthorized('Invalid credentials')
 
-
-@api.before_request
-@auth.login_required  # Auth check will be done automatically for all routes in the blueprint
+"""Log in required is temporally disabled
+Once enlable, log in form on vue app will
+be needed to post token as per token route below"""
+#@api.before_request
+#@auth.login_required  # Auth check will be done automatically for all routes in the blueprint
 def before_request():
     """The before_request handler is registered
     with the blueprint, ensuring that it runs before
