@@ -352,7 +352,6 @@ class User(UserMixin, db.Model):
     # One to many relationship
     role_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
-
     def __init__(self, **kwargs) -> None:
         super(User, self).__init__(**kwargs)
         """This constructor sets the role of the user
@@ -500,13 +499,10 @@ class User(UserMixin, db.Model):
         return User.query.get(data['id'])
 
     def __repr__(self) -> str:
-        return f'User {self.username}' \
-                f'ID: {self.id}' \
-                f'Name: {self.name}' \
-                f'Email: {self.email}' \
-                f'Role: {self.role}' \
-                f'Confirmed: {self.confirmed}' \
-                f'Member Since: {self.member_since}' \
+        return f'User {self.username}' + ' ' +\
+                f'ID: {self.id}' + ' ' +\
+                f'Email: {self.email}' + ' ' + \
+                f'Member Since: {self.member_since}' + ' ' + \
                 f'Last Seen: {self.last_seen}'
 
 
