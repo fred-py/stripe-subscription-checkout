@@ -471,6 +471,14 @@ class User(UserMixin, db.Model):
         }
         return json_user
 
+    def ping(self):
+        """Updates the last seen time of the user
+        This method is called from auth/views
+        and it is used to count new orders since
+        last visit to be displayed on the front-end."""
+        self.last_seen = datetime.now(timezone.utc)
+        db.session.add(self)
+
     # API methods for Authentication
     def generate_auth_token(self, expiration):
         """Returns a signed token that encodes user id.

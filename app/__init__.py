@@ -48,7 +48,7 @@ def create_app(config_name='production'):  # Change to 'production' before deplo
     mail.init_app(app)
     login_manager.init_app(app)
     CORS(app,  resources={r'/*': {'origins': 'http://localhost:5173',  # Vue default route
-                            'allow_headers': 'Access-Control-Allow-Origin'}})  # Enables CORS for the entire app - can be changed to allow only specific routes
+                        'allow_headers': 'Access-Control-Allow-Origin'}})  # Enables CORS for the entire app - can be changed to allow only specific routes
 
 
     # Register blueprints here
@@ -61,7 +61,7 @@ def create_app(config_name='production'):  # Change to 'production' before deplo
     from .auth import auth as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth') # prefix adds /auth to all routes in the blueprint
 
-    from .customers import customers as customers_bp
+    from .customers import customers as customers_bp  # NOTE: This route IS NOT related to customer module on the API Directory
     app.register_blueprint(customers_bp)
 
     from .api import api as api_bp
