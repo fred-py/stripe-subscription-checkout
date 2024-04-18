@@ -7,7 +7,7 @@ from .errors import forbidden
 
 
 @api.route('/orders/')
-def get_order_stats(id, last_seen):
+def get_order_stats():
     # Retunrs the total number of active orders in the database
     total_orders = CustomerDB.query.filter_by(active=True).count()
 
