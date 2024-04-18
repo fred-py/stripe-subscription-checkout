@@ -11,6 +11,7 @@ def get_order_stats(id, last_seen):
     # Retunrs the total number of active orders in the database
     total_orders = CustomerDB.query.filter_by(active=True).count()
 
-    new_orders = User.query.filter_by(id=id).count()
+    """Add new orders logic here. use last_seen
+    from User model"""
 
-    return jsonify({'total_orders': total_orders, 'new_orders': new_orders})
+    return jsonify({'total_orders': total_orders})
