@@ -11,7 +11,7 @@ from .forms import LoginForm, RegistrationForm, \
     PasswordResetForm, ChangeEmailForm
 
 
-@auth.before_request  # Page. 286 before_request handler to intercept all blueprint requests
+@auth.before_app_request  # Page. 286 before_request handler to intercept all blueprint requests
 def before_request():     # @before_app_request can be used to intercept all requests to the application
     """This view allows unfinished users to confirm their
     email before accessing the application.
