@@ -28,6 +28,11 @@ load_dotenv(find_dotenv())
 
 #port = int(os.environ.get('PORT', 4242))  # This is needed to deploy on fl0
 
+
+@db_views.route('/home', methods=['GET'])
+def front_end():
+    return ('This is VUE frontend')
+
 @db_views.route('/database', methods=['GET', 'POST'])  # Flask WebDev p. 140
 def index():
     # Access congig variables using current_app.config
