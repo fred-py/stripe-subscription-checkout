@@ -47,7 +47,10 @@ def create_app(config_name='production'):  # Change to 'production' before deplo
     migrate.init_app(app, db)
     mail.init_app(app)
     login_manager.init_app(app)
-    CORS(app,  resources={r'/*': {'origins': 'http://localhost:5173',  # Vue default route
+    # Enable CORS for the entire app
+    # localhost:5173 is vue default port
+    # https://united-dashboard.web.app/ is the firebase app
+    CORS(app,  resources={r'/*': {'origins': 'http://localhost:5173', 'https://united-dashboard.web.app/'
                         'allow_headers': 'Access-Control-Allow-Origin'}})  # Enables CORS for the entire app - can be changed to allow only specific routes
 
 
