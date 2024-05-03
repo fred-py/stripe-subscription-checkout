@@ -1,5 +1,5 @@
 from flask import jsonify, request, g, url_for, current_app
-from app.extensions import db
+from app.extensions import db, cross_origin
 from ..models import CustomerDB, User, Permission
 from . import api
 from .decorators import permission_required
@@ -7,6 +7,7 @@ from .errors import forbidden
 
 
 @api.route('/customers/')
+@cross_origin()
 def get_customers():
     customers = CustomerDB.query.all()
     return jsonify({

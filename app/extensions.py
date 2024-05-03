@@ -11,7 +11,7 @@ from flask_moment import Moment
 from flask_migrate import Migrate
 from flask_mail import Mail, Message
 from flask_login import LoginManager
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 #from app.db_operations.query_ops import CustomerQuery, BinQuery
 
 
