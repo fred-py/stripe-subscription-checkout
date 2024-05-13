@@ -84,6 +84,14 @@ https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
 http --json --auth <str:email>:<str:password> GET http://localhost:5000/api/v1/customers
 
 
+# CONFIGURE FLASK TO RUN ON DOCKER WITH POSTGRES 
+https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/#project-setup
+
+https://realpython.com/docker-continuous-integration/#run-a-redis-server-through-docker
+
+https://testdriven.io/blog/docker-best-practices/
+
+
 # STRIPE READ.md BELOW
 
 # Using Checkout for subscriptions
