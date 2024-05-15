@@ -1,0 +1,81 @@
+>>> from sqlalchemy import create_engine
+>>> engine = create_engine("sqlite:///./data/books.db", echo=True, future=True)
+>>> from sqlalchemy.orm import Session
+>>> session = Session(engine)
+>>> from models import Author, Book
+>>> from sqlalchemy import select
+>>> stmt = select(Author)
+>>> for author in session.scalars(stmt):
+...     print(author)
+...
+2022-05-17 11:30:43,460 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2022-05-17 11:30:43,464 INFO sqlalchemy.engine.Engine SELECT author.author_id, author.first_name, author.last_name FROM author
+2022-05-17 11:30:43,464 INFO sqlalchemy.engine.Engine [generated in 0.00020s] ()
+Author(author_id=1, first_name='Isaac', last_name='Asimov')
+Author(author_id=2, first_name='Pearl', last_name='Buck')
+Author(author_id=3, first_name='Tom', last_name='Clancy')
+Author(author_id=4, first_name='Stephen', last_name='King')
+Author(author_id=5, first_name='Richard', last_name='Bachman')
+Author(author_id=6, first_name='John', last_name='Le Carre')
+Author(author_id=7, first_name='Alex', last_name='Michaelides')
+>>> stmt = select(Book)
+>>> for book in session.scalars(stmt):
+...     print(book)
+...
+2022-05-17 11:30:56,996 INFO sqlalchemy.engine.Engine SELECT book.book_id, book.title, book.author_id FROM book
+2022-05-17 11:30:56,996 INFO sqlalchemy.engine.Engine [generated in 0.00014s] ()
+Book(book_id=1, title='Foundation', author_id=1)
+Book(book_id=2, title='The Good Earth', author_id=2)
+>>> stmt = select(Book).join(Book.author).where(Author.last_name > "B")
+>>> for book in session.scalars(stmt):
+...     print(book)
+...
+2022-05-17 11:31:08,764 INFO sqlalchemy.engine.Engine SELECT book.book_id, book.title, book.author_id FROM book JOIN author ON author.author_id = book.author_id WHERE author.last_name > ?
+2022-05-17 11:31:08,764 INFO sqlalchemy.engine.Engine [generated in 0.00016s] ('B',)
+Book(book_id=2, title='The Good Earth', author_id=2)
+>>> stmt = select(Author).where(Author.last_name == "King")
+>>> king = session.scalars(stmt).one()
+2022-05-17 11:31:56,544 INFO sqlalchemy.engine.Engine SELECT author.author_id, author.first_name, author.last_name FROM author WHERE author.last_name = ?
+2022-05-17 11:31:56,544 INFO sqlalchemy.engine.Engine [generated in 0.00016s] ('King',)
+>>> king
+Author(author_id=4, first_name='Stephen', last_name='King')
+>>> king.books.append(Book(title="It"))
+2022-05-17 11:32:07,456 INFO sqlalchemy.engine.Engine SELECT book.book_id AS book_book_id, book.title AS book_title, book.author_id AS book_author_id FROM book WHERE ? = book.author_id
+2022-05-17 11:32:07,456 INFO sqlalchemy.engine.Engine [generated in 0.00015s] (4,)
+>>> print(session.scalars(select(Book)).all())
+2022-05-17 11:32:16,160 INFO sqlalchemy.engine.Engine INSERT INTO book (title, author_id) VALUES (?, ?)
+2022-05-17 11:32:16,160 INFO sqlalchemy.engine.Engine [generated in 0.00015s] ('It', 4)
+2022-05-17 11:32:16,161 INFO sqlalchemy.engine.Engine SELECT book.book_id, book.title, book.author_id FROM book
+2022-05-17 11:32:16,161 INFO sqlalchemy.engine.Engine [cached since 79.17s ago] ()
+[Book(book_id=1, title='Foundation', author_id=1), Book(book_id=2, title='The Good Earth', author_id=2), Book(book_id=None, title='It', author_id=None)]
+>>> print(king.books)
+[Book(book_id=None, title='It', author_id=None)]
+>>> king = session.get(Author, 4)
+>>> king.books.append(Book(title="Dead Zone"))
+>>> print(king.books)
+[Book(book_id=None, title='It', author_id=None), Book(book_id=None, title='Dead Zone', author_id=None)]
+>>> session.commit()
+2022-05-17 11:32:55,230 INFO sqlalchemy.engine.Engine INSERT INTO book (title, author_id) VALUES (?, ?)
+2022-05-17 11:32:55,230 INFO sqlalchemy.engine.Engine [cached since 39.07s ago] ('Dead Zone', 4)
+2022-05-17 11:32:55,230 INFO sqlalchemy.engine.Engine COMMIT
+>>> king.books.remove(king.books[1])
+2022-05-17 11:33:06,246 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2022-05-17 11:33:06,247 INFO sqlalchemy.engine.Engine SELECT author.author_id AS author_author_id, author.first_name AS author_first_name, author.last_name AS author_last_name FROM author WHERE author.author_id = ?
+2022-05-17 11:33:06,247 INFO sqlalchemy.engine.Engine [generated in 0.00012s] (4,)
+2022-05-17 11:33:06,248 INFO sqlalchemy.engine.Engine SELECT book.book_id AS book_book_id, book.title AS book_title, book.author_id AS book_author_id FROM book WHERE ? = book.author_id
+2022-05-17 11:33:06,248 INFO sqlalchemy.engine.Engine [cached since 58.79s ago] (4,)
+>>> print(king.books)
+[Book(book_id=3, title='It', author_id=4)]
+>>> session.delete(king)
+>>> print(session.scalars(select(Book)).all())
+2022-05-17 11:33:23,319 INFO sqlalchemy.engine.Engine DELETE FROM book WHERE book.book_id = ?
+2022-05-17 11:33:23,319 INFO sqlalchemy.engine.Engine [generated in 0.00018s] ((3,), (4,))
+2022-05-17 11:33:23,320 INFO sqlalchemy.engine.Engine DELETE FROM author WHERE author.author_id = ?
+2022-05-17 11:33:23,320 INFO sqlalchemy.engine.Engine [generated in 0.00011s] (4,)
+2022-05-17 11:33:23,320 INFO sqlalchemy.engine.Engine SELECT book.book_id, book.title, book.author_id FROM book
+2022-05-17 11:33:23,320 INFO sqlalchemy.engine.Engine [cached since 146.3s ago] ()
+[Book(book_id=1, title='Foundation', author_id=1), Book(book_id=2, title='The Good Earth', author_id=2)]
+>>> session.rollback()
+2022-05-17 11:33:33,214 INFO sqlalchemy.engine.Engine ROLLBACK
+>>> session.close()
+>>> ^D

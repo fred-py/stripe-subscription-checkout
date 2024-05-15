@@ -1,0 +1,14 @@
+<!-- Flask WebDev p. 142 -->
+ 
+{% extends "database/base.html" %}  <!-- .. to indicate base.html is a directory above user-->
+
+{% block title %}United Login{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <!-- Var name can be modified with filters -->
+        <h1>Hey, {{ name|capitalize }}!</h1>
+    </div>
+</div>
+{% endblock %}

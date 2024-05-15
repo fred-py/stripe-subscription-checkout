@@ -1,0 +1,138 @@
+>>> from sqlalchemy import create_engine
+>>> engine = create_engine("sqlite:///./data/books.db", echo=True, future=True)
+>>> conn = engine.connect()
+>>> # MetaData
+>>> from sqlalchemy import MetaData, Table
+>>> metadata = MetaData()
+>>> author_table = Table("author", metadata, autoload_with=engine)
+2022-05-17 09:19:42,694 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2022-05-17 09:19:42,694 INFO sqlalchemy.engine.Engine PRAGMA main.table_xinfo("author")
+2022-05-17 09:19:42,695 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 09:19:42,696 INFO sqlalchemy.engine.Engine SELECT sql FROM  (SELECT * FROM sqlite_master UNION ALL   SELECT * FROM sqlite_temp_master) WHERE name = ? AND type = 'table'
+2022-05-17 09:19:42,696 INFO sqlalchemy.engine.Engine [raw sql] ('author',)
+2022-05-17 09:19:42,696 INFO sqlalchemy.engine.Engine PRAGMA main.foreign_key_list("author")
+2022-05-17 09:19:42,696 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 09:19:42,696 INFO sqlalchemy.engine.Engine PRAGMA temp.foreign_key_list("author")
+2022-05-17 09:19:42,696 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 09:19:42,696 INFO sqlalchemy.engine.Engine SELECT sql FROM  (SELECT * FROM sqlite_master UNION ALL   SELECT * FROM sqlite_temp_master) WHERE name = ? AND type = 'table'
+2022-05-17 09:19:42,697 INFO sqlalchemy.engine.Engine [raw sql] ('author',)
+2022-05-17 09:19:42,698 INFO sqlalchemy.engine.Engine PRAGMA main.index_list("author")
+2022-05-17 09:19:42,698 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 09:19:42,698 INFO sqlalchemy.engine.Engine PRAGMA temp.index_list("author")
+2022-05-17 09:19:42,698 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 09:19:42,698 INFO sqlalchemy.engine.Engine PRAGMA main.index_list("author")
+2022-05-17 09:19:42,698 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 09:19:42,700 INFO sqlalchemy.engine.Engine PRAGMA temp.index_list("author")
+2022-05-17 09:19:42,700 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 09:19:42,701 INFO sqlalchemy.engine.Engine SELECT sql FROM  (SELECT * FROM sqlite_master UNION ALL   SELECT * FROM sqlite_temp_master) WHERE name = ? AND type = 'table'
+2022-05-17 09:19:42,701 INFO sqlalchemy.engine.Engine [raw sql] ('author',)
+2022-05-17 09:19:42,702 INFO sqlalchemy.engine.Engine ROLLBACK
+>>> author_table
+Table('author', MetaData(), Column('author_id', INTEGER(), table=<author>, primary_key=True, nullable=False), Column('first_name', VARCHAR(), table=<author>), Column('last_name', VARCHAR(), table=<author>), schema=None)
+>>> # Select
+>>> from sqlalchemy import select
+>>> stmt = select(author_table).where(author_table.c.first_name == "Stephen")
+>>> stmt
+<sqlalchemy.sql.selectable.Select object at 0x107d16ec0>
+>>> print(stmt)
+SELECT author.author_id, author.first_name, author.last_name
+FROM author
+WHERE author.first_name = :first_name_1
+>>> result = conn.execute(stmt)
+2022-05-17 09:21:42,546 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2022-05-17 09:21:42,546 INFO sqlalchemy.engine.Engine SELECT author.author_id, author.first_name, author.last_name FROM author WHERE author.first_name = ?
+2022-05-17 09:21:42,546 INFO sqlalchemy.engine.Engine [generated in 0.00021s] ('Stephen',)
+>>> print(result.all())
+[(4, 'Stephen', 'King')]
+>>> print(select(author_table))
+SELECT author.author_id, author.first_name, author.last_name
+FROM author
+>>> print(select(author_table.c.first_name, author_table.c.last_name))
+SELECT author.first_name, author.last_name
+FROM author
+>>> stmt = select(author_table).where(author_table.c.last_name > "C")
+>>> str(stmt)
+'SELECT author.author_id, author.first_name, author.last_name \nFROM author \nWHERE author.last_name > :last_name_1'
+>>> compiled = stmt.compile()
+>>> str(compiled)
+'SELECT author.author_id, author.first_name, author.last_name \nFROM author \nWHERE author.last_name > :last_name_1'
+>>> compiled.params
+{'last_name_1': 'C'}
+>>> result = conn.execute(compiled)
+2022-05-17 09:29:46,203 INFO sqlalchemy.engine.Engine SELECT author.author_id, author.first_name, author.last_name FROM author WHERE author.last_name > ?
+2022-05-17 09:29:46,203 INFO sqlalchemy.engine.Engine [generated in 0.00019s] ('C',)
+>>> print(result.all())
+[(3, 'Tom', 'Clancy'), (4, 'Stephen', 'King')]
+>>> stmt = select(author_table).where(author_table.c.last_name > "B", author_table.c.first_name > "S")
+>>> result = conn.execute(stmt)
+2022-05-17 09:43:18,232 INFO sqlalchemy.engine.Engine SELECT author.author_id, author.first_name, author.last_name FROM author WHERE author.last_name > ? AND author.first_name > ?
+2022-05-17 09:43:18,232 INFO sqlalchemy.engine.Engine [generated in 0.00015s] ('B', 'S')
+>>> print(result.all())
+[(3, 'Tom', 'Clancy'), (4, 'Stephen', 'King')]
+>>> # Insert
+>>> from sqlalchemy import insert
+>>> stmt = insert(author_table).values(first_name="Richard", last_name="Bachman")
+>>> str(stmt)
+'INSERT INTO author (first_name, last_name) VALUES (:first_name, :last_name)'
+>>> compiled = stmt.compile()
+>>> str(compiled)
+'INSERT INTO author (first_name, last_name) VALUES (:first_name, :last_name)'
+>>> compiled.params
+{'first_name': 'Richard', 'last_name': 'Bachman'}
+>>> conn.execute(stmt)
+2022-05-17 09:45:27,461 INFO sqlalchemy.engine.Engine INSERT INTO author (first_name, last_name) VALUES (?, ?)
+2022-05-17 09:45:27,461 INFO sqlalchemy.engine.Engine [generated in 0.00016s] (('Richard', 'Bachman'))
+>>> conn.execute(select(author_table)).all()
+2022-05-17 09:49:15,691 INFO sqlalchemy.engine.Engine SELECT author.author_id, author.first_name, author.last_name FROM author
+2022-05-17 09:49:15,691 INFO sqlalchemy.engine.Engine [generated in 0.00016s] ()
+[(1, 'Isaac', 'Asimov'), (2, 'Pearl', 'Buck'), (3, 'Tom', 'Clancy'), (4, 'Stephen', 'King'), (5, 'Richard', 'Bachman')]
+>>> result = conn.execute(
+... insert(author_table),
+... [ {"first_name":"John", "last_name":"Le Carre"}, {"first_name":"Alex", "last_name":"Michaelides"}]
+... )
+2022-05-17 09:51:27,761 INFO sqlalchemy.engine.Engine INSERT INTO author (first_name, last_name) VALUES (?, ?)
+2022-05-17 09:51:27,761 INFO sqlalchemy.engine.Engine [generated in 0.00016s] (('John', 'Le Carre'), ('Alex', 'Michaelides'))
+>>> conn.commit()
+2022-05-17 09:51:39,752 INFO sqlalchemy.engine.Engine COMMIT
+>>> conn.execute(select(author_table)).all()
+2022-05-17 09:51:53,441 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2022-05-17 09:51:53,441 INFO sqlalchemy.engine.Engine SELECT author.author_id, author.first_name, author.last_name FROM author
+2022-05-17 09:51:53,441 INFO sqlalchemy.engine.Engine [cached since 157.8s ago] ()
+[(1, 'Isaac', 'Asimov'), (2, 'Pearl', 'Buck'), (3, 'Tom', 'Clancy'), (4, 'Stephen', 'King'), (5, 'Richard', 'Bachman'), (6, 'John', 'Le Carre'), (7, 'Alex', 'Michaelides')]
+
+>>> # Update
+>>> from sqlalchemy import update
+>>> stmt = update(author_table).where(author_table.c.last_name == "King").values(first_name='Stephen "The Ruler"')
+>>> conn.execute(stmt)
+2022-05-17 10:01:31,026 INFO sqlalchemy.engine.Engine UPDATE author SET first_name=? WHERE author.last_name = ?
+2022-05-17 10:01:31,026 INFO sqlalchemy.engine.Engine [generated in 0.00015s] ('Stephen "The Ruler"', 'King')
+<sqlalchemy.engine.cursor.CursorResult object at 0x10664e800>
+>>> conn.execute(select(author_table)).all()
+2022-05-17 10:01:34,569 INFO sqlalchemy.engine.Engine SELECT author.author_id, author.first_name, author.last_name FROM author
+2022-05-17 10:01:34,569 INFO sqlalchemy.engine.Engine [cached since 738.9s ago] ()
+[(1, 'Isaac', 'Asimov'), (2, 'Pearl', 'Buck'), (3, 'Tom', 'Clancy'), (4, 'Stephen "The Ruler"', 'King'), (5, 'Richard', 'Bachman'), (6, 'John', 'Le Carre'), (7, 'Alex', 'Michaelides')]
+>>> conn.rollback()
+2022-05-17 10:01:41,169 INFO sqlalchemy.engine.Engine ROLLBACK
+>>> conn.execute(select(author_table)).all()
+2022-05-17 10:01:43,489 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2022-05-17 10:01:43,489 INFO sqlalchemy.engine.Engine SELECT author.author_id, author.first_name, author.last_name FROM author
+2022-05-17 10:01:43,489 INFO sqlalchemy.engine.Engine [cached since 747.8s ago] ()
+[(1, 'Isaac', 'Asimov'), (2, 'Pearl', 'Buck'), (3, 'Tom', 'Clancy'), (4, 'Stephen', 'King'), (5, 'Richard', 'Bachman'), (6, 'John', 'Le Carre'), (7, 'Alex', 'Michaelides')]
+>>> # Delete
+>>> from sqlalchemy import delete
+>>> stmt = delete(author_table).where(author_table.c.author_id == 7)
+>>> conn.execute(stmt)
+2022-05-17 10:03:51,408 INFO sqlalchemy.engine.Engine DELETE FROM author WHERE author.author_id = ?
+2022-05-17 10:03:51,408 INFO sqlalchemy.engine.Engine [generated in 0.00015s] (7,)
+<sqlalchemy.engine.cursor.CursorResult object at 0x107d7db40>
+>>> conn.execute(select(author_table)).all()
+2022-05-17 10:03:57,776 INFO sqlalchemy.engine.Engine SELECT author.author_id, author.first_name, author.last_name FROM author
+2022-05-17 10:03:57,776 INFO sqlalchemy.engine.Engine [cached since 882.1s ago] ()
+[(1, 'Isaac', 'Asimov'), (2, 'Pearl', 'Buck'), (3, 'Tom', 'Clancy'), (4, 'Stephen', 'King'), (5, 'Richard', 'Bachman'), (6, 'John', 'Le Carre')]
+>>> conn.rollback()
+2022-05-17 10:04:03,191 INFO sqlalchemy.engine.Engine ROLLBACK
+>>> conn.execute(select(author_table)).all()
+2022-05-17 10:04:05,879 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2022-05-17 10:04:05,879 INFO sqlalchemy.engine.Engine SELECT author.author_id, author.first_name, author.last_name FROM author
+2022-05-17 10:04:05,880 INFO sqlalchemy.engine.Engine [cached since 890.2s ago] ()
+[(1, 'Isaac', 'Asimov'), (2, 'Pearl', 'Buck'), (3, 'Tom', 'Clancy'), (4, 'Stephen', 'King'), (5, 'Richard', 'Bachman'), (6, 'John', 'Le Carre'), (7, 'Alex', 'Michaelides')]

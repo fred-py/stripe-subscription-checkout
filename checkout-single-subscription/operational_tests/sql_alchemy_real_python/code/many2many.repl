@@ -1,0 +1,142 @@
+>>> from sqlalchemy import create_engine
+>>> engine = create_engine("sqlite:///./data/published.db", echo=True, future=True)
+>>> from published import Base
+>>> Base.metadata.create_all(engine)
+2022-05-17 13:54:15,854 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2022-05-17 13:54:15,854 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("author_publisher")
+2022-05-17 13:54:15,854 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 13:54:15,855 INFO sqlalchemy.engine.Engine PRAGMA temp.table_info("author_publisher")
+2022-05-17 13:54:15,855 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 13:54:15,855 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("book_publisher")
+2022-05-17 13:54:15,855 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 13:54:15,855 INFO sqlalchemy.engine.Engine PRAGMA temp.table_info("book_publisher")
+2022-05-17 13:54:15,855 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 13:54:15,855 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("author")
+2022-05-17 13:54:15,855 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 13:54:15,855 INFO sqlalchemy.engine.Engine PRAGMA temp.table_info("author")
+2022-05-17 13:54:15,855 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 13:54:15,855 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("book")
+2022-05-17 13:54:15,855 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 13:54:15,856 INFO sqlalchemy.engine.Engine PRAGMA temp.table_info("book")
+2022-05-17 13:54:15,856 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 13:54:15,856 INFO sqlalchemy.engine.Engine PRAGMA main.table_info("publisher")
+2022-05-17 13:54:15,859 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 13:54:15,860 INFO sqlalchemy.engine.Engine PRAGMA temp.table_info("publisher")
+2022-05-17 13:54:15,860 INFO sqlalchemy.engine.Engine [raw sql] ()
+2022-05-17 13:54:15,861 INFO sqlalchemy.engine.Engine
+CREATE TABLE author (
+        author_id INTEGER NOT NULL,
+        first_name VARCHAR,
+        last_name VARCHAR,
+        PRIMARY KEY (author_id)
+)
+2022-05-17 13:54:15,861 INFO sqlalchemy.engine.Engine [no key 0.00020s] ()
+2022-05-17 13:54:15,867 INFO sqlalchemy.engine.Engine
+CREATE TABLE publisher (
+        publisher_id INTEGER NOT NULL,
+        name VARCHAR,
+        PRIMARY KEY (publisher_id)
+)
+2022-05-17 13:54:15,867 INFO sqlalchemy.engine.Engine [no key 0.00011s] ()
+2022-05-17 13:54:15,868 INFO sqlalchemy.engine.Engine
+CREATE TABLE author_publisher (
+        author_id INTEGER,
+        publisher_id INTEGER,
+        FOREIGN KEY(author_id) REFERENCES author (author_id),
+        FOREIGN KEY(publisher_id) REFERENCES publisher (publisher_id)
+)
+2022-05-17 13:54:15,868 INFO sqlalchemy.engine.Engine [no key 0.00008s] ()
+2022-05-17 13:54:15,870 INFO sqlalchemy.engine.Engine
+CREATE TABLE book (
+        book_id INTEGER NOT NULL,
+        title VARCHAR,
+        author_id INTEGER NOT NULL,
+        PRIMARY KEY (book_id),
+        FOREIGN KEY(author_id) REFERENCES author (author_id)
+)
+2022-05-17 13:54:15,870 INFO sqlalchemy.engine.Engine [no key 0.00008s] ()
+2022-05-17 13:54:15,872 INFO sqlalchemy.engine.Engine
+CREATE TABLE book_publisher (
+        book_id INTEGER,
+        publisher_id INTEGER,
+        FOREIGN KEY(book_id) REFERENCES book (book_id),
+        FOREIGN KEY(publisher_id) REFERENCES publisher (publisher_id)
+)
+2022-05-17 13:54:15,872 INFO sqlalchemy.engine.Engine [no key 0.00007s] ()
+2022-05-17 13:54:15,873 INFO sqlalchemy.engine.Engine COMMIT
+>>> from sqlalchemy.orm import Session
+>>> session = Session(engine)
+>>> from published import Author, Book, Publisher
+>>> king = Author(first_name="Stephen", last_name="King")
+>>> session.add(king)
+>>> session.commit()
+2022-05-17 13:55:21,965 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2022-05-17 13:55:21,984 INFO sqlalchemy.engine.Engine INSERT INTO author (first_name, last_name) VALUES (?, ?)
+2022-05-17 13:55:21,984 INFO sqlalchemy.engine.Engine [generated in 0.00024s] ('Stephen', 'King')
+2022-05-17 13:55:21,992 INFO sqlalchemy.engine.Engine COMMIT
+>>> king.books
+2022-05-17 13:55:29,814 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2022-05-17 13:55:29,815 INFO sqlalchemy.engine.Engine SELECT author.author_id AS author_author_id, author.first_name AS author_first_name, author.last_name AS author_last_name FROM author WHERE author.author_id = ?
+2022-05-17 13:55:29,815 INFO sqlalchemy.engine.Engine [generated in 0.00015s] (1,)
+2022-05-17 13:55:29,817 INFO sqlalchemy.engine.Engine SELECT book.book_id AS book_book_id, book.title AS book_title, book.author_id AS book_author_id FROM book WHERE ? = book.author_id
+2022-05-17 13:55:29,817 INFO sqlalchemy.engine.Engine [generated in 0.00014s] (1,)
+[]
+>>> king.books.append(Book(title="It"))
+>>> king.books
+[Book(book_id=None, title='It', author_id=None)]
+>>> pub = Publisher(name="Random House")
+>>> session.add(pub)
+>>> pub.books
+[]
+>>> pub.books.append(king.books[0])
+>>> pub.books
+[Book(book_id=None, title='It', author_id=None)]
+>>> session.commit()
+2022-05-17 13:57:21,084 INFO sqlalchemy.engine.Engine INSERT INTO publisher (name) VALUES (?)
+2022-05-17 13:57:21,085 INFO sqlalchemy.engine.Engine [generated in 0.00015s] ('Random House',)
+2022-05-17 13:57:21,086 INFO sqlalchemy.engine.Engine INSERT INTO book (title, author_id) VALUES (?, ?)
+2022-05-17 13:57:21,086 INFO sqlalchemy.engine.Engine [generated in 0.00013s] ('It', 1)
+2022-05-17 13:57:21,086 INFO sqlalchemy.engine.Engine INSERT INTO book_publisher (book_id, publisher_id) VALUES (?, ?)
+2022-05-17 13:57:21,086 INFO sqlalchemy.engine.Engine [generated in 0.00010s] (1, 1)
+2022-05-17 13:57:21,087 INFO sqlalchemy.engine.Engine COMMIT
+>>> pub.books
+2022-05-17 13:57:23,500 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2022-05-17 13:57:23,501 INFO sqlalchemy.engine.Engine SELECT publisher.publisher_id AS publisher_publisher_id, publisher.name AS publisher_name FROM publisher WHERE publisher.publisher_id = ?
+2022-05-17 13:57:23,501 INFO sqlalchemy.engine.Engine [generated in 0.00013s] (1,)
+2022-05-17 13:57:23,502 INFO sqlalchemy.engine.Engine SELECT book.book_id AS book_book_id, book.title AS book_title, book.author_id AS book_author_id FROM book, book_publisher WHERE ? = book_publisher.publisher_id AND book.book_id = book_publisher.book_id
+2022-05-17 13:57:23,502 INFO sqlalchemy.engine.Engine [generated in 0.00013s] (1,)
+[Book(book_id=1, title='It', author_id=1)]
+>>> pub = Publisher(name="Penguin")
+>>> session.add(pub)
+>>> pub.books.append(king.books[0])
+2022-05-17 13:58:15,283 INFO sqlalchemy.engine.Engine INSERT INTO publisher (name) VALUES (?)
+2022-05-17 13:58:15,284 INFO sqlalchemy.engine.Engine [cached since 54.2s ago] ('Penguin',)
+2022-05-17 13:58:15,284 INFO sqlalchemy.engine.Engine SELECT author.author_id AS author_author_id, author.first_name AS author_first_name, author.last_name AS author_last_name FROM author WHERE author.author_id = ?
+2022-05-17 13:58:15,284 INFO sqlalchemy.engine.Engine [cached since 165.5s ago] (1,)
+2022-05-17 13:58:15,285 INFO sqlalchemy.engine.Engine SELECT book.book_id AS book_book_id, book.title AS book_title, book.author_id AS book_author_id FROM book WHERE ? = book.author_id
+2022-05-17 13:58:15,285 INFO sqlalchemy.engine.Engine [cached since 165.5s ago] (1,)
+>>> session.commit()
+2022-05-17 13:58:26,324 INFO sqlalchemy.engine.Engine INSERT INTO book_publisher (book_id, publisher_id) VALUES (?, ?)
+2022-05-17 13:58:26,324 INFO sqlalchemy.engine.Engine [cached since 65.24s ago] (1, 2)
+2022-05-17 13:58:26,324 INFO sqlalchemy.engine.Engine COMMIT
+>>> pub.books
+2022-05-17 13:58:33,619 INFO sqlalchemy.engine.Engine BEGIN (implicit)
+2022-05-17 13:58:33,619 INFO sqlalchemy.engine.Engine SELECT publisher.publisher_id AS publisher_publisher_id, publisher.name AS publisher_name FROM publisher WHERE publisher.publisher_id = ?
+2022-05-17 13:58:33,619 INFO sqlalchemy.engine.Engine [cached since 70.12s ago] (2,)
+2022-05-17 13:58:33,620 INFO sqlalchemy.engine.Engine SELECT book.book_id AS book_book_id, book.title AS book_title, book.author_id AS book_author_id FROM book, book_publisher WHERE ? = book_publisher.publisher_id AND book.book_id = book_publisher.book_id
+2022-05-17 13:58:33,620 INFO sqlalchemy.engine.Engine [cached since 70.12s ago] (2,)
+[Book(book_id=1, title='It', author_id=1)]
+>>> king.books
+2022-05-17 13:58:38,971 INFO sqlalchemy.engine.Engine SELECT author.author_id AS author_author_id, author.first_name AS author_first_name, author.last_name AS author_last_name FROM author WHERE author.author_id = ?
+2022-05-17 13:58:38,971 INFO sqlalchemy.engine.Engine [cached since 189.2s ago] (1,)
+2022-05-17 13:58:38,972 INFO sqlalchemy.engine.Engine SELECT book.book_id AS book_book_id, book.title AS book_title, book.author_id AS book_author_id FROM book WHERE ? = book.author_id
+2022-05-17 13:58:38,972 INFO sqlalchemy.engine.Engine [cached since 189.2s ago] (1,)
+[Book(book_id=1, title='It', author_id=1)]
+>>> king.books[0].publishers
+2022-05-17 13:58:45,964 INFO sqlalchemy.engine.Engine SELECT publisher.publisher_id AS publisher_publisher_id, publisher.name AS publisher_name FROM publisher, book_publisher WHERE ? = book_publisher.book_id AND publisher.publisher_id = book_publisher.publisher_id
+2022-05-17 13:58:45,964 INFO sqlalchemy.engine.Engine [generated in 0.00015s] (1,)
+[Publisher(publisher_id=1, name='Random House'), Publisher(publisher_id=2, name='Penguin')]
+>>> pub.authors
+2022-05-17 13:59:06,331 INFO sqlalchemy.engine.Engine SELECT author.author_id AS author_author_id, author.first_name AS author_first_name, author.last_name AS author_last_name FROM author, author_publisher WHERE ? = author_publisher.publisher_id AND author.author_id = author_publisher.author_id
+2022-05-17 13:59:06,332 INFO sqlalchemy.engine.Engine [generated in 0.00017s] (2,)
+[]

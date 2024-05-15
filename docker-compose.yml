@@ -1,0 +1,26 @@
+# Build new image
+# $ docker-compose up -d --build
+
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./checkout-single-subscription
+  
+    image: united:1.0
+    ports:
+      - 5001:5000
+    env_file:
+      - ./checkout-single-subscription/.env.dev
+  db:
+    image: postgres:16
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_USER: united
+      POSTGRES_PASSWORD: houdini123876
+      POSTGRES_DB: wheeliewash  
+
+volumes:
+  postgres_data:

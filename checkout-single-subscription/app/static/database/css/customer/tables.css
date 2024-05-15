@@ -1,0 +1,64 @@
+/* Variables */
+:root {
+    --gray-offset: #00000008;
+    --gray-border: rgba(0, 0, 0, 0.15);
+    --gray-light: #00000066;
+    --gray-mid: rgba(0, 0, 0, 0.702);
+    --gray-dark: rgba(0, 0, 0, 0.9);
+    --gray-transparent: rgba(0, 0, 0, 0.12);
+    --wheelie-green: #00BF63;
+    --green-transparent: rgba(13, 246, 133, 0.113);
+    --green-light: #4ed728; 
+    --green-mid: #048D4B;
+    --green-dark: #048D4B;
+    --white: #fff;
+    --green-gradient: linear-gradient(to bottom, #00ff00, #008000);
+    --body-color: var(--gray-mid);
+    --headline-color: var(--gray-dark);
+    --accent-color: #0066f0;
+    --body-font-family: Noto Serif Japanese;
+    --nav-font-color: var(--white);
+    --radius: 6px;
+  }
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+.gridjs td {
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: " [more]";
+    min-width: 60px;
+    max-width: 200px;
+}
+
+/* Change background color of table row on hover */
+.container .gridjs tr:hover td {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Style table headers and change their color on hover */
+.container .gridjs th {
+    text-align: center;
+}
+
+.container .gridjs th:hover {
+    background-color: var(--wheelie-green);
+    color: #fff;
+}
+
+/* Style table cells and change their color on hover */
+.container .gridjs td {
+    color: #999;
+}
+
+.container .gridjs td:hover {
+    color: #000;
+}
+
+/*Mobile Screens*/
+@media (max-width: 600px) {
+    .gridjs td {
+        min-width: 30px;
+        max-width: 200px;
+    }
+}

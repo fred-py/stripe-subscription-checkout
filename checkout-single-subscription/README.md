@@ -1,3 +1,138 @@
+# -----> DOCUMENTATION - UNITED <-----
+
+# Client Library Fundamentals 
+https://stripe.com/docs/videos/developer-foundations?video=webhook-helpers
+
+# Webhooks & Event Listeners
+**Interactice webhook builder:** https://stripe.com/docs/webhooks/quickstart
+https://stripe.com/docs/billing/subscriptions/webhooks
+https://stripe.com/docs/webhooks/quickstart
+https://stripe.com/docs/webhooks?shell=true&api=true
+https://stripe.com/docs/billing/subscriptions/webhooks#events
+https://stripe.com/docs/cli/listen
+
+# Cancel Subscription
+https://stripe.com/docs/api/subscriptions/cancel
+
+# Refunds
+https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
+
+###### DATABASE ######
+  
+  # POSTGRES DATABASE
+  https://wiki.postgresql.org/wiki/Psycopg2_Tutorial
+
+  -> In order to connect to the postgres db, **psycopg2** must be installed. 
+  -> The use of **postgresql://** instead of **postgres://** in the         'SQLALCHEMY_DATABASE_URI' is also needed
+
+  # INTERACT WITH POSTGRES DATABASE USING **psqls**
+
+  > Login:
+  # Set user name(default is root user)
+  $ psql -U united
+  # Log in
+  $ psql -h localhost -p <default postgress port is 5432 > -U yourusername -d yourdatabasename
+
+  > List all tables:
+  $ \dt
+
+  Check structure/schema of tables:
+  $ \d table_name
+
+  # FLASK SHELL
+
+  > Open Shell
+  $ flask shell
+  > Import db object from extensions module to interact with database
+  $ from app.extensions import db
+  > Print db to check connection
+  $ print(db)
+  > Import modules to be created
+  $ from app.models import CustomerDB, Address, Bin, Subscription, Invoice, Role, User
+  > Create modules - expect no output
+  $ db.create_all()
+  > Inspect database tables
+  $ from sqlalchemy import inspect
+  $ inspector = inspect(db.engine)
+  $ print(inspector.get_table_names())
+  > Query data
+  $ from app.models import CustomerDB, Address etc...
+  $ cus = CustomerDB.query.all()
+  $ print(cus)
+  > Add Existing Roles in models module
+  $ flask shell
+  $ Role.insert_roles()
+  $ Role.query.all()
+  > Update User List or any model column once db has been changed - p. 344
+  $ flask shell
+  $ admin_role = Role.query.filter_by(name='Administrator').first()
+  $ default_role = Role.query.filter_by(default=True).first()
+  $ for u in User.query.all():
+  ...     if u.role is None:
+  ...         if u.email == app.config['UNITED_ADMIN]:
+  ...             u.role = admin_role
+  ...         else:
+  ...             u.role = default_role
+  ...
+  $ db.session.commit()
+
+
+
+
+  # FLASK SQLALQUEMY BLUEPRINT & FILE STRUCTURE
+  https://www.digitalocean.com/community/tutorials/how-to-structure-a-large-flask-application-with-flask-blueprints-and-flask-sqlalchemy#creating-the-main-blueprint-and-rendering-its-templates
+
+
+#  TEST API ROUTES USING HTTPie Flask WebDev pg 431
+http --json --auth <str:email>:<str:password> GET http://localhost:5000/api/v1/customers
+
+
+# CONFIGURE FLASK TO RUN ON DOCKER WITH POSTGRES 
+https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/#project-setup
+
+https://realpython.com/docker-continuous-integration/#run-a-redis-server-through-docker
+
+https://testdriven.io/blog/docker-best-practices/
+
+Build image after changes
+  # -t tags a name . stands for current dir
+--> $ docker build -t united .
+
+  # The below is not needed when running docker-compose
+--> $ docker run server.py
+
+  # list containers
+--> $ docker ps
+
+  # also lists containers that are stopped
+--> # docker ps -a  
+
+  # Access terminal within container
+--> $ docker exec -it <container-id OR name> /bin/bash
+
+  # View Logs
+--> $ docker logs <container_id_or_name>
+
+  # Follow Logs in real-time
+--> $ docker logs -f <container_id_or_name>
+
+
+
+Yes, you would need to run `docker-compose up -d --build` again after running `docker-compose down -v`.
+
+Here's what the command does:
+
+- `docker-compose up`: This command starts and runs your entire app. Docker Compose will start and run your entire app by using the `docker-compose.yml` file which defines your multi-container application.
+
+- `-d`: This option runs the containers in the background (detached mode).
+
+- `--build`: This option tells Docker Compose to build images before starting containers. If you've made changes to your Dockerfile since the last time you ran `docker-compose up`, you'll need this option to ensure your changes are included in the containers that are started.
+
+So, after running `docker-compose down -v`, running `docker-compose up -d --build` will rebuild your images and start your containers again, incorporating any changes you've made to your Dockerfile or application code.
+
+
+# STRIPE READ.md BELOW
+
 # Using Checkout for subscriptions
 
 [Checkout](https://stripe.com/docs/payments/checkout) is a pre-built payment page that lets you accept cards and Apple Pay. [Billing](https://stripe.com/docs/billing) is a suite of APIs that lets you model complex subscription plans. You can combine the two products to get a subscription payment page up and running without the need of a server.

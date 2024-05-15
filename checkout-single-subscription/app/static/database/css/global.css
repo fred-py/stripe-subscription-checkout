@@ -1,0 +1,112 @@
+/* Variables */
+:root {
+    --gray-offset: rgba(0, 0, 0, 0.03);
+    --gray-border: rgba(0, 0, 0, 0.15);
+    --gray-light: rgba(0, 0, 0, 0.4);
+    --gray-mid: rgba(0, 0, 0, 0.7);
+    --gray-dark: rgba(0, 0, 0, 0.9);
+    --gray-transparent: rgba(0, 0, 0, 0.12);
+    --wheelie-green: #00BF63;
+    --green-transparent: rgba(13, 246, 133, 0.113);
+    --green-light: #4ed728; 
+    --green-mid: #048D4B;
+    --green-dark: #048D4B;
+    --beige-grey: #999;
+    --white: #fff;
+    --green-gradient: linear-gradient(to bottom, #00ff00, #008000);
+    --body-color: var(--gray-mid);
+    --headline-color: var(--gray-dark);
+    --accent-color: #0066f0;
+    --body-font-family: Noto Serif Japanese;
+    --nav-font-color: var(--white);
+    --radius: 6px;
+  }
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+h1 {
+    font-weight: 400;
+    text-align: center;
+    font-size: 24px;
+    color: var(--beige-grey);
+}
+
+h3 {
+    font-weight: 400;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: var(--beige-grey);
+    padding-bottom: 10px;
+}
+
+.header_logo {
+    position: inherit;
+    background-image: url('/stripe/img/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 90px;
+    height: 50px;
+    margin-left: 10px;
+    padding-bottom: 10px;
+    z-index: 9999;
+}
+
+
+.navbar {
+    border: none;
+    border-radius: 0;
+}
+
+/* Header/Nav Text = 'Dashboard', 'Customers', etc...*/
+.navbar-inverse .navbar-text {
+    color: var(--nav-font-color);
+}
+
+/* Header/Nav Text = 'Account'(toggle) */
+.navbar-inverse .navbar-nav>li>a {
+    color: var(--nav-font-color);
+}
+
+/* Header/Nav Dropdown Menu for Accounts Navigation */
+.navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {
+    background-color: var(--green-dark);
+}
+
+/* Navigation Bar Background */
+.navbar-inverse {
+    background: var(--green-dark);
+    background: -moz-linear-gradient(top, var(--green-light) 0%, var(--green-dark) 100%);
+    background: -webkit-linear-gradient(top, var(--green-light) 0%, var(--green-dark) 100%);
+    background: linear-gradient(to bottom, var(--green-light) 0%, var(--green-dark) 100%);
+    border-color: none;
+}
+
+.container {
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-right: 15px;
+    margin-left: 15px;
+    max-width: auto;
+    width: auto;
+}
+
+/*Mobile Screens*/
+@media (max-width: 600px) {
+    /* Header/Nav Text = 'Dashboard', 'Customers', etc...*/
+    .navbar-inverse .navbar-text {
+        padding-right: 7px;
+        padding-top: 5px;
+    }
+
+    .header_logo {
+        margin-left: -15px;
+        width: 90px;
+        margin-bottom: 15px;
+        position: left;
+        background-size: contain;
+
+    }
+    body {
+        font-size: 11px;
+    }
+}
