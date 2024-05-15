@@ -1,0 +1,46 @@
+.env
+.env.dev
+.env.example
+.cli.json
+.rspec
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+
+# Dotnet files
+**/Debug/**
+**/project-cache/**
+**/.vs/**
+**/obj/**
+
+# Node files
+node_modules/
+
+# Ruby files
+Gemfile.lock
+.bundle
+.byebug_history
+
+# Python files
+__pycache__
+venv
+env
+
+# PHP files
+vendor
+logs
+
+# Java files
+.settings
+target/
+.classpath
+.factorypath
+.project
+
+# Virtual Env
+venv/
+*sqlite
+credentials.json
+token.json
+proton_me_recovery
+client_DELETE_AFTER_TEST/
