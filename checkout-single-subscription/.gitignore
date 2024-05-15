@@ -1,4 +1,5 @@
 .env
+.env.dev
 .env.example
 .cli.json
 .rspec
