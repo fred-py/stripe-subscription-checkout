@@ -22,7 +22,7 @@ from app.decorators import admin_required
 #from ..db_operations.crud_operations import add_user
 #from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
 
-load_dotenv(find_dotenv())
+load_dotenv(find_dotenv(''))
 
 #UNITED_ADMIN = os.getenv('UNITED_ADMIN')
 

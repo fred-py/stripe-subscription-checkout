@@ -11,6 +11,7 @@ from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.support.select import Select  # For dropdown menus
 from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from street_names import addresses
 # Testing
 import random
 from faker import Faker
@@ -65,7 +66,8 @@ def random_bin_selection():
     return bin
 
 
-
+post_code_options = ['6284', '6285', '6286', '6288', '6290']
+suburb_options = ['Margaret River', 'Cowaramup', 'Witchcliffe', 'Redgate', 'Boranup']
 
 mobile = create_mobile()
 random_name = random.choice(name_list)
@@ -74,12 +76,12 @@ bin_collection = random_weekday()
 success_card = '4242 4242 4242 4242'
 expiry = '12/28'
 cvc = '333'
-street = '20 Humble Way'
-suburb = 'Margaret River'
-postcode = '6285'
+street = random.choice(addresses)
+suburb = random.choice(suburb_options)
+postcode = random.choice(post_code_options)
 bin = random_bin_selection()
 
-local = 'http://localhost:5000/'
+local = 'http://localhost:5001/'
 public = 'https://wheeliewash.2.sg-1.fl0.io/'
 
 
@@ -579,9 +581,11 @@ gold_cus.subscribe()"""
 
 
 if __name__ == '__main__':
-    for _ in range(15):
+    for _ in range(30):
         checkout_test(gold, local)
         sleep.sleep(2)
         checkout_test(silver, local)
         sleep.sleep(2)
         #checkout_test(bronze, local)
+
+

@@ -1,3 +1,4 @@
+# For use in development environment
 # Build new image
 # $ docker-compose up -d --build
 
@@ -17,10 +18,8 @@ services:
     image: postgres:16
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    environment:
-      POSTGRES_USER: united
-      POSTGRES_PASSWORD: houdini123876
-      POSTGRES_DB: wheeliewash  
+    env_file:
+      - ./checkout-single-subscription/.env.dev
 
 volumes:
   postgres_data:

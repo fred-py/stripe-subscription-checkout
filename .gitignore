@@ -1,6 +1,7 @@
 .env
 .env.dev
-.env.example
+.env.prod
+.env.prod.db
 .cli.json
 .rspec
 .DS_Store

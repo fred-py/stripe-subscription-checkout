@@ -14,7 +14,9 @@ FROM python:3.11.2-slim
 
 # Patch security updates & bug fixes 
 RUN apt-get update && \
-    apt-get upgrade --yes
+    apt-get upgrade --yes && \
+    apt-get install --yes postgresql-client && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Remove root-level-access by creating a regular user
 RUN useradd --create-home united

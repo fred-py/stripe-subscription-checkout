@@ -116,7 +116,16 @@ Build image after changes
   # Follow Logs in real-time
 --> $ docker logs -f <container_id_or_name>
 
+  # Access DB from image
+--> $ docker-compose exec db psql --username=<username> --dbname=<databasename> 
 
+  # Inpect DB Volume
+--> $ docker volume inspect <db_name>
+
+  # Check for errors on containers
+--> $ docker-compose -f docker-compose.prod.yml logs -f 
+
+--> $ docker-compose -f docker-compose.prod.yml up -d --build
 
 Yes, you would need to run `docker-compose up -d --build` again after running `docker-compose down -v`.
 

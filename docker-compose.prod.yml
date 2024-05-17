@@ -1,0 +1,28 @@
+# For use in production environment
+# https://testdriven.io/blog/dockerizing-flask-with-postgres-gunicorn-and-nginx/#postgres
+# https://realpython.com/docker-continuous-integration/#isolate-your-docker-image
+# Build new image
+# $ docker-compose up -d --build
+
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: ./checkout-single-subscription
+    command: gunicorn --bind 0.0.0.0:5000 server:app
+    image: united:1.0-prod
+    ports:
+      - 5001:5000
+    env_file:
+      - ./checkout-single-subscription/.env.prod
+    depends_on:
+      - db
+  db:
+    image: postgres:16
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data/
+    env_file:
+      - ./checkout-single-subscription/.env.prod.db
+volumes:
+  postgres_data_prod:
