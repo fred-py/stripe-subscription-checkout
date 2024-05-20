@@ -12,12 +12,19 @@ services:
       context: ./checkout-single-subscription
     command: gunicorn --bind 0.0.0.0:5000 server:app
     image: united:1.0-prod
-    ports:
-      - 5001:5000
+    expose:
+      - 5000
     env_file:
       - ./checkout-single-subscription/.env.prod
     depends_on:
       - db
+  nginx:
+    build:
+      context: ./nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - web
   db:
     image: postgres:16
     volumes:
@@ -26,3 +33,4 @@ services:
       - ./checkout-single-subscription/.env.prod.db
 volumes:
   postgres_data_prod:
+  

@@ -125,7 +125,11 @@ Build image after changes
   # Check for errors on containers
 --> $ docker-compose -f docker-compose.prod.yml logs -f 
 
+  # Build specific docker-compose file
 --> $ docker-compose -f docker-compose.prod.yml up -d --build
+
+  # Stop Nginx
+--> $ docker-compose -f docker-compose.prod.yml stop nginx
 
 Yes, you would need to run `docker-compose up -d --build` again after running `docker-compose down -v`.
 
