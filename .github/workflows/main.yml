@@ -24,8 +24,7 @@ jobs:
       -
         name: Build and push
         uses: docker/build-push-action@v5
-        with:
-          context: .
-          dockerfile: ./checkout-single-subscription/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/${{ github.event.repository.name }}:latest
+      -
+        name: Build images
+        run: docker-compose up docker-compose.prod.yml -d build
+        
