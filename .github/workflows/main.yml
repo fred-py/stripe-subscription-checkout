@@ -23,15 +23,15 @@ jobs:
         run: |
           echo "FLASK_CONFIG=${{ secrets.FLASK_CONFIG }}" >> checkout-single-subscription/.env.dev
           echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> checkout-single-subscription/.env.dev
-          echo "SQL_HOST"=${{ secrets.SQL_HOST }}" >> checkout-single-subscription/.env.dev
-          echo "DATABASE"=${{ secrets.DATABASE }}" >> checkout-single-subscription/.env.dev
-          echo "STRIPE_PUBLISHABLE_KEY"=${{ secrets.STRIPE_PUBLISHABLE_KEY }}" >> checkout-single-subscription/.env.dev
-          echo "STRIPE_SECRET_KEY"=${{ secrets.STRIPE_SECRET_KEY }}" >> checkout-single-subscription/.env.dev
-          echo "STRIPE_WEBHOOK_SECRET"=${{ secrets.STRIPE_WEBHOOK_SECRET }}" >> checkout-single-subscription/.env.dev
-          echo "GOLD_PRICE_ID"=${{ secrets.GOLD_PRICE_ID }}" >> checkout-single-subscription/.env.dev
-          echo "SILVER_PRICE_ID"=${{ secrets.SILVER_PRICE_ID }}" >> checkout-single-subscription/.env.dev
-          echo "ANY_COMBO_PRICE_ID"=${{ secrets.ANY_COMBO_PRICE_ID }}" >> checkout-single-subscription/.env.dev
-          echo "ONE_OFF_PRICE_ID"=${{ secrets.ONE_OFF_PRICE_ID }}" >> checkout-single-subscription/.env.dev
+          echo "SQL_HOST=${{ secrets.SQL_HOST }}" >> checkout-single-subscription/.env.dev
+          echo "DATABASE=${{ secrets.DATABASE }}" >> checkout-single-subscription/.env.dev
+          echo "STRIPE_PUBLISHABLE_KEY=${{ secrets.STRIPE_PUBLISHABLE_KEY }}" >> checkout-single-subscription/.env.dev
+          echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> checkout-single-subscription/.env.dev
+          echo "STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }}" >> checkout-single-subscription/.env.dev
+          echo "GOLD_PRICE_ID=${{ secrets.GOLD_PRICE_ID }}" >> checkout-single-subscription/.env.dev
+          echo "SILVER_PRICE_ID=${{ secrets.SILVER_PRICE_ID }}" >> checkout-single-subscription/.env.dev
+          echo "ANY_COMBO_PRICE_ID=${{ secrets.ANY_COMBO_PRICE_ID }}" >> checkout-single-subscription/.env.dev
+          echo "ONE_OFF_PRICE_ID=${{ secrets.ONE_OFF_PRICE_ID }}" >> checkout-single-subscription/.env.dev
       -
         name: Build images
         run: docker-compose up docker-compose.prod.yml -d build
