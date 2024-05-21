@@ -34,7 +34,7 @@ jobs:
           echo "ONE_OFF_PRICE_ID=${{ secrets.ONE_OFF_PRICE_ID }}" >> checkout-single-subscription/.env.dev
       -
         name: Build images
-        run: docker-compose up docker-compose.prod.yml -d build
+        run: docker-compose -f docker-compose.prod.yml up --build
         
           
         
