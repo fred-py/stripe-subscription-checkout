@@ -34,7 +34,7 @@ jobs:
           echo "ONE_OFF_PRICE_ID=${{ secrets.ONE_OFF_PRICE_ID }}" >> checkout-single-subscription/.env.dev
 
           echo "FLASK_CONFIG=${{ secrets.FLASK_CONFIG }}" >> checkout-single-subscription/.env.prod
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> checkout-single-subscription/.env.prod.db
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> checkout-single-subscription/.env.prod
           echo "SQL_HOST=${{ secrets.SQL_HOST }}" >> checkout-single-subscription/.env.prod.db
           echo "DATABASE=${{ secrets.DATABASE }}" >> checkout-single-subscription/.env.prod.db
           echo "STRIPE_PUBLISHABLE_KEY=${{ secrets.STRIPE_PUBLISHABLE_KEY }}" >> checkout-single-subscription/.env.prod
