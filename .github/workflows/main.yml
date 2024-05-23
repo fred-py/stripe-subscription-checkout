@@ -19,27 +19,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - 
-        name: Set up enviroment variable
-        run: |
-          echo "FLASK_CONFIG=production" >> checkout-single-subscription/.env.prod
-          
-          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> checkout-single-subscription/.env.prod.db
-          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> checkout-single-subscription/.env.prod.db
-          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> checkout-single-subscription/.env.prod.db
-          
-          echo "SQL_HOST=${{ secrets.SQL_HOST }}" >> checkout-single-subscription/.env.prod
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> checkout-single-subscription/.env.prod
-          
-          echo "STRIPE_PUBLISHABLE_KEY=${{ secrets.STRIPE_PUBLISHABLE_KEY }}" >> checkout-single-subscription/.env.prod
-          echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> checkout-single-subscription/.env.prod
-          echo "STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }}" >> checkout-single-subscription/.env.prod
-          echo "GOLD_PRICE_ID=${{ secrets.GOLD_PRICE_ID }}" >> checkout-single-subscription/.env.prod
-          echo "SILVER_PRICE_ID=${{ secrets.SILVER_PRICE_ID }}" >> checkout-single-subscription/.env.prod
-          echo "ANY_COMBO_PRICE_ID=${{ secrets.ANY_COMBO_PRICE_ID }}" >> checkout-single-subscription/.env.prod
-          echo "ONE_OFF_PRICE_ID=${{ secrets.ONE_OFF_PRICE_ID }}" >> checkout-single-subscription/.env.prod
-      -
-        name: Build images
-        run: docker-compose -f docker-compose.prod.yml up --build
-        
+        name: Push image to Docker Hub
+        uses: docker/build-push-action@v4.0.0
+        with:
+          context: .
+          push: true
+          tags: united:1.0-prod
+
           
         
