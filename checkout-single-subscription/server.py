@@ -13,7 +13,7 @@ load_dotenv(find_dotenv())
 # Create app instance
 # export FLASK_CONFIG=production/development/testing
 # NOTE: Add FLASK_CONFIG to FL0 environment variables
-app = create_app('production') #or 'default')
+app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 
 
 @app.shell_context_processor

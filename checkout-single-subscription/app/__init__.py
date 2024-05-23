@@ -18,7 +18,7 @@ load_dotenv(find_dotenv())
 login_manager.login_view = 'auth.login'
 
 
-def create_app(config_name='production'):  # Change to 'production' before deployment
+def create_app(config_name):
     """Flask application factory function configuration
     settings stored in one of the classes defined in
     config.py can be imported directly into the app using 
