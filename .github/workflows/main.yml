@@ -25,7 +25,7 @@ jobs:
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> checkout-single-subscription/.env.prod.db
           echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> checkout-single-subscription/.env.prod.db
           
-          echo "FLASK_CONFIG=${{ secrets.FLASK_CONFIG }}" >> $GITHUB_ENV  
+          echo "FLASK_CONFIG=${{ secrets.FLASK_CONFIG }}" >> checkout-single-subscription/.env.prod.db  
           
           echo "SQL_HOST=${{ secrets.SQL_HOST }}" >> checkout-single-subscription/.env.prod
           echo "FLASK_CONFIG=${{ secrets.FLASK_CONFIG }}" >> checkout-single-subscription/.env.prod

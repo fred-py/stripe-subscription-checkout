@@ -36,16 +36,16 @@ class Config:
 class DevelopmentConfig(Config):
     DEBUG = True
 
-    def __init__(self):
-        self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    #def __init__(self):
+    #    self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 
 class TestingConfig(Config):
     TESTING = True
     # Stripe Prices - TEST MODE
 
-    def __init__(self):
-        self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL_TEST') or \
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL_TEST') or \
         'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
 
 
@@ -56,8 +56,7 @@ class ProductionConfig(Config):
     # Tis class definition was running before env variables were loaded
     # Now in create_app() function, an instance of the Config class is created
 
-    def __init__(self):
-        self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
 
 
 config = {
