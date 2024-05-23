@@ -21,6 +21,8 @@ jobs:
       - 
         name: Set up enviroment variable
         run: |
+          echo "FLASK_CONFIG=production" >> checkout-single-subscription/.env.prod
+          
           echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> checkout-single-subscription/.env.prod.db
           echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> checkout-single-subscription/.env.prod.db
           echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> checkout-single-subscription/.env.prod.db
