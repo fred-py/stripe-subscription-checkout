@@ -5,7 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 # NOTE: load_dotenv defaults to .env file
 # For a different file, pass the file path as an argument
-load_dotenv(find_dotenv('.env.dev'))
+load_dotenv(find_dotenv('.env.dev.prod'))
 
 
 class Config:
@@ -45,7 +45,7 @@ class TestingConfig(Config):
     # Stripe Prices - TEST MODE
 
     def __init__(self):
-        self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or \
+        self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL_TEST') or \
         'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
 
 

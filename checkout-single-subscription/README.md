@@ -131,6 +131,9 @@ Build image after changes
   # Stop Nginx
 --> $ docker-compose -f docker-compose.prod.yml stop nginx
 
+  # Configure CI/CD for your Python application
+  https://docs.docker.com/language/python/configure-ci-cd/
+
 Yes, you would need to run `docker-compose up -d --build` again after running `docker-compose down -v`.
 
 Here's what the command does:

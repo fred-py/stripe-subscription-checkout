@@ -32,18 +32,19 @@ def make_shell_context():
 
 @app.cli.command()  # The cli.command decorator simplifies the implementation of custom commands
 @click.argument('test_names', nargs=-1)
-def test(test_names):
+def test(test_names, pytest=None):
     """Run the unit tests.
     To run on shell:
     $ export FLASK_APP=server.py
     $ flask test """
-    
+
     import unittest
     if test_names:
         tests = unittest.TestLoader().loadTestsFromNames(test_names)
     else:
         tests = unittest.TestLoader().discover('tests')
     unittest.TextTestRunner(verbosity=2).run(tests)
+
 
 
 if __name__ == '__main__':
