@@ -51,4 +51,4 @@ RUN python -m pip install --upgrade pip setuptools && \
 # Any changes to source code will not require re-installing dependencies
 
 CMD ["python", "server.py", \
-    "--host", "0.0.0.0", "--port", "8080"]
+    "--host", "0.0.0.0", "--port", "5000"]
