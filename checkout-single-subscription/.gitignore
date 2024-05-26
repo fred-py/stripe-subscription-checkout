@@ -45,3 +45,6 @@ credentials.json
 token.json
 proton_me_recovery
 client_DELETE_AFTER_TEST/
+
+# Gcloud
+.stripe-checkout-424311-b4403b529eb8.json
