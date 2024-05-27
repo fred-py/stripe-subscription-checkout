@@ -10,7 +10,7 @@ services:
   web:
     build:
       context: ./checkout-single-subscription
-    command: gunicorn --bind 0.0.0.0:$PORT server:app  # $PORT is set for Gcloud Run
+    command: gunicorn --bind 0.0.0.0:5000 server:app  # PORT:5000 for local test
     image: united:1.0-prod
     expose:
       - 5000
