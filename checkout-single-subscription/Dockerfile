@@ -50,5 +50,6 @@ RUN python -m pip install --upgrade pip setuptools && \
 # app code in the Docker Image. They will stay in a chached layer
 # Any changes to source code will not require re-installing dependencies
 
+# $PORT is set for gcloud deployment. 
 CMD ["python", "server.py", \
-    "--host", "0.0.0.0", "--port", "5000"]
+    "--host", "0.0.0.0", "--port", "$PORT"]  

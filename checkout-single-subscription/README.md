@@ -88,6 +88,13 @@ https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
   Check structure/schema of tables:
   $ \d table_name
 
+  > Migrate data & export table structures from db in docker container
+  > This will create a dump file in the current directory
+  $ docker exec -it container_id_or_name pg_dump -U username -d database_name > dump.sql
+  $ <enter db password> <NOTE: You will not be explicitly prompted to enter the password>
+
+  > Load into new DB
+  $ psql <connection string> < dump.sql
 
 *--------------------------------------*
 
@@ -257,7 +264,7 @@ Authenticate gcloud CLI
 
 > View backend, current stack, pending operations, and versions
 - $ pulumi about
-AUSTRALIA-SOUTHEAST1 > SMALL CAPS
+
 > Logout login
 - $ pulumi logout && pulumi login
 

@@ -3,7 +3,8 @@
 # https://realpython.com/docker-continuous-integration/#isolate-your-docker-image
 # Build new image
 # $ docker-compose up -d --build
-
+# $ docker-compose -f docker-compose.prod.yml up -d --build
+# NOTE Given port set up on this file, it will only run on Cloud Run
 version: '3.8'
 
 services:

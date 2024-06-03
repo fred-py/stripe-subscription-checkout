@@ -6,6 +6,7 @@ import json
 import os
 from flask import render_template, redirect, url_for, abort, \
     flash, request, current_app, make_response, send_from_directory, jsonify
+import traceback
 #from flask_login import login_required, current_user
 #from flask_sqlalchemy import get_debug_queries
 from . import main
@@ -316,8 +317,9 @@ def webhook_received():
             return jsonify(status=400, content=f'Invalid signature: {e}')
         except Exception as e:
             # Catch unexpected errors
-            return jsonify(status=500, content=f'Unexpected error: {e}')
-        
+            traceback_str = traceback.format_exc()
+            return jsonify(status=500, content=f'Unexpected error: {e}\n{traceback_str}')
+
     # Get the type of webhook event sent - 
     # used to check the status of PaymentIntents.    
     else:
@@ -457,7 +459,6 @@ def webhook_received():
                 payment_intent=p_intent_id,
                 amount=amount
             )
-
 
 
     elif event_type == 'subscription_schedule.canceled':
