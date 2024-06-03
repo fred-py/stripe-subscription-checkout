@@ -296,6 +296,7 @@ def webhook_received():
     webhook_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
     request_data = json.loads(request.data)
 
+
     if webhook_secret:
         # Retrieve the event by verifying the signature using 
         # the raw body and secret if webhook signing is configured.
@@ -326,6 +327,7 @@ def webhook_received():
         data = request_data['data']
         event_type = request_data['type']
         data_object = data['object'] # Values added to metadata can be accessed from data_object - print(data_object)
+        event = request_data
 
     #print('event ' + event_type)
 

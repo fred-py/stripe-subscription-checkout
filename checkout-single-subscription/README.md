@@ -287,6 +287,12 @@ Authenticate gcloud CLI
 > Get region
 - $ pulumi config get gcloud:region
 
+> * Error updating Service "locations/australia-southeast1/namespaces/stripe-checkout-424311/services/service-c4790b5": googleapi: Error 409: Conflict for resource 'service-c4790b5': version '1716904170281583' was specified but current version is '1717335246426735'.
+> Usually running the below should fix the issue
+> NOTE: mix of manual and managed deployment might trigger this issue
+- $ pulumi refresh
+- $ pulumi up
+
 
 
 *--------------------------------------*
