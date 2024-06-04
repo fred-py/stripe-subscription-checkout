@@ -462,7 +462,6 @@ def webhook_received():
                 amount=amount
             )
 
-
     elif event_type == 'subscription_schedule.canceled':
         subscription_schedule = event['data']['object']
         print(f'This is the OTHER THING: {subscription_schedule}')
