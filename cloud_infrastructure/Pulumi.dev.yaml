@@ -1,0 +1,9 @@
+config:
+  gcloud:region: australia-southeast1
+  gcp:project: stripe-checkout-424311
+  gcp:region: australia-southeast1
+  united-app:appPath: ../checkout-single-subscription
+  united-app:concurrency: "50"
+  united-app:containerPort: "5000"
+  united-app:cpu: "1"
+  united-app:memory: 1Gi
