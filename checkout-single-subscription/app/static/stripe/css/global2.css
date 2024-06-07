@@ -15,15 +15,21 @@
     --body-color: var(--gray-mid);
     --headline-color: var(--gray-dark);
     --accent-color: #0066f0;
-    --body-font-family: Noto Serif Japanese;
+    /* --body-font-family: Noto Serif Japanese; */
+    --font-family: Inter, sans-serif;
+    --font-feature-settings: 'liga' 1, 'calt' 1; /* fix for Chrome */
     --radius: 6px;
+  }
+
+  @supports (font-variation-settings: normal) {
+    :root { font-family: InterVariable, sans-serif; }
   }
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
 html {
     box-sizing: border-box;
-    font-family: var(--body-font-family)
+    font-family: var(--font-family)
   }
 
 
@@ -44,7 +50,7 @@ html {
     background: -webkit-linear-gradient(top, var(--green-light) 0%, var(--green-dark) 100%);
     background: linear-gradient(to bottom, var(--green-light) 0%, var(--green-dark) 100%);
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#60a9ff', endColorstr='#4394f4',GradientType=0 );
-    height: 550px;
+    height: 750px;
     left: 0;
     position: absolute;
     top: 0;
@@ -68,37 +74,46 @@ html {
     background-repeat: no-repeat;
     width: 140px;
     height: 140px;
-    padding-bottom: 10%;
+    padding-bottom: 0%;
     z-index: 9999;
 }
 
 .header__title {
     position: inherit;
-    font-family: sans-serif;
+    font-family: InterVariable, sans-serif;
+    font-variation-settings: 'wght' 800;
     color: #fff;
     transform: translateY(100%);
     letter-spacing: 1px;
     font-size: 33px;
     z-index: 9999;
     margin-bottom: 3%;
-    padding-bottom: 3%;
+    padding-top: 2%;
+    
 }
 
 .header__features {
     position: inherit;
-    font-family: sans-serif;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: InterVariable, sans-serif;
+    font-variation-settings: 'wght' 600;
+    line-height: 1.4;
     color: #fff;
     transform: translateY(20%);
-    letter-spacing: 1px;
-    font-size: 14px;
-    padding-top: 0%;
+    letter-spacing: 0;
+    font-size: 37px;
+    padding-top: 3%;
+    padding-bottom: 3%;
     z-index: 9999;
 }
 
 .header__features p {
+
     margin: 8px 0;
+    margin-left: 0%;
+    margin-right: 0%;
+    padding-bottom: 2%;
     text-align: center;
+    
 }
   
   @media (min-width: 900px) {
@@ -189,6 +204,7 @@ html {
     .pricing-img {
       filter: drop-shadow(0.4px 0.4px 0.4px rgba(0, 0, 0, 0.4));
     }
+    
   }
   
 
@@ -215,7 +231,8 @@ html {
   
 .pricing-features-item {
     list-style-type: none;
-    font-family: sans-serif;
+    font-family: InterVariable, sans-serif;
+    font-variation-settings: 'wght' 300;
     border-top: .7px solid var(--gray-transparent);
     width: 100%;
     text-align: left;
@@ -340,7 +357,7 @@ html {
 }
 
 .accordion-body {
-    font-family: sans-serif;
+    font-family: InterVariable, sans-serif;
     color: var(--gray-light);
     margin: 2px auto;
     padding: 77px 77px;
@@ -394,12 +411,24 @@ the class .pricing-table.  */
 
 /*Mobile Screens*/
 @media (max-width: 600px) {
+    
+    .header__features {
+      font-size: 27px;
+    }
+
+    .header__title {
+        font-size: 27px;
+        margin-top: 12%;
+    }
+
     .accordion .content {
         font-size: 12px;
         width: 100%;
     }
+    /*FAQs Header*/
     .accordion h1{
         margin-top: 55px;
+        font-weight: 700;
     }
     .accordion-body {
         padding: 0% 0%;
@@ -411,12 +440,14 @@ the class .pricing-table.  */
         /*Sequences of whitespace will collapse into a single whitespace.
         Text will wrap when necessary, and on line breaks.*/
         white-space: normal;
-        font-weight: 600;
-        font-size: 12px;
+        font-weight: 500;
+        font-size: 18px;
         margin-left: 0%;
         margin-right: 0%;
     }
-    /*FAQs Header*/
+  }
+    
+    
     h1 {
         font-size: 18px;
         font-weight: 600;
@@ -426,8 +457,12 @@ the class .pricing-table.  */
         font-size: 12px;
         font-weight: 600;
     }
+
+    .pricing-features-item {
+        font-size: 10.8px;
+    }
     
-}
+
 
 
 
@@ -526,12 +561,12 @@ justifies text and adds transition */
       position: absolute;
       top: 50%;
       right: -5px;
-      font-size: 14px;
+      font-size: 22px;
       transform: translateY(-50%);
     }
     .accordion .container-accord.active .label::before {
       content: '-';
-      font-size: 14px;
+      font-size: 22px;
     }
     .table-header {
       font-size: 9px;

@@ -5,8 +5,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 # NOTE: load_dotenv defaults to .env file
 # For a different file, pass the file path as an argument
-load_dotenv(find_dotenv('.env.dev.prod'))
-
+#load_dotenv(find_dotenv('.env.dev.prod'))
+load_dotenv(find_dotenv())
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')  # flask-wtf 
