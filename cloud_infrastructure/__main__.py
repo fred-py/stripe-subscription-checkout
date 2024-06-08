@@ -27,6 +27,7 @@ project = gcp_config.require("project")
 FLASK_CONFIG = get_env("stripe-checkout-424311", "FLASK_CONFIG")
 STRIPE_SECRET_KEY = get_env("stripe-checkout-424311", "STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = get_env("stripe-checkout-424311", "STRIPE_PUBLISHABLE_KEY")
+DOMAIN = get_env("stripe-checkout-424311", "DOMAIN")
 GOLD_PRICE_ID = get_env("stripe-checkout-424311", "GOLD_PRICE_ID")
 SILVER_PRICE_ID = get_env("stripe-checkout-424311", "SILVER_PRICE_ID")
 ANY_COMBO_PRICE_ID = get_env("stripe-checkout-424311", "ANY_COMBO_PRICE_ID")
@@ -150,6 +151,10 @@ service = cloudrun.Service(
                             cloudrun.ServiceTemplateSpecContainerEnvArgs(
                                 name="PASSWORD",
                                 value=PASSWORD,
+                            ),
+                            cloudrun.ServiceTemplateSpecContainerEnvArgs(
+                                name="DOMAIN",
+                                value=DOMAIN,
                             ),
                             cloudrun.ServiceTemplateSpecContainerEnvArgs(
                                 name="GOLD_PRICE_ID",

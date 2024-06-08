@@ -52,7 +52,7 @@ def get_checkout_session():
 @main.route('/create-checkout-session', methods=['POST', 'OPTIONS'])
 def create_checkout_session():
     price = request.form.get('priceId')
-    domain_url = os.getenv('DOMAIN')
+    domain_url = os.getenv('DOMAIN')  # Domain if fetched by back arrow icon on stripe hoted
     try:
         # Create new Checkout Session for the order
         # For full details see https://stripe.com/docs/api/checkout/sessions/create
@@ -74,7 +74,6 @@ def create_checkout_session():
                 #    'coupon': 'test_coupon',
                 #}],
                 billing_address_collection='required',
-                # automatic_tax={'enabled': True},
                 line_items=[{
                     'price': price,
                     'adjustable_quantity':
