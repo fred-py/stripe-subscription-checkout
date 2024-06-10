@@ -1,4 +1,5 @@
 from flask import jsonify, request, g, url_for, current_app
+from flask_login import login_required, current_user
 from app.extensions import db, cross_origin
 from ..models import CustomerDB, User, Permission
 from . import api
@@ -7,6 +8,7 @@ from .errors import forbidden
 
 
 @api.route('/customers/')
+@permission_required(Permission.DRIVER)
 @cross_origin()
 def get_customers():
     customers = CustomerDB.query.all()
@@ -18,6 +20,8 @@ def get_customers():
 
 
 @api.route('/customers/<int:id>')
+@permission_required(Permission.DRIVER)
+@cross_origin()
 def get_customer(id):
     """Returns a single customer.
     If name it not found in the database,

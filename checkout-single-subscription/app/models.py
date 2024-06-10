@@ -332,7 +332,8 @@ class Role(db.Model):
         return self.permissions & perm == perm
 
     def __repr__(self) -> str:
-        return '<Role %r>' % self.name
+        return f'Users: {self.users.email} | Name: {self.name}' \
+                f'Default: {self.default} | Permissions: {self.permissions}'
 
 
 class User(UserMixin, db.Model):
@@ -502,6 +503,7 @@ class User(UserMixin, db.Model):
         return f'User {self.username}' + ' ' +\
                 f'ID: {self.id}' + ' ' +\
                 f'Email: {self.email}' + ' ' + \
+                f'Role_id: {self.role_id}' + ' ' + \
                 f'Member Since: {self.member_since}' + ' ' + \
                 f'Last Seen: {self.last_seen}'
 

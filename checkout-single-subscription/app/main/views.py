@@ -24,9 +24,14 @@ stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 
 @main.route('/', methods=['GET', 'OPTIONS'])
-def get_example():
+def get_sub_page():
     # Passing favicon en var to render on deployment
     return render_template('stripe/index.html', favicon=os.getenv('FAVICON'))
+
+@main.route('/bootstrap', methods=['GET', 'OPTIONS'])
+def get_bootstrap_test():
+    # Passing favicon en var to render on deployment
+    return render_template('stripe/index_bootstrap.html', favicon=os.getenv('FAVICON'))
 
 
 @main.route('/config', methods=['GET', 'OPTIONS'])
