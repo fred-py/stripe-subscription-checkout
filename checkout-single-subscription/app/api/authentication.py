@@ -1,19 +1,27 @@
-from flask import g, jsonify
+from flask import g, jsonify, request, current_app, \
+    redirect, flash, url_for
 # This user auth will only be used in the API blueprint
 # Hence the flask_httpauth is initialised in the blueprint
 from flask_httpauth import HTTPBasicAuth
+from flask_login import login_user, logout_user, \
+    login_required, current_user
+from flask_wtf.csrf import CSRFProtect
+from app.emails import send_email
+from ..auth.forms import LoginForm, RegistrationForm, \
+    ChangePasswordForm, PasswordResetRequestForm, \
+    PasswordResetForm, ChangeEmailForm
 from ..models import User
 from . import api
 from .errors import unauthorized, forbidden  # Error handlers in API Directory not db_views
 
-
+# NOTE: refer to link below for SPA + Flask Auth Implementation
+# https://testdriven.io/blog/flask-spa-auth/#session-vs-token-based-auth
 auth = HTTPBasicAuth()
 
 # The Flask-HTTPAuth extension also invoke the callback
 # for requests that carry no authentication information.
-# Setting both arguments to the empty string,
+# Setting both arguments∫ to the empty string,
 # in this case when the email is empty, the func returns false
-
 
 @auth.verify_password
 def verify_password(email_or_token, password):  
@@ -58,10 +66,36 @@ def before_request():
     with the blueprint, ensuring that it runs before
     any request in the blueprint. This handler is
     responsible for verifying the authentication of
-    the client."""
+    the client. Must be included in all api routes
+    that require auth"""
     if not g.current_user.is_anonymous and \
             not g.current_user.confirmed:
         return forbidden('Unconfirmed account')
+
+@api.after_request
+def set_xsrf_cookie(response):
+    """Set the XSRF cookie on the response"""
+    csrf_token = CSRFProtect.create_token()
+    response.set_cookie('XSRF-TOKEN', csrf_token)
+    return response
+
+
+@api.route('/login', methods=['GET', 'POST'])
+def login():
+    """Review page 133 and document this view function"""
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data.lower()).first()
+        if user is not None and user.verify_password(form.password.data):
+            login_user(user, form.remember_me.data)
+            next = request.args.get('next')
+            
+            if next is None or not next.startswith('/'):
+                next = url_for('db_views.index')
+            return redirect(next)
+        flash('Invalid email or password.')
+    return jsonify(f"Not sure what to return yet")
+
 
 
 @api.route('/tokens/', methods=['POST'])

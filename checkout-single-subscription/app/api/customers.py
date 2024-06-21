@@ -3,10 +3,13 @@ from flask_login import login_required, current_user
 from app.extensions import db, cross_origin
 from ..models import CustomerDB, User, Permission
 from . import api
+from .authentication import before_request
 from .decorators import permission_required
 from .errors import forbidden
 
 
+
+@api.before_request  # requires auth
 @api.route('/customers/')
 @permission_required(Permission.DRIVER)
 @cross_origin()

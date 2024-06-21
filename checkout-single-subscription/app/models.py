@@ -1,9 +1,14 @@
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
 from flask import current_app, url_for, request
 from flask_login import UserMixin, AnonymousUserMixin
-from datetime import datetime, timezone
+#from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
+
+import jwt
+from datetime import datetime, timedelta, timezone
+from jwt import ExpiredSignatureError, InvalidTokenError
+
 from itsdangerous import BadSignature, SignatureExpired
 from app.exceptions import ValidationError
 from .extensions import db, login_manager
@@ -392,8 +397,8 @@ class User(UserMixin, db.Model):
         password is correct"""
         return check_password_hash(self.password_hash, password)
 
-    def generate_confirmation_token(self) -> str:
-        s = Serializer(current_app.config['SECRET_KEY'])
+    def generate_confirmation_token(self, expiration=3600) -> str:
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'confirm': self.id})
 
     def confirm(self, token: str) -> bool:
@@ -412,13 +417,13 @@ class User(UserMixin, db.Model):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'reset': self.id}).decode('utf-8')
 
-    @staticmethod
+    @staticmethod  # The user will be known only after token is decoded
     def reset_password(token, new_password):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token.encode('utf-8'))
-        except:
-            return False
+        except Exception as e:
+            return f'{False} : Error: {e}'
         user = User.query.get(data.get('reset'))
         if user is None:
             return False
@@ -483,19 +488,30 @@ class User(UserMixin, db.Model):
     def generate_auth_token(self, expiration):
         """Returns a signed token that encodes user id.
         Expiraton time is set in seconds."""
-        s = Serializer(current_app.config['SECRET_KEY'],
-                       expires_in=expiration)
-        return s.dumps({'id': self.id}).decode('utf-8')
+        # Create a payload with the user's ID and expiration time
+        """Generate an authentication token for the user with the given expiration time in seconds."""
+        try:
+            payload = {
+                'id': self.id,
+                'exp': datetime.now(timezone.utc) + timedelta(seconds=expiration),
+
+            }
+            return jwt.encode(
+                payload,
+                current_app.config['SECRET_KEY'],
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
 
     @staticmethod
     def verify_auth_token(token):
         """Takes token and if valid, returns user object.
         This is a static method, the user will be known 
         only after the token is decoded."""
-        s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token)
-        except BadSignature:
+            data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+        except (ExpiredSignatureError, InvalidTokenError):
             return None
         return User.query.get(data['id'])
 
