@@ -51,7 +51,11 @@ def create_app(config_name='production'):  # Note: this should work without conf
     # localhost:5173 is vue default port
     # https://united-dashboard.web.app/ is the firebase app
     CORS(app,  resources={r'/*': {
-        'origins': ['http://localhost:5173', 'https://united-dashboard.web.app/', 'http://localhost:5000'],
+        'origins': [
+            'http://localhost:5173',
+            'https://united-dashboard.web.app/',
+            'http://localhost:5000',
+        ],
         'allow_headers': 'Access-Control-Allow-Origin'}})
         # Enables CORS for the entire app - can be changed to allow only specific routes
 

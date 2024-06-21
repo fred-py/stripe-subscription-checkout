@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from flask_sqlalchemy import SQLAlchemy
 from flask import current_app, url_for, request
 from flask_login import UserMixin, AnonymousUserMixin
 #from datetime import datetime, timezone
@@ -17,6 +18,10 @@ from .extensions import db, login_manager
 # Create association table
 # https://realpython.com/python-sqlite-sqlalchemy/#table-creates-associations
 # Flask Web Development 2nd Edition, p. 90
+
+# AUTH 
+#https://realpython.com/token-based-authentication-with-flask/
+#https://github.com/realpython/flask-jwt-auth
 
 class Permission:
     USER = 1
@@ -485,6 +490,7 @@ class User(UserMixin, db.Model):
         db.session.add(self)
 
     # API methods for Authentication
+    # Refer to Real Python Auth with Flask
     def generate_auth_token(self, expiration):
         """Returns a signed token that encodes user id.
         Expiraton time is set in seconds."""
@@ -503,17 +509,22 @@ class User(UserMixin, db.Model):
             )
         except Exception as e:
             return e
-
-    @staticmethod
-    def verify_auth_token(token):
+ 
+    @staticmethod  # Staticmethod added since it does not to the class instance.
+    def verify_auth_token(auth_token):
         """Takes token and if valid, returns user object.
         This is a static method, the user will be known 
         only after the token is decoded."""
         try:
-            data = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
-        except (ExpiredSignatureError, InvalidTokenError):
-            return None
-        return User.query.get(data['id'])
+            payload = jwt.decode(
+                auth_token,
+                current_app.config['SECRET_KEY'],
+                algorithms=['HS256'])
+            return db.session.get(User, payload['id'])
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid Token. Please log in again.'
 
     def __repr__(self) -> str:
         return f'User {self.username}' + ' ' +\

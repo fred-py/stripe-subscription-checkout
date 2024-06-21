@@ -1,5 +1,5 @@
 from flask import g, jsonify, request, current_app, \
-    redirect, flash, url_for
+    redirect, flash, url_for, make_response
 # This user auth will only be used in the API blueprint
 # Hence the flask_httpauth is initialised in the blueprint
 from flask_httpauth import HTTPBasicAuth
@@ -72,31 +72,42 @@ def before_request():
             not g.current_user.confirmed:
         return forbidden('Unconfirmed account')
 
-@api.after_request
-def set_xsrf_cookie(response):
-    """Set the XSRF cookie on the response"""
-    csrf_token = CSRFProtect.create_token()
-    response.set_cookie('XSRF-TOKEN', csrf_token)
-    return response
+#@api.after_request
+#def set_xsrf_cookie(response):
+#    """Set the XSRF cookie on the response"""
+#    csrf_token = CSRFProtect.create_token()
+#    response.set_cookie('XSRF-TOKEN', csrf_token)
+#    return response
 
-
-@api.route('/login', methods=['GET', 'POST'])
+@api.route('/login', methods=['POST'])
 def login():
-    """Review page 133 and document this view function"""
     form = LoginForm()
-    if form.validate_on_submit():
+    if form.validate_on_submit():       
         user = User.query.filter_by(email=form.email.data.lower()).first()
-        if user is not None and user.verify_password(form.password.data):
-            login_user(user, form.remember_me.data)
-            next = request.args.get('next')
-            
-            if next is None or not next.startswith('/'):
-                next = url_for('db_views.index')
-            return redirect(next)
-        flash('Invalid email or password.')
-    return jsonify(f"Not sure what to return yet")
+        if user and user.verify_password(form.password.data):
+            login_user(user, remember=form.remember_me.data)
+            # Return a JSON response with a success message and user data
+            auth_token = user.generate_auth_token(expiration=3600)
+            response = {
+                'message': 'Login successful',
+                'token': auth_token,
+            }
+            return make_response(jsonify(response)), 200
+        else:
+            # Return an error response if login fails
+            response = {'message': 'Invalid email or password'}
+            return make_response(jsonify(response)), 401   
+
+    # If the form is not validated, return a bad request response
+    response = {'message': 'Invalid request data'}
+    return make_response(jsonify(response)), 400
 
 
+@api.route('/logout', methods=['POST'])
+def logout():
+    logout_user()
+    response = {'message': 'Logout successful'}
+    return make_response(jsonify(response)), 200
 
 @api.route('/tokens/', methods=['POST'])
 def get_token():
