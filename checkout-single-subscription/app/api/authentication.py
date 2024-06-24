@@ -12,6 +12,7 @@ from ..auth.forms import LoginForm, RegistrationForm, \
     PasswordResetForm, ChangeEmailForm
 from ..models import User
 from . import api
+from .. import db
 from .errors import unauthorized, forbidden  # Error handlers in API Directory not db_views
 
 # NOTE: refer to link below for SPA + Flask Auth Implementation
@@ -101,6 +102,24 @@ def login():
     # If the form is not validated, return a bad request response
     response = {'message': 'Invalid request data'}
     return make_response(jsonify(response)), 400
+
+
+@api.route('/register', methods=['POST'])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(email=form.email.data.lower(),
+                    username=form.username.data,
+                    password=form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        token = user.generate_confirmation_token()
+        send_email(user.email, 'Confirm Your Account',
+                   'database/auth/email/confirm', user=user, token=token)
+        flash('A confirmation email has been sent to your inbox.\
+              Please check spam folder if you do not see it in your inbox')
+        return redirect(url_for('api.login'))
+    return redirect(url_for('api.register'))
 
 
 @api.route('/logout', methods=['POST'])
