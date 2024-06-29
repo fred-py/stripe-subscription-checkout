@@ -46,7 +46,6 @@ def test(test_names, pytest=None):
     unittest.TextTestRunner(verbosity=2).run(tests)
 
 
-
 if __name__ == '__main__':
     import os
     port = int(os.environ.get('PORT', 5000))

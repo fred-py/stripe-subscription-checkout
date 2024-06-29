@@ -8,6 +8,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 #load_dotenv(find_dotenv('.env.dev.prod'))
 load_dotenv(find_dotenv())
 
+
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')  # flask-wtf 
     MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.googlemail.com')

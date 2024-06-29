@@ -56,7 +56,9 @@ def create_app(config_name='production'):  # Note: this should work without conf
             'https://united-dashboard.web.app/',
             'http://localhost:5000',
         ],
-        'allow_headers': 'Access-Control-Allow-Origin'}})
+        'allow_headers': 'Access-Control-Allow-Origin',
+        'supports_credentials': True
+    }})
         # Enables CORS for the entire app - can be changed to allow only specific routes
 
 

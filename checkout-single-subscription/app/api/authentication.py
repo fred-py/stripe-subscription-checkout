@@ -83,7 +83,7 @@ def before_request():
 @api.route('/login', methods=['POST'])
 def login():
     form = LoginForm()
-    if form.validate_on_submit():       
+    if form.validate_on_submit():     
         user = User.query.filter_by(email=form.email.data.lower()).first()
         if user and user.verify_password(form.password.data):
             login_user(user, remember=form.remember_me.data)
@@ -97,7 +97,7 @@ def login():
         else:
             # Return an error response if login fails
             response = {'message': 'Invalid email or password'}
-            return make_response(jsonify(response)), 401   
+            return make_response(jsonify(response)), 401
 
     # If the form is not validated, return a bad request response
     response = {'message': 'Invalid request data'}
