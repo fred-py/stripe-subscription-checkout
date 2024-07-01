@@ -11,7 +11,7 @@ from .errors import forbidden
 
 @api.before_request  # requires auth
 @api.route('/customers/')
-@permission_required(Permission.DRIVER)
+@permission_required(Permission.USER)
 @cross_origin()
 def get_customers():
     customers = CustomerDB.query.all()

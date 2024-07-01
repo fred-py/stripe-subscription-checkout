@@ -4,7 +4,7 @@ from flask import g, jsonify, request, current_app, \
 # Hence the flask_httpauth is initialised in the blueprint
 from flask_httpauth import HTTPBasicAuth
 from flask_login import login_user, logout_user, \
-    login_required, current_user
+    login_required
 from flask_wtf.csrf import CSRFProtect
 from app.emails import send_email
 from ..auth.forms import LoginForm, RegistrationForm, \
@@ -93,15 +93,15 @@ def login():
                 'message': 'Login successful',
                 'token': auth_token,
             }
-            return make_response(jsonify(response)), 200
+            return jsonify(response), 200
         else:
             # Return an error response if login fails
             response = {'message': 'Invalid email or password'}
-            return make_response(jsonify(response)), 401
+            return jsonify(response), 401
 
     # If the form is not validated, return a bad request response
     response = {'message': 'Invalid request data'}
-    return make_response(jsonify(response)), 400
+    return jsonify(response), 400
 
 
 @api.route('/register', methods=['POST'])
@@ -127,6 +127,7 @@ def logout():
     logout_user()
     response = {'message': 'Logout successful'}
     return make_response(jsonify(response)), 200
+
 
 @api.route('/tokens/', methods=['POST'])
 def get_token():
