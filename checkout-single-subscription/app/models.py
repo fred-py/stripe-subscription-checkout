@@ -96,6 +96,8 @@ class CustomerDB(db.Model):
         """Serialise the CustomerDB object to JSON"""
         json_customer = {
             # CustomerDB columns
+            # api.get_customer is used on get_customer method
+            # by id on api/users.py
             'url': url_for('api.get_customer', id=self.id),
             'name': self.name,
             'phone': self.phone,
@@ -313,7 +315,7 @@ class Role(db.Model):
         To add a new role or change the permission assignments for a role,
         change the roles dictionary at the top of the function
         and then run the function again."""
-        # NOTE: Roles were added via flask shell p.342
+        # NOTE: Roles were added via flask shell p.117-195
         roles = {
             'User': [Permission.USER],
             'Driver': [Permission.USER, Permission.DRIVER],
@@ -467,6 +469,20 @@ class User(UserMixin, db.Model):
         """Returns True if the user has the admin role"""
         return self.can(Permission.ADMIN)
 
+    def to_dict(self, include_email=False):
+        """Serialise JSON to dictionary"""
+        data = {
+            'url': url_for('api.get_user', id=self.id),
+            'username': self.username,
+            'role_id': self.role.id,
+            'member_since': self.member_since,
+            'last_seen': self.last_seen
+        }
+        # Email is only included when requested
+        if include_email:
+            data['email'] = self.email
+        return data
+
     # Serialising the user object to JSON
     def to_json(self):
         """Email and role are omitted from response
@@ -530,6 +546,7 @@ class User(UserMixin, db.Model):
                 f'ID: {self.id}' + ' ' +\
                 f'Email: {self.email}' + ' ' + \
                 f'Role_id: {self.role_id}' + ' ' + \
+                f'Role_name: {self.role_name}' + ' ' + \
                 f'Member Since: {self.member_since}' + ' ' + \
                 f'Last Seen: {self.last_seen}'
 
