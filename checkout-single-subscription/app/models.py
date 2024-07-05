@@ -469,6 +469,17 @@ class User(UserMixin, db.Model):
         """Returns True if the user has the admin role"""
         return self.can(Permission.ADMIN)
 
+    def from_dict(self, data, new_user=False):
+        """Commit new Users to the database
+        Takes dictionary from to_dict method"""
+        for field in ['username', 'email', 'role_id']:
+            if field in data:
+                setattr(self, field, data[field])
+        if new_user and 'password' in data:
+            # Hash password and save hash
+            # into the database
+            self.password = data['password']
+
     def to_dict(self, include_email=False):
         """Serialise JSON to dictionary"""
         data = {
