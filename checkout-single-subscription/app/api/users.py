@@ -5,6 +5,8 @@ from app.api.errors import bad_request
 from ..models import User, CustomerDB
 from app.extensions import db
 
+# NOTE: Great resource: https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
+
 
 @api.route('users/<int:id>', methods=['GET'])
 def get_user(id):
@@ -12,7 +14,31 @@ def get_user(id):
     returns 404 if None"""
     return db.get_or_404(User, id).to_dict()
 
-# NOTE: Great resource: https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
+@api.route('/users/<int:id>', methods=['PUT'])
+def update_user(id):
+    """
+    Updates user information
+    Use in terminal:
+
+    $ http PUT http://localhost:5000/api/v1/users/2
+    "email=enter@differentemail.com"
+
+    Same method can be applied for other fields
+    in the User model.
+    """
+    user = db.get_or_404(User, id)
+    data = request.get_json()
+    if 'username' in data and data['username'] != user.username and \
+        db.session.scalar(sa.select(User).where(
+            User.username == data['username'])):
+        return bad_request('please use a different username')
+    if 'email' in data and data['email'] != user.email and \
+        db.session.scalar(sa.select(User).where(
+            User.email == data['email'])):
+        return bad_request('please use a different email address')
+    user.from_dict(data, new_user=False)
+    db.session.commit()
+    return user.to_dict()
 
 @api.route('/register/', methods=['POST'])
 def create_user():
@@ -41,7 +67,6 @@ def create_user():
     # HTTP protocol requires that the response includes a Location header
     # This is set in to the URL of the new resource using url_for()
     return user.to_dict(), 201, {'Location': url_for('api.get_user', id=user.id)}
-
 
 @api.route('/customers/')
 def get_customers():
