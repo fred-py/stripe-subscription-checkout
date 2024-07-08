@@ -588,11 +588,19 @@ class User(UserMixin, db.Model):
         return self.token
 
     def revoke_token(self):
+        """Additional security.
+        Revokes the user's token by setting
+        the expiration time to one second before
+        the current time"""
         self.token_expiration = datetime.now(
                 timezone.utc) - timedelta(seconds=1)
 
     @staticmethod
     def check_token(token):
+        """Takes token as input, returns
+        the use the token belongs to as
+        a reponse. If token is invalid/
+        expired, returns None."""
         user = db.session.scalar(sa.select(User).where(User.token == token))
         if user is None or user.token_expiration.replace(
                 tzinfo=timezone.utc) < datetime.now(timezone.utc):
