@@ -1,11 +1,14 @@
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from typing import Optional
 from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy as sa
 from flask import current_app, url_for, request
 from flask_login import UserMixin, AnonymousUserMixin
 #from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
 
+import secrets
 import jwt
 from datetime import datetime, timedelta, timezone
 from jwt import ExpiredSignatureError, InvalidTokenError
@@ -20,6 +23,8 @@ from .extensions import db, login_manager
 # Flask Web Development 2nd Edition, p. 90
 
 # AUTH 
+#https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
+#https://github.com/miguelgrinberg/microblog/blob/v0.23/app/api/users.py
 #https://realpython.com/token-based-authentication-with-flask/
 #https://github.com/realpython/flask-jwt-auth
 
@@ -361,8 +366,13 @@ class User(UserMixin, db.Model):
             db.DateTime, default=datetime.now(timezone.utc))
     last_seen: Mapped[datetime] = db.Column(
             db.DateTime, default=datetime.now(timezone.utc))
+    # Token indexed and unique for quick lookup
+    token: Mapped[Optional[str]] = db.Column(
+            db.String(32), index=True, unique=True)
+    token_expiration: Mapped[Optional[datetime]]
     # One to many relationship
-    role_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    role_id: Mapped[int] = db.Column(
+            db.Integer, db.ForeignKey('roles.id'))
 
     def __init__(self, **kwargs) -> None:
         super(User, self).__init__(**kwargs)
@@ -407,7 +417,7 @@ class User(UserMixin, db.Model):
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'confirm': self.id})
 
-    def confirm(self, token: str) -> bool:
+    def confirm(self, token: str) -> bool:  # OLD FOR FLASK RENDERES FRONTEND ONLY
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token.encode('utf-8'), max_age=3600)
@@ -469,6 +479,17 @@ class User(UserMixin, db.Model):
         """Returns True if the user has the admin role"""
         return self.can(Permission.ADMIN)
 
+    def ping(self):
+        """Updates the last seen time of the user
+        This method is called from auth/views
+        and it is used to count new orders since
+        last visit to be displayed on the front-end."""
+        self.last_seen = datetime.now(timezone.utc)
+        db.session.add(self)
+
+    # NOTE: API methods for Authentication
+    # Refer to Real Python Auth with Flask
+    # Refer to  Miguel MicroBlog link above
     def from_dict(self, data, new_user=False):
         """Commit new Users to the database
         Takes dictionary from to_dict method"""
@@ -506,22 +527,13 @@ class User(UserMixin, db.Model):
             'username': self.username,
         }
         return json_user
-
-    def ping(self):
-        """Updates the last seen time of the user
-        This method is called from auth/views
-        and it is used to count new orders since
-        last visit to be displayed on the front-end."""
-        self.last_seen = datetime.now(timezone.utc)
-        db.session.add(self)
-
-    # API methods for Authentication
-    # Refer to Real Python Auth with Flask
+    
     def generate_auth_token(self, expiration):
         """Returns a signed token that encodes user id.
         Expiraton time is set in seconds."""
         # Create a payload with the user's ID and expiration time
-        """Generate an authentication token for the user with the given expiration time in seconds."""
+        """Generate an authentication token for the user
+        with the given expiration time in seconds."""
         try:
             payload = {
                 'id': self.id,
@@ -551,6 +563,41 @@ class User(UserMixin, db.Model):
             return 'Signature expired. Please log in again.'
         except jwt.InvalidTokenError:
             return 'Invalid Token. Please log in again.'
+
+    # NOTE: The below methods is from Flask microblog
+    # Uses python secret for the User token.
+    def get_token(self, expires_in=3600):
+        """Returns token for the user.
+        The token is generated using the
+        secrets.token_hex() from Python standard lib.
+        Before a new token is created, checks if
+        a current token has at least a minute left.
+        If so, existing token is returned"""
+        now = datetime.now(timezone.utc)
+        if self.token and self.token_expiration(
+                tzinfo=timezone.utc) > now + timedelta(seconds=60):
+            return self.token
+        # Field lenght has 32 characters
+        # Passing 16 to token_hex() will
+        # return a token with 16 bytes
+        # which would use 32 characters when
+        # rendered in hexadecimal.
+        self.token = secrets.token_hex(16)
+        self.token_expiration = now + timedelta(seconds=expires_in)
+        db.session.add(self)
+        return self.token
+
+    def revoke_token(self):
+        self.token_expiration = datetime.now(
+                timezone.utc) - timedelta(seconds=1)
+
+    @staticmethod
+    def check_token(token):
+        user = db.session.scalar(sa.select(User).where(User.token == token))
+        if user is None or user.token_expiration.replace(
+                tzinfo=timezone.utc) < datetime.now(timezone.utc):
+            return None
+        return user
 
     def __repr__(self) -> str:
         return f'User {self.username}' + ' ' +\

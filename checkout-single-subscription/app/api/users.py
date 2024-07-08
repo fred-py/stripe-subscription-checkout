@@ -14,10 +14,11 @@ def get_user(id):
     returns 404 if None"""
     return db.get_or_404(User, id).to_dict()
 
+
 @api.route('/users/<int:id>', methods=['PUT'])
 def update_user(id):
-    """
-    Updates user information
+    """ Loads & updates user information
+    Returns 404 if user is not found
     Use in terminal:
 
     $ http PUT http://localhost:5000/api/v1/users/2
@@ -25,7 +26,8 @@ def update_user(id):
 
     Same method can be applied for other fields
     in the User model.
-    """
+    NOTE: More logic is needed to
+    updates to User permissions"""
     user = db.get_or_404(User, id)
     data = request.get_json()
     if 'username' in data and data['username'] != user.username and \
@@ -39,6 +41,7 @@ def update_user(id):
     user.from_dict(data, new_user=False)
     db.session.commit()
     return user.to_dict()
+
 
 @api.route('/register/', methods=['POST'])
 def create_user():
@@ -68,6 +71,7 @@ def create_user():
     # This is set in to the URL of the new resource using url_for()
     return user.to_dict(), 201, {'Location': url_for('api.get_user', id=user.id)}
 
+
 @api.route('/customers/')
 def get_customers():
     customers = CustomerDB.query.all()
@@ -76,6 +80,7 @@ def get_customers():
            customer.to_json() for customer in customers
         ]
     })
+
 
 @api.route('/customers/<int:id>')
 #@permission_required(Permission.DRIVER)
