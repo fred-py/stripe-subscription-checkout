@@ -12,7 +12,7 @@ auth = HTTPBasicAuth()
 
 
 @auth.verify_password
-def verify_password(username, password):
+def verify_password(email, password):
     """Receives username and password
     from the client and returns the
     authenticated user if credentials
@@ -22,7 +22,7 @@ def verify_password(username, password):
     so that it can be used in the API
     view functions."""
     user = db.session.scalar(sa.select(User).where(
-        User.username == username))
+        User.email == email))
     if user and user.verify_password(password):
         return user
 

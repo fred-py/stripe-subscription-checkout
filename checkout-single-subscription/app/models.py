@@ -574,7 +574,7 @@ class User(UserMixin, db.Model):
         a current token has at least a minute left.
         If so, existing token is returned"""
         now = datetime.now(timezone.utc)
-        if self.token and self.token_expiration(
+        if self.token and self.token_expiration.replace(
                 tzinfo=timezone.utc) > now + timedelta(seconds=60):
             return self.token
         # Field lenght has 32 characters
