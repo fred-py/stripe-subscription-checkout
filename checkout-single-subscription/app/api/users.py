@@ -4,11 +4,23 @@ from app.api import api
 from app.api.errors import bad_request
 from ..models import User, CustomerDB
 from app.extensions import db
+from app.api.auth import token_auth
 
 # NOTE: Great resource: https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
 
+# Protect API Routes with tokens
+# Using @token_auth.login_required
+# NOTE: Requests sent to any routes with the 
+# @token_auth decorator, will have to add the
+# Authorisation header, with the token received
+# from the /tokens endpoint.
+# Flask-HTTPAuth expects the token to be
+# sent as a "bearer" token, which can be
+# sent with HTTPie as follows:
+# (venv) $ http -A bearer --auth <token> GET http://localhost:5000/api/users/1
 
 @api.route('users/<int:id>', methods=['GET'])
+@token_auth.login_required
 def get_user(id):
     """Retrieves single user by id
     returns 404 if None"""
@@ -16,6 +28,7 @@ def get_user(id):
 
 
 @api.route('/users/<int:id>', methods=['PUT'])
+@token_auth.login_required
 def update_user(id):
     """ Loads & updates user information
     Returns 404 if user is not found
@@ -73,7 +86,11 @@ def create_user():
 
 
 @api.route('/customers/')
+@token_auth.login_required
 def get_customers():
+    """Test with HTTPie:
+    $ http -A bearer --auth "<token>" GET
+    http://localhost:5000/api/v1/customers/"""
     customers = CustomerDB.query.all()
     return jsonify({
        'customers': [
@@ -85,6 +102,7 @@ def get_customers():
 @api.route('/customers/<int:id>')
 #@permission_required(Permission.DRIVER)
 #@cross_origin()
+@token_auth.login_required
 def get_customer(id):
     """Returns a single customer.
     If name it not found in the database,
