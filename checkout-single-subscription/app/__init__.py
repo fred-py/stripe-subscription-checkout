@@ -79,6 +79,9 @@ def create_app(config_name='production'):  # Note: this should work without conf
 
     from .customers import customers as customers_bp  # NOTE: This route IS NOT related to customer module on the API Directory
     app.register_blueprint(customers_bp)
+    
+    from .errors import bp as errors_bp
+    app.register_blueprint(errors_bp)
 
     from .api import api as api_bp
     # /v1 helps track version number, this will be usefull when
@@ -87,15 +90,6 @@ def create_app(config_name='production'):  # Note: this should work without conf
     # Adding the prefix to the blueprint also eliminates
     # the need to hardcode the version to every blueprint route
     app.register_blueprint(api_bp, url_prefix='/api/v1')
-
-
-    #from app.users import bp as users_bp
-    #app.register_blueprint(users_bp)
-
-    #from app.models import bp as models_bp
-    #app.register_blueprint(models_bp)
-
-    # Attached routes and custome error pages here
 
     # Defining a test route
     #@app.route('/test/')

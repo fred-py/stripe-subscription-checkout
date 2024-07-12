@@ -12,7 +12,8 @@ from flask import render_template, request, jsonify
 from . import db_views
 
 
-@db_views.app_errorhandler(403)
+#@db_views.app_errorhandler(403)  # Applies to global app
+@db_views.errorhandler(403)  # Applies to blueprint only
 def forbidden(message):
     """Custom error handler for 403 Forbidden errors"""
     if request.accept_mimetypes.accept_json and \
@@ -23,7 +24,7 @@ def forbidden(message):
     return render_template('/database/403.html'), 403
 
 
-@db_views.app_errorhandler(404)
+@db_views.errorhandler(404)
 def page_not_found(e):
     """Checks the accept header of the request which
     is decoded into request.accept_mimetypes.
@@ -38,7 +39,7 @@ def page_not_found(e):
     return render_template('/database/404.html'), 404
 
 
-@db_views.app_errorhandler(500)
+@db_views.errorhandler(500)
 def internal_server_error(e):
     if request.accept_mimetypes.accept_json and \
             not request.accept_mimetypes.accept_html:
