@@ -1,32 +1,25 @@
-"""Flask handles error 404 & 500 by default,
-returning a HTML response. This can confuse the
-API client if it expects a JSON response.
+from werkzeug.http import HTTP_STATUS_CODES
+from werkzeug.exceptions import HTTPException
+from app.api import api
 
-This error handler adapts the response based
-on the format requested by the client."""
 
-from flask import jsonify
-from app.exceptions import ValidationError
-from . import api
+# https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
+def error_response(status_code, message=None):
+    """Helper function to generate error response"""
+    payload = {'error': HTTP_STATUS_CODES.get(status_code, 'Unknown error')}
+    if message:
+        payload['message'] = message
+    return payload, status_code
+
 
 def bad_request(message):
-    response = jsonify({'error': 'bad request', 'message': message})
-    response.status_code = 400
-    return response
+    """Handles requests with invalid
+    data in the header"""
+    return error_response(400, message)
 
 
-def unauthorized(message):
-    response = jsonify({'error': 'unauthorized', 'message': message})
-    response.status_code = 401
-    return response
-
-
-def forbidden(message):
-    response = jsonify({'error': 'forbidden', 'message': message})
-    response.status_code = 403
-    return response
-
-
-@api.errorhandler(ValidationError)
-def validation_error(e):
-    return bad_request(e.args[0])
+@api.errorhandler(HTTPException)
+def handle_exception(e):
+    """Return JSON instead of Flask's
+    default HTML for HTTP errors."""
+    return error_response(e.code)

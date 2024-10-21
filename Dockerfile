@@ -14,7 +14,9 @@ FROM python:3.11.2-slim
 
 # Patch security updates & bug fixes 
 RUN apt-get update && \
-    apt-get upgrade --yes
+    apt-get upgrade --yes && \
+    apt-get install --yes postgresql-client && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Remove root-level-access by creating a regular user
 RUN useradd --create-home united
@@ -36,6 +38,8 @@ COPY --chown=united server.py ./
 # Copy the app code & change ownership to regular user
 COPY --chown=united app ./app
 
+COPY --chown=united config.py ./
+
 # Upgrade pip and setuptools
 # Install dependencies
 # --no-chache-dir: Avoids caching the downloaded packages
@@ -46,5 +50,6 @@ RUN python -m pip install --upgrade pip setuptools && \
 # app code in the Docker Image. They will stay in a chached layer
 # Any changes to source code will not require re-installing dependencies
 
+# $PORT is set for gcloud deployment. 
 CMD ["python", "server.py", \
-    "--host", "0.0.0.0", "--port", "5000"]
+    "--host", "0.0.0.0", "--port", "$PORT"]  

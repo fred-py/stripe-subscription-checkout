@@ -18,7 +18,7 @@ load_dotenv(find_dotenv())
 login_manager.login_view = 'auth.login'
 
 
-def create_app(config_name='production'):  # Change to 'production' before deployment
+def create_app(config_name='production'):  # Note: this should work without config/
     """Flask application factory function configuration
     settings stored in one of the classes defined in
     config.py can be imported directly into the app using 
@@ -50,9 +50,21 @@ def create_app(config_name='production'):  # Change to 'production' before deplo
     # Enable CORS for the entire app
     # localhost:5173 is vue default port
     # https://united-dashboard.web.app/ is the firebase app
+    # {r'/*': matches any paths within a domain(in most cases)
     CORS(app,  resources={r'/*': {
-        'origins': ['http://localhost:5173', 'https://united-dashboard.web.app/'],
-        'allow_headers': 'Access-Control-Allow-Origin'}})
+        'origins': [
+            'http://localhost:5173',
+            'https://united-dashboard.web.app/',
+            'http://localhost:5000',
+        ],
+        #'allow_headers': 'Access-Control-Allow-Origin',
+        'allow_headers': [
+            'Content-Type',
+            'Authorization',
+            'Access-Control-Allow-Origin'
+        ],
+        'supports_credentials': True
+    }})
         # Enables CORS for the entire app - can be changed to allow only specific routes
 
 
@@ -68,6 +80,9 @@ def create_app(config_name='production'):  # Change to 'production' before deplo
 
     from .customers import customers as customers_bp  # NOTE: This route IS NOT related to customer module on the API Directory
     app.register_blueprint(customers_bp)
+    
+    from .errors import bp as errors_bp
+    app.register_blueprint(errors_bp)
 
     from .api import api as api_bp
     # /v1 helps track version number, this will be usefull when
@@ -76,15 +91,6 @@ def create_app(config_name='production'):  # Change to 'production' before deplo
     # Adding the prefix to the blueprint also eliminates
     # the need to hardcode the version to every blueprint route
     app.register_blueprint(api_bp, url_prefix='/api/v1')
-
-
-    #from app.users import bp as users_bp
-    #app.register_blueprint(users_bp)
-
-    #from app.models import bp as models_bp
-    #app.register_blueprint(models_bp)
-
-    # Attached routes and custome error pages here
 
     # Defining a test route
     #@app.route('/test/')

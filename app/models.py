@@ -1,9 +1,18 @@
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
+from typing import Optional
+from flask_sqlalchemy import SQLAlchemy
+import sqlalchemy as sa
 from flask import current_app, url_for, request
 from flask_login import UserMixin, AnonymousUserMixin
-from datetime import datetime, timezone
+#from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous.url_safe import URLSafeTimedSerializer as Serializer
+
+import secrets
+import jwt
+from datetime import datetime, timedelta, timezone
+from jwt import ExpiredSignatureError, InvalidTokenError
+
 from itsdangerous import BadSignature, SignatureExpired
 from app.exceptions import ValidationError
 from .extensions import db, login_manager
@@ -12,6 +21,12 @@ from .extensions import db, login_manager
 # Create association table
 # https://realpython.com/python-sqlite-sqlalchemy/#table-creates-associations
 # Flask Web Development 2nd Edition, p. 90
+
+# AUTH 
+#https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-xxiii-application-programming-interfaces-apis
+#https://github.com/miguelgrinberg/microblog/blob/v0.23/app/api/users.py
+#https://realpython.com/token-based-authentication-with-flask/
+#https://github.com/realpython/flask-jwt-auth
 
 class Permission:
     USER = 1
@@ -86,6 +101,8 @@ class CustomerDB(db.Model):
         """Serialise the CustomerDB object to JSON"""
         json_customer = {
             # CustomerDB columns
+            # api.get_customer is used on get_customer method
+            # by id on api/users.py
             'url': url_for('api.get_customer', id=self.id),
             'name': self.name,
             'phone': self.phone,
@@ -303,7 +320,7 @@ class Role(db.Model):
         To add a new role or change the permission assignments for a role,
         change the roles dictionary at the top of the function
         and then run the function again."""
-        # NOTE: Roles were added via flask shell p.342
+        # NOTE: Roles were added via flask shell p.117-195
         roles = {
             'User': [Permission.USER],
             'Driver': [Permission.USER, Permission.DRIVER],
@@ -332,7 +349,7 @@ class Role(db.Model):
         return self.permissions & perm == perm
 
     def __repr__(self) -> str:
-        return '<Role %r>' % self.name
+        return f'Role: {self.name}, Permission: {self.permissions}'
 
 
 class User(UserMixin, db.Model):
@@ -349,8 +366,13 @@ class User(UserMixin, db.Model):
             db.DateTime, default=datetime.now(timezone.utc))
     last_seen: Mapped[datetime] = db.Column(
             db.DateTime, default=datetime.now(timezone.utc))
+    # Token indexed and unique for quick lookup
+    token: Mapped[Optional[str]] = db.Column(
+            db.String(32), index=True, unique=True)
+    token_expiration: Mapped[Optional[datetime]]
     # One to many relationship
-    role_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    role_id: Mapped[int] = db.Column(
+            db.Integer, db.ForeignKey('roles.id'))
 
     def __init__(self, **kwargs) -> None:
         super(User, self).__init__(**kwargs)
@@ -391,11 +413,11 @@ class User(UserMixin, db.Model):
         password is correct"""
         return check_password_hash(self.password_hash, password)
 
-    def generate_confirmation_token(self) -> str:
-        s = Serializer(current_app.config['SECRET_KEY'])
+    def generate_confirmation_token(self, expiration=3600) -> str:
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'confirm': self.id})
 
-    def confirm(self, token: str) -> bool:
+    def confirm(self, token: str) -> bool:  # OLD FOR FLASK RENDERES FRONTEND ONLY
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token.encode('utf-8'), max_age=3600)
@@ -411,13 +433,13 @@ class User(UserMixin, db.Model):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
         return s.dumps({'reset': self.id}).decode('utf-8')
 
-    @staticmethod
+    @staticmethod  # The user will be known only after token is decoded
     def reset_password(token, new_password):
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token.encode('utf-8'))
-        except:
-            return False
+        except Exception as e:
+            return f'{False} : Error: {e}'
         user = User.query.get(data.get('reset'))
         if user is None:
             return False
@@ -457,6 +479,42 @@ class User(UserMixin, db.Model):
         """Returns True if the user has the admin role"""
         return self.can(Permission.ADMIN)
 
+    def ping(self):
+        """Updates the last seen time of the user
+        This method is called from auth/views
+        and it is used to count new orders since
+        last visit to be displayed on the front-end."""
+        self.last_seen = datetime.now(timezone.utc)
+        db.session.add(self)
+
+    # NOTE: API methods for Authentication
+    # Refer to Real Python Auth with Flask
+    # Refer to  Miguel MicroBlog link above
+    def from_dict(self, data, new_user=False):
+        """Commit new Users to the database
+        Takes dictionary from to_dict method"""
+        for field in ['username', 'email', 'role_id']:
+            if field in data:
+                setattr(self, field, data[field])
+        if new_user and 'password' in data:
+            # Hash password and save hash
+            # into the database
+            self.password = data['password']
+
+    def to_dict(self, include_email=False):
+        """Serialise JSON to dictionary"""
+        data = {
+            'url': url_for('api.get_user', id=self.id),
+            'username': self.username,
+            'role_id': self.role.id,
+            'member_since': self.member_since,
+            'last_seen': self.last_seen
+        }
+        # Email is only included when requested
+        if include_email:
+            data['email'] = self.email
+        return data
+
     # Serialising the user object to JSON
     def to_json(self):
         """Email and role are omitted from response
@@ -469,39 +527,92 @@ class User(UserMixin, db.Model):
             'username': self.username,
         }
         return json_user
-
-    def ping(self):
-        """Updates the last seen time of the user
-        This method is called from auth/views
-        and it is used to count new orders since
-        last visit to be displayed on the front-end."""
-        self.last_seen = datetime.now(timezone.utc)
-        db.session.add(self)
-
-    # API methods for Authentication
+    
     def generate_auth_token(self, expiration):
         """Returns a signed token that encodes user id.
         Expiraton time is set in seconds."""
-        s = Serializer(current_app.config['SECRET_KEY'],
-                       expires_in=expiration)
-        return s.dumps({'id': self.id}).decode('utf-8')
+        # Create a payload with the user's ID and expiration time
+        """Generate an authentication token for the user
+        with the given expiration time in seconds."""
+        try:
+            payload = {
+                'id': self.id,
+                'exp': datetime.now(timezone.utc) + timedelta(seconds=expiration),
 
-    @staticmethod
-    def verify_auth_token(token):
+            }
+            return jwt.encode(
+                payload,
+                current_app.config['SECRET_KEY'],
+                algorithm='HS256'
+            )
+        except Exception as e:
+            return e
+ 
+    @staticmethod  # Staticmethod added since it does not to the class instance.
+    def verify_auth_token(auth_token):
         """Takes token and if valid, returns user object.
         This is a static method, the user will be known 
         only after the token is decoded."""
-        s = Serializer(current_app.config['SECRET_KEY'])
         try:
-            data = s.loads(token)
-        except BadSignature:
+            payload = jwt.decode(
+                auth_token,
+                current_app.config['SECRET_KEY'],
+                algorithms=['HS256'])
+            return db.session.get(User, payload['id'])
+        except jwt.ExpiredSignatureError:
+            return 'Signature expired. Please log in again.'
+        except jwt.InvalidTokenError:
+            return 'Invalid Token. Please log in again.'
+
+    # NOTE: The below methods is from Flask microblog
+    # Uses python secret for the User token.
+    def get_token(self, expires_in=3600):
+        """Returns token for the user.
+        The token is generated using the
+        secrets.token_hex() from Python standard lib.
+        Before a new token is created, checks if
+        a current token has at least a minute left.
+        If so, existing token is returned"""
+        now = datetime.now(timezone.utc)
+        if self.token and self.token_expiration.replace(
+                tzinfo=timezone.utc) > now + timedelta(seconds=60):
+            return self.token
+        # Field lenght has 32 characters
+        # Passing 16 to token_hex() will
+        # return a token with 16 bytes
+        # which would use 32 characters when
+        # rendered in hexadecimal.
+        self.token = secrets.token_hex(16)
+        self.token_expiration = now + timedelta(seconds=expires_in)
+        db.session.add(self)
+        return self.token
+
+    def revoke_token(self):
+        """Additional security.
+        Revokes the user's token by setting
+        the expiration time to one second before
+        the current time"""
+        self.token_expiration = datetime.now(
+                timezone.utc) - timedelta(seconds=1)
+
+    @staticmethod
+    def check_token(token):
+        """Takes token as input, returns
+        the use the token belongs to as
+        a reponse. If token is invalid/
+        expired, returns None."""
+        user = db.session.scalar(sa.select(User).where(User.token == token))
+        if user is None or user.token_expiration.replace(
+                tzinfo=timezone.utc) < datetime.now(timezone.utc):
             return None
-        return User.query.get(data['id'])
+        return user
 
     def __repr__(self) -> str:
         return f'User {self.username}' + ' ' +\
                 f'ID: {self.id}' + ' ' +\
                 f'Email: {self.email}' + ' ' + \
+                f'Role_id: {self.role_id}' + ' ' + \
+                f'Role_name: {self.role_name}' + ' ' + \
                 f'Member Since: {self.member_since}' + ' ' + \
                 f'Last Seen: {self.last_seen}'
 

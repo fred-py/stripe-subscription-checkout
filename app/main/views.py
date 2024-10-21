@@ -6,6 +6,7 @@ import json
 import os
 from flask import render_template, redirect, url_for, abort, \
     flash, request, current_app, make_response, send_from_directory, jsonify
+import traceback
 #from flask_login import login_required, current_user
 #from flask_sqlalchemy import get_debug_queries
 from . import main
@@ -21,13 +22,16 @@ load_dotenv(find_dotenv())
 stripe.api_version = '2020-08-27'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
-port = int(os.environ.get('PORT', 4242))  # This is needed to deploy on fl0
-
 
 @main.route('/', methods=['GET', 'OPTIONS'])
-def get_example():
+def get_sub_page():
     # Passing favicon en var to render on deployment
     return render_template('stripe/index.html', favicon=os.getenv('FAVICON'))
+
+@main.route('/bootstrap', methods=['GET', 'OPTIONS'])
+def get_bootstrap_test():
+    # Passing favicon en var to render on deployment
+    return render_template('stripe/index_bootstrap.html', favicon=os.getenv('FAVICON'))
 
 
 @main.route('/config', methods=['GET', 'OPTIONS'])
@@ -53,7 +57,7 @@ def get_checkout_session():
 @main.route('/create-checkout-session', methods=['POST', 'OPTIONS'])
 def create_checkout_session():
     price = request.form.get('priceId')
-    domain_url = os.getenv('DOMAIN')
+    domain_url = os.getenv('DOMAIN')  # Domain if fetched by back arrow icon on stripe hoted
     try:
         # Create new Checkout Session for the order
         # For full details see https://stripe.com/docs/api/checkout/sessions/create
@@ -75,7 +79,6 @@ def create_checkout_session():
                 #    'coupon': 'test_coupon',
                 #}],
                 billing_address_collection='required',
-                # automatic_tax={'enabled': True},
                 line_items=[{
                     'price': price,
                     'adjustable_quantity':
@@ -297,6 +300,7 @@ def webhook_received():
     webhook_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
     request_data = json.loads(request.data)
 
+
     if webhook_secret:
         # Retrieve the event by verifying the signature using 
         # the raw body and secret if webhook signing is configured.
@@ -318,14 +322,16 @@ def webhook_received():
             return jsonify(status=400, content=f'Invalid signature: {e}')
         except Exception as e:
             # Catch unexpected errors
-            return jsonify(status=500, content=f'Unexpected error: {e}')
-        
+            traceback_str = traceback.format_exc()
+            return jsonify(status=500, content=f'Unexpected error: {e}\n{traceback_str}')
+
     # Get the type of webhook event sent - 
     # used to check the status of PaymentIntents.    
     else:
         data = request_data['data']
         event_type = request_data['type']
         data_object = data['object'] # Values added to metadata can be accessed from data_object - print(data_object)
+        event = request_data
 
     #print('event ' + event_type)
 
@@ -460,8 +466,6 @@ def webhook_received():
                 amount=amount
             )
 
-
-
     elif event_type == 'subscription_schedule.canceled':
         subscription_schedule = event['data']['object']
         print(f'This is the OTHER THING: {subscription_schedule}')
@@ -477,4 +481,4 @@ def data_transfer(filename):
 
 
 if __name__ == '__main__':
-    main.run(debug=True, port=port)
+    main.run(debug=True)

@@ -1,5 +1,51 @@
 # -----> DOCUMENTATION - UNITED <-----
 
+## Requirements
+
+- Python 3
+- [Configured .env file](../README.md)
+
+## How to run
+
+<details>
+<summary>Enabling Stripe Tax</summary>
+
+   In the [`server.py`](./server.py) file you will find the following code commented out
+   ```python
+   # automatic_tax={'enabled': True},
+   ```
+
+   Uncomment this line of code and the sales tax will be automatically calculated during the checkout.
+
+   Make sure you previously went through the set up of Stripe Tax: [Set up Stripe Tax](https://stripe.com/docs/tax/set-up) and you have your products and prices updated with tax behavior and optionally tax codes: [Docs - Update your Products and Prices](https://stripe.com/docs/tax/checkout#product-and-price-setup)
+</details>
+
+1. Create and activate a new virtual environment
+
+**MacOS / Unix**
+
+```
+python3 -m venv env
+source env/bin/activate
+```
+
+2. Install dependencies
+
+```
+pip install -r requirements.txt
+```
+
+3. Export and run the application
+
+**MacOS / Unix**
+
+```
+server.py in APP directory.
+export FLASK_APP=server.py
+python3 -m flask run --port=4242
+```
+
+
 # Client Library Fundamentals 
 https://stripe.com/docs/videos/developer-foundations?video=webhook-helpers
 
@@ -17,6 +63,10 @@ https://stripe.com/docs/api/subscriptions/cancel
 # Refunds
 https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
 
+
+*--------------------------------------*
+
+
 ###### DATABASE ######
   
   # POSTGRES DATABASE
@@ -28,13 +78,27 @@ https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
   # INTERACT WITH POSTGRES DATABASE USING **psqls**
 
   > Login:
-  $ psql -h localhost -U yourusername -d yourdatabasename
+  # Set user name(default is root user)
+  $ psql -U united
+  # Log in
+  $ psql -h localhost -p <default postgress port is 5432 > -U yourusername -d yourdatabasename
 
   > List all tables:
   $ \dt
 
   Check structure/schema of tables:
   $ \d table_name
+
+  > Migrate data & export table structures from db in docker container
+  > This will create a dump file in the current directory
+  $ docker exec -it container_id_or_name pg_dump -U username -d database_name > dump.sql
+  $ <enter db password> <NOTE: You will not be explicitly prompted to enter the password>
+
+  > Load into new DB
+  $ psql <connection string> < dump.sql
+
+*--------------------------------------*
+
 
   # FLASK SHELL
 
@@ -45,7 +109,7 @@ https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
   > Print db to check connection
   $ print(db)
   > Import modules to be created
-  $ from app.models import CustomerDB, Address, Bin, Subscription, Invoice
+  $ from app.models import CustomerDB, Address, Bin, Subscription, Invoice, Role, User
   > Create modules - expect no output
   $ db.create_all()
   > Inspect database tables
@@ -74,14 +138,21 @@ https://stripe.com/docs/refunds?dashboard-or-api=api#issuing
   $ db.session.commit()
 
 
+*--------------------------------------*
 
 
-  # FLASK SQLALQUEMY BLUEPRINT & FILE STRUCTURE
+# FLASK SQLALQUEMY BLUEPRINT & FILE STRUCTURE
   https://www.digitalocean.com/community/tutorials/how-to-structure-a-large-flask-application-with-flask-blueprints-and-flask-sqlalchemy#creating-the-main-blueprint-and-rendering-its-templates
+
+
+*--------------------------------------*
 
 
 #  TEST API ROUTES USING HTTPie Flask WebDev pg 431
 http --json --auth <str:email>:<str:password> GET http://localhost:5000/api/v1/customers
+
+
+*--------------------------------------*
 
 
 # CONFIGURE FLASK TO RUN ON DOCKER WITH POSTGRES 
@@ -92,7 +163,166 @@ https://realpython.com/docker-continuous-integration/#run-a-redis-server-through
 https://testdriven.io/blog/docker-best-practices/
 
 
-# STRIPE READ.md BELOW
+*--------------------------------------*
+
+
+**DOCKER**
+
+>Build image after changes
+  > -t tags a name . stands for current dir
+--> $ docker build -t united .
+
+>The below is not needed when running docker-compose
+--> $ docker run server.py
+
+>list containers
+--> $ docker ps
+
+>also lists containers that are stopped
+--> # docker ps -a  
+
+>Access terminal within container
+--> $ docker exec -it <container-id OR name> /bin/bash
+
+>View Logs
+--> $ docker logs <container_id_or_name>
+
+>Follow Logs in real-time
+--> $ docker logs -f <container_id_or_name>
+
+>Access DB from image
+--> $ docker-compose exec db psql --username=<username> --dbname=<databasename> 
+
+>Inpect DB Volume
+--> $ docker volume inspect <db_name>
+
+>Check for errors on containers
+--> $ docker-compose -f docker-compose.prod.yml logs -f 
+
+>Build specific docker-compose file
+--> $ docker-compose -f docker-compose.prod.yml up -d --build
+
+>Stop Nginx
+--> $ docker-compose -f docker-compose.prod.yml stop nginx
+
+>Configure CI/CD for your Python application
+  https://docs.docker.com/language/python/configure-ci-cd/
+
+>Yes, you would need to run `docker-compose up -d --build` again after running `docker-compose down -v`.
+
+>Here's what the command does:
+
+> `docker-compose up`: This command starts and runs your entire app. Docker Compose will start and run your entire app by using the `docker-compose.yml` file which defines your multi-container application.
+
+>`-d`: This option runs the containers in the background (detached mode).
+
+> `--build`: This option tells Docker Compose to build images before starting containers. If you've made changes to your Dockerfile since the last time you ran `docker-compose up`, you'll need this option to ensure your changes are included in the containers that are started.
+
+>So, after running `docker-compose down -v`, running `docker-compose up -d --build` will rebuild your images and start your containers again, incorporating any changes you've made to your Dockerfile or application code.
+
+
+*--------------------------------------*
+
+
+**GCLOUD**
+
+# GOOGLE CLOUD RUN
+
+- $ gcloud auth login (if gcloud has already been installed)
+
+Set project
+- $ gcloud config set project <PROJECT_ID>
+
+Authenticate gcloud CLI
+- $ gcloud auth application-default login
+
+
+*--------------------------------------*
+
+
+**Infrastructure As Code (IaC)**
+>https://www.youtube.com/watch?v=YGcd0lAQCl8
+# Pulumi
+>Resources
+
+>https://www.pulumi.com/docs/clouds/gcp/get-started/
+
+>https://www.pulumi.com/docs/clouds/gcp/get-started/create-project/
+
+>https://www.pulumi.com/docs/using-pulumi/organizing-projects-stacks/
+
+>Run installation script
+- $ curl -fsSL https://get.pulumi.com | sh
+
+>Create Container Service on Googgle Cloud > https://www.pulumi.com/templates/container-service/gcp/
+- $ pulumi new container-gcp-python
+
+>Manage and view state
+- $ pulumi stack
+
+>Set the default destination org for all stack operations
+- $ pulumi org set-default NAME
+
+> View backend, current stack, pending operations, and versions
+- $ pulumi about
+
+> Logout login
+- $ pulumi logout && pulumi login
+
+> Create bucket/Deploy
+- $ pulumi up
+
+> Update changes - Same as above
+- $ pulumi up
+
+> Destroy resources on gcloud
+  > Note that the stack will still be defined
+- $ pulumi destroy
+
+> Remove the stack
+- $ pulumi rm dev
+
+> Set region
+- $ pulumi config set gcloud:region <australia-southeast1>
+
+> Get region
+- $ pulumi config get gcloud:region
+
+> * Error updating Service "locations/australia-southeast1/namespaces/stripe-checkout-424311/services/service-c4790b5": googleapi: Error 409: Conflict for resource 'service-c4790b5': version '1716904170281583' was specified but current version is '1717335246426735'.
+> Usually running the below should fix the issue
+> NOTE: mix of manual and managed deployment might trigger this issue
+- $ pulumi refresh
+- $ pulumi up
+
+
+
+*--------------------------------------*
+
+
+**GCLOUD Artifac Registry For Docker**
+> https://cloud.google.com/artifact-registry/docs/docker/authentication
+# Configure Authentication
+
+>Initialise CLI
+- $ gcloud init
+
+> Enable the API from Google Cloud console or with the following gcloud command:
+- $ gcloud services enable artifactregistry.googleapis.com
+
+> Disable the API
+- $ gcloud services disable artifactregistry.googleapis.com
+
+> https://cloud.google.com/artifact-registry/docs/docker/authentication#gcloud-helper
+- $ gcloud auth activate-service-account <ComputeEngineDefaultServiceAccount> --key-file=<KEY-FILE>
+
+*--------------------------------------*
+
+
+
+
+
+#
+ STRIPE READ.md BELOW
 
 # Using Checkout for subscriptions
 

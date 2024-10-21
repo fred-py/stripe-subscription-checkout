@@ -1,7 +1,11 @@
 import os
 from dotenv import load_dotenv, find_dotenv
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+# NOTE: load_dotenv defaults to .env file
+# For a different file, pass the file path as an argument
+#load_dotenv(find_dotenv('.env.dev.prod'))
 load_dotenv(find_dotenv())
 
 
@@ -22,7 +26,7 @@ class Config:
     UNITED_DRIVER = os.getenv('UNITED_DRIVER')
     MAIL_USERNAME = os.getenv('MAIL_USERNAME')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    PORT = int(os.getenv('PORT', 4242))  # This is needed to deploy on fl0
+    #HOST = int(os.getenv('HOST', 4242))  # This is needed to deploy on fl0
     
     @staticmethod
     def init_app(app):
@@ -42,7 +46,7 @@ class TestingConfig(Config):
     # Stripe Prices - TEST MODE
 
     def __init__(self):
-        self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL') or \
+        self.SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL_TEST') or \
         'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
 
 

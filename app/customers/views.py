@@ -10,8 +10,9 @@ from . import customers
 
 
 
-@login_required  # NOTE: First route attempeting to display all customers
+
 @customers.route('/customers_test', methods=['GET', 'POST'])
+@login_required  # NOTE: First route attempeting to display all customers
 def customers_info():
     customers = CustomerDB.query.all()
     return render_template(
@@ -19,8 +20,9 @@ def customers_info():
     )
 
 
-@login_required
+
 @customers.route('/customers')
+@login_required
 def index():
     return render_template('database/customers/editable_table.html')
 
