@@ -298,6 +298,9 @@ class Invoice(db.Model):
 
 
 class Role(db.Model):
+    """The 'default' field should be set to True for only one role
+    and False for all the others. The role marked as default,
+    will be the one assigned to users upon registration"""
     __tablename__ = 'roles'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)
     name: Mapped[str] = db.Column(db.String(64), unique=True)
@@ -308,18 +311,23 @@ class Role(db.Model):
 
     def __init__(self, **kwargs) -> None:  #  **kwargs accepts any number of keyword arguments
         super(Role, self).__init__(**kwargs)  # super() function returns a temporary object of the superclass that allows to call its methods
+        # This class constructor is used to set permissions value to 0
+        # As the default value would be None otherwise
         if self.permissions is None:  # SQLALchemy will set the default value to None
             self.permissions = 0
 
     @staticmethod  # This method does not require an object to be created
     def insert_roles() -> None:
-        """This func looks for existing roles by name.
+        """This method creates Rolles and add the relevant permissions to the database.
+        It looks for existing roles by name.
         A new role object is created only for roles that aren’t
         in the database already. This is done so that the role
         list can be updated in the future when changes need to be made.
         To add a new role or change the permission assignments for a role,
         change the roles dictionary at the top of the function
-        and then run the function again."""
+        and then run the function again.
+        $ flask shell
+        $ Role.insert_roles()"""
         # NOTE: Roles were added via flask shell p.117-195
         roles = {
             'User': [Permission.USER],
@@ -338,6 +346,20 @@ class Role(db.Model):
             db.session.add(role)
         db.session.commit()
 
+    def verify_email(email):
+        """Check if email is a valid
+        UPS email, returns roles based
+        on email"""
+        if 'email' in email is current_app.config['UNITED_ADMIN_1'] \
+                or current_app.config['UNITED_ADMIN_2'] \
+                or current_app.config['UNITED_ADMIN_3'] \
+                or current_app.config['UNITED_ADMIN_4']:
+            return 'admin'  # Full adm permission
+        if 'email' in email is current_app.config['UNITED_DRIVER']:
+            return 'driver'  # Driver permission
+        else:
+            return 'user'  # User - no database permission
+
     def add_permission(self, perm: int) -> None:
         if not self.has_permission(perm):
             self.permissions += perm
@@ -347,7 +369,7 @@ class Role(db.Model):
 
     def has_permission(self, perm: int) -> bool:
         return self.permissions & perm == perm
-
+    
     def __repr__(self) -> str:
         return f'Role: {self.name}, Permission: {self.permissions}'
 
@@ -374,22 +396,27 @@ class User(UserMixin, db.Model):
     role_id: Mapped[int] = db.Column(
             db.Integer, db.ForeignKey('roles.id'))
 
-    def __init__(self, **kwargs) -> None:
+    def __init__(self, email=None, **kwargs) -> None:
         super(User, self).__init__(**kwargs)
         """This constructor sets the role of the user
-        based on email address"""
+        based on email address
+        Note: role refers to users backref in Role model"""
+        # NOTE: The constructor was not able to access self.mail
+        # when checking to set the self.role
+        # Hence email=None added as am argument
+        self.email = email
         if self.role is None:
             if self.email == current_app.config['UNITED_ADMIN']:
-                self.role = Role.query.filter_by(name='Administrator').first()
+                self.role = Role.query.filter_by(name='Admin').first()
             elif self.email == current_app.config['UNITED_ADMIN_1']:
-                self.role = Role.query.filter_by(name='Administrator').first()
+                self.role = Role.query.filter_by(name='Admin').first()
             elif self.email == current_app.config['UNITED_ADMIN_2']:
-                self.role = Role.query.filter_by(name='Administrator').first()
+                self.role = Role.query.filter_by(name='Admin').first()
             elif self.email == current_app.config['UNITED_ADMIN_3']:
-                self.role = Role.query.filter_by(name='Administrator').first()
+                self.role = Role.query.filter_by(name='Admin').first()
             elif self.email == current_app.config['UNITED_DRIVER']:
                 self.role = Role.query.filter_by(name='Driver').first()
-            if self.role is None:
+            else:
                 self.role = Role.query.filter_by(default=True).first()  # Defaults to 'User'
 
     @property  # Write-only Property decorator allows the method below to be defined as a property of an object
@@ -413,11 +440,12 @@ class User(UserMixin, db.Model):
         password is correct"""
         return check_password_hash(self.password_hash, password)
 
+    # NOTE: Method not in use/does not word argument expires_in oudated
     def generate_confirmation_token(self, expiration=3600) -> str:
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'confirm': self.id})
 
-    def confirm(self, token: str) -> bool:  # OLD FOR FLASK RENDERES FRONTEND ONLY
+    def confirm(self, token: str) -> bool:  # OLD FOR FLASK RENDERED FRONTEND ONLY
         s = Serializer(current_app.config['SECRET_KEY'])
         try:
             data = s.loads(token.encode('utf-8'), max_age=3600)
@@ -547,7 +575,7 @@ class User(UserMixin, db.Model):
             )
         except Exception as e:
             return e
- 
+
     @staticmethod  # Staticmethod added since it does not to the class instance.
     def verify_auth_token(auth_token):
         """Takes token and if valid, returns user object.
@@ -612,9 +640,7 @@ class User(UserMixin, db.Model):
                 f'ID: {self.id}' + ' ' +\
                 f'Email: {self.email}' + ' ' + \
                 f'Role_id: {self.role_id}' + ' ' + \
-                f'Role_name: {self.role_name}' + ' ' + \
-                f'Member Since: {self.member_since}' + ' ' + \
-                f'Last Seen: {self.last_seen}'
+                f'Member Since: {self.member_since}'
 
 
 class AnonymousUser(AnonymousUserMixin):

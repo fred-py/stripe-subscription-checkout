@@ -1,3 +1,4 @@
+from flask import current_app, jsonify
 import sqlalchemy as sa
 from flask_httpauth import HTTPBasicAuth, HTTPTokenAuth
 from app.extensions import db
