@@ -346,20 +346,6 @@ class Role(db.Model):
             db.session.add(role)
         db.session.commit()
 
-    def verify_email(email):
-        """Check if email is a valid
-        UPS email, returns roles based
-        on email"""
-        if 'email' in email is current_app.config['UNITED_ADMIN_1'] \
-                or current_app.config['UNITED_ADMIN_2'] \
-                or current_app.config['UNITED_ADMIN_3'] \
-                or current_app.config['UNITED_ADMIN_4']:
-            return 'admin'  # Full adm permission
-        if 'email' in email is current_app.config['UNITED_DRIVER']:
-            return 'driver'  # Driver permission
-        else:
-            return 'user'  # User - no database permission
-
     def add_permission(self, perm: int) -> None:
         if not self.has_permission(perm):
             self.permissions += perm

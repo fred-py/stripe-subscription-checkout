@@ -10,6 +10,11 @@ from app.emails import send_email
 
 @api.route('/register', methods=['POST'])
 def create_new_user():
+    """Access User representation in JSON body of request.
+    Returns dictionary representation of User object.
+    415 error if client sends non-JSON format.
+    400 error if JSON content is malformed.
+    Both errors handles by handle_http_exception"""
     data = request.get_json()
     if 'username' not in data or 'email' not in data or 'password' not in data:
         return bad_request('Must include username, email and password fields')
