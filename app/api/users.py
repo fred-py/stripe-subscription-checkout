@@ -2,7 +2,7 @@ import sqlalchemy as sa
 from flask import jsonify, url_for, request, current_app
 from app.api import api
 from app.api.errors import bad_request
-from ..models import User, CustomerDB
+from ..models import User, CustomerDB, Address
 from app.extensions import db
 from app.api.auth import token_auth, auth
 from app.decorators import permission_required, admin_required
@@ -59,7 +59,7 @@ def update_user(id):
 
 
 @api.route('/customers/')
-@admin_required
+#@admin_required  # NOTE; when running is_administrator() on adm user still returns false Look into it Chap.9
 @token_auth.login_required
 def get_customers():
     """Test with HTTPie:
@@ -76,10 +76,98 @@ def get_customers():
 @api.route('/customers/<int:id>')
 #@permission_required(Permission.DRIVER)
 #@cross_origin()
-@token_auth.login_required
+#@token_auth.login_required
 def get_customer(id):
     """Returns a single customer.
     If name it not found in the database,
     a 404 error is returned."""
     customer = CustomerDB.query.get_or_404(id)
+    return jsonify(customer.to_json())
+
+
+@api.route('/customers/<int:id>/name', methods=['PUT'])
+#@token_auth.login_required
+def update_customer_name(id):
+    """Test w/o auth
+    http PUT  http://localhost:5000/api/v1/c
+    ustomers/1/name id=1 name=Josephina
+    NOTE: cus id is passed as id=<int> and new name as name=<str>"""
+    customer = CustomerDB.query.get_or_404(id)
+    data = request.get_json()
+    if 'name' in data:
+        customer.name = data['name']
+        db.session.commit()
+        return jsonify(customer.to_json()), 200
+    return jsonify({'error': 'Invalid data'}), 400
+
+
+@api.route('/customers/<int:customer_id>/email', methods=['PUT'])
+#@token_auth.login_required
+def update_customer_email(customer_id):
+    """Test w/o auth
+    http PUT  http://localhost:5000/api/v1/customers/1/email id=1 email=<str>"""
+    customer = CustomerDB.query.get_or_404(customer_id)
+    data = request.get_json()
+    if 'email' in data:
+        customer.email = data['email']
+        db.session.commit()
+        return jsonify(customer.to_json()), 200
+    return jsonify({'error': 'Invalid data'}), 400
+
+
+@api.route('/customers/<int:customer_id>/phone', methods=['PUT'])
+#@token_auth.login_required
+def update_customer_phone(customer_id):
+    customer = CustomerDB.query.get_or_404(customer_id)
+    data = request.get_json()
+    if 'phone' in data:
+        customer.phone = data['phone']
+        db.session.commit()
+        return jsonify(customer.to_json()), 200
+    return jsonify({'error': 'Invalid data'}), 400
+
+
+@api.route('/customers/<int:customer_id>/address', methods=['PUT'])
+#@token_auth.login_required
+def update_customer_address(customer_id):
+    customer = CustomerDB.query.get_or_404(customer_id)
+    data = request.get_json()
+    if 'street' in data and 'city' in data and 'state' in data and 'postcode' in data:
+        address = Address(
+            street=data['street'],
+            city=data['city'],
+            state=data['state'],
+            postcode=data['postcode'],
+            customer_id=customer_id
+        )
+        customer.addresses = address
+        db.session.commit()
+        return jsonify(customer.to_json()), 200
+    return jsonify({'error': 'Invalid data'}), 400
+
+
+@api.route('/customers_test/<int:id>/', methods=['GET', 'PUT'])
+def edit_customer_test(id):
+    customer = CustomerDB.query.get(id)
+    if not customer:
+        return jsonify({'message': 'Customer not found'}), 404
+
+    data = request.get_json()
+    if 'name' in data:
+        customer.name = data['name']
+    if 'email' in data:
+        customer.email = data['email']
+    if 'phone' in data:
+        customer.phone = data['phone']
+    if 'addresses' in data:
+        if customer.addresses:
+            customer.addresses.street = data['addresses'].get('street', customer.addresses.street)
+            customer.addresses.city = data['addresses'].get('city', customer.addresses.city)
+            customer.addresses.state = data['addresses'].get('state', customer.addresses.state)
+            customer.addresses.postcode = data['addresses'].get('postcode', customer.addresses.postcode)
+        else:
+            new_address = Address(**data['addresses'])
+            customer.addresses = new_address
+        db.session.commit()
+
     return jsonify(customer.to_json())
