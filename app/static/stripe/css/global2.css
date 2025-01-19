@@ -601,6 +601,7 @@ justifies text and adds transition */
     .pricing-features {
       padding-left: 0%;
       padding-right: 0%;
+      font-size: 10px;
     }
   }
 
