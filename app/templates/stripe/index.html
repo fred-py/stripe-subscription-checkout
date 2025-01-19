@@ -104,7 +104,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
         </div>
 
         <form action="/create-checkout-session" method="POST">
-          <input type="hidden" id="priceId" name="priceId">
+          <input type="hidden" id="oneOff" name="priceId">
           <div class="container">
             <div class="panel pricing-table">
               <div class="pricing-plan">
@@ -121,8 +121,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                   in a single-page application (SPA). In such applications, changes in
                   the part of the URL after the # are used to dynamically load different 
                   content without refreshing the page.-->
-                <button href="#/" class="pricing-button" id="one-off-btn-1" onclick="fetchPrice('oneOffx1')">Book 1 bin</button>
-                <button href="#/" class="pricing-button" id="one-off-btn-2" onclick="fetchPrice('oneOffx2')">Book 2 bins</button>
+                <button href="#/" class="pricing-button" id="one-off-btn" onclick="fetchPrice('oneOff')">Book now</button>
               </div>
             </div>
           </div>
@@ -214,7 +213,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
 
                           <hr>
                           <div class="container-accord">
-                              <div class="label">What is your different pricing plans</div>
+                              <div class="label">What is included in each pricing plan</div>
                               <div class="content"> We offer three different pricing plans to suit your needs. Our Gold plan has the best value costing only $9 per bin (This includes one free FOGO bin clean per cycle). Our Silver plan costs $15 per bin (This includes one free FOGO bin clean per cleaning cycle).
                                 <table>
                                   <tr> 

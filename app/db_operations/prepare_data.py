@@ -4,6 +4,9 @@ from dataclasses import dataclass
 from functools import partial
 from statistics import median
 
+
+
+
 """Improve the Performance of Accessing Class Members
 With Slots"""
 
@@ -99,6 +102,7 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
 
 
 # SAMPLE JSON CHECKOUT RESPONSE

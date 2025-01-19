@@ -100,7 +100,7 @@ html {
     color: #fff;
     transform: translateY(20%);
     letter-spacing: 0;
-    font-size: 37px;
+    font-size: 28px;
     padding-top: 3%;
     padding-bottom: 3%;
     z-index: 9999;
@@ -413,12 +413,12 @@ the class .pricing-table.  */
 @media (max-width: 600px) {
     
     .header__features {
-      font-size: 27px;
+      font-size: 14px;
     }
 
     .header__title {
         font-size: 27px;
-        margin-top: 12%;
+        margin-top: 6%;
     }
 
     .accordion .content {

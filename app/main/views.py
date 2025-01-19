@@ -41,8 +41,7 @@ def get_publishable_key():
         'comboPrice': os.getenv('ANY_COMBO_PRICE_ID'),
         'silverPrice': os.getenv('SILVER_PRICE_ID'),
         'goldPrice': os.getenv('GOLD_PRICE_ID'),
-        'oneOffx1': os.getenv('ONE_OFF_X1_PRICE_ID'),
-        'oneOffx2': os.getenv('ONE_OFF_X2_PRICE_ID'),
+        'oneOff': os.getenv('ONE_OFF_PRICE_ID'),
     })
 
 
@@ -125,7 +124,7 @@ def create_checkout_session():
                 },
             )
 
-        elif price == os.getenv('ONE_OFF_X1_PRICE_ID'):
+        elif price == os.getenv('ONE_OFF_PRICE_ID'):
             checkout_session = stripe.checkout.Session.create(
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url=domain_url, # + '/canceled.html',
@@ -139,7 +138,9 @@ def create_checkout_session():
                 line_items=[
                     {
                         'price': price,
-                        'quantity': 1,
+                        'adjustable_quantity':
+                            {'enabled': True, 'minimum': 1, 'maximum': 3},
+                            'quantity': 1
                     }
                 ],
                 phone_number_collection={'enabled': True},

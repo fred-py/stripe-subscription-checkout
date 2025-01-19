@@ -90,8 +90,11 @@ def get_customer(id):
 #@token_auth.login_required
 def edit_customer(id):
     """Test w/o auth
-    http PUT  http://localhost:5000/api/v1/c
-    ustomers/1/name id=1 name=Josephina
+    http PUT  http://localhost:5000/api/v1/customers/<int:id>/ email=newemail@here.com
+
+    Args:
+        <int:id>: id linked to customer details being edited
+
     NOTE: cus id is passed as id=<int> and new name as name=<str>"""
 
     customer = CustomerDB.query.get(id)
@@ -99,24 +102,24 @@ def edit_customer(id):
         return jsonify({'message': 'Customer not found'}), 404
 
     data = request.get_json()
-    if 'name' in data:
+    if 'name' in data and data['name'] != customer.name:
         customer.name = data['name']
-    if 'email' in data:
+    if 'email' in data and data['email'] != customer.email:
         customer.email = data['email']
-    if 'phone' in data:
+    if 'phone' in data and data['phone'] != customer.phone:
         customer.phone = data['phone']
-    if 'street' in data:
+    if 'street' in data and data['street'] != customer.addresses.street:
         customer.addresses.street = data['street']
-    if 'city' in data:
+    if 'city' in data and data['city'] != customer.addresses.city:
         customer.addresses.city = data['city']
-    if 'postcode' in data:
-        customer.addresses.postcode = data['postcode']    
-    if 'bin_collection' in data:
+    if 'postcode' in data and data['postcode'] != customer.addresses.postcode:
+        customer.addresses.postcode = data['postcode'] 
+    if 'bin_collection' in data and data['bin_collection'] != customer.bins.bin_collection:
         customer.bins.bin_collection = data['bin_collection']
-    if 'selected_bins' in data:
+    if 'selected_bins' in data and data['selected_bins'] != customer.bins.selected_bins:
         customer.bins.selected_bins = data['selected_bins']
-    if 'clean_date' in data:
-        customer.bins.clean_data = data['clean_date']
+    if 'clean_date' in data and data['clean_date'] != customer.bins.clean_date:
+        customer.bins.clean_date = data['clean_date']
 
     db.session.commit()
 
