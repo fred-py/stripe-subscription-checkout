@@ -225,6 +225,8 @@ https://testdriven.io/blog/docker-best-practices/
 
 
 **GCLOUD**
+https://cloud.google.com/sdk/docs/install#mac
+64-bit
 
 # GOOGLE CLOUD RUN
 
@@ -300,6 +302,7 @@ Authenticate gcloud CLI
 
 
 **GCLOUD Artifac Registry For Docker**
+>https://cloud.google.com/sdk/docs/install#mac
 > https://cloud.google.com/artifact-registry/docs/docker/authentication
 # Configure Authentication
 

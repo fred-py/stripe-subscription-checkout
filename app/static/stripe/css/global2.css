@@ -131,6 +131,13 @@ html {
     width: 100%;
   }
 
+  .container h1 {
+    font-family: InterVariable, sans-serif;
+    color: var(--gray-light);
+    margin-top: 6%;
+    margin-bottom: 40px;
+  }
+
   .container.description {
     max-width: 100%;
   }
@@ -604,5 +611,8 @@ justifies text and adds transition */
       font-size: 10px;
     }
   }
+/*Leaflet Map*/
+#map { height: 600px; }
+
 
 

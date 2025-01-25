@@ -23,6 +23,17 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
     -->
     <link rel="preconnect" href="https://rsms.me/">  <!--Inter Font-->
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">  <!--Inter Font-->
+    
+    <!--Leaflet Map API-->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+    <!--END of Leaflet Map API-->
+
     <!-- Load Stripe.js on your website. -->
     <script src="https://js.stripe.com/v3/"></script>
     <script src="/stripe/js/script.js"></script>
@@ -129,6 +140,15 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                 </div>
             </div>
         </form>
+
+        <div class="container">
+          <div class="panel pricing-table">
+            <h1>Serviced Areas</h1>
+            <div id="map"></div>
+            <script src="/stripe/js/loadMap.js"></script>
+          </div>  
+        </div>
+        
         <!-- ============== FAQs ============== -->
         <div class="container">
           <a id="faqs"></a> <!-- Invisible Anchor Point -->
@@ -145,7 +165,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                       <div class="container-accord">
                         <div class="label">What areas do you service?</div>
                         <div class="content">We currently service the following postcodes in the Margaret River Region: 6284, 6285, 6286, 6288, 6290. We are always expanding our service area, please register your interest by clicking here and we will keep you updated as we service area expands.
-                            </div>
+                            </div>   
                       </div>
 
                       <hr>
@@ -259,6 +279,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
             </div>
             <p>For commercial enquiries email us at info@wheeliewash.au</p>
         </div>
+        
   <div id="error-message" class="error-message"></div>
-  </body>
+  </body>  
 </html>
