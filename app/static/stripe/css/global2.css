@@ -614,5 +614,13 @@ justifies text and adds transition */
 /*Leaflet Map*/
 #map { height: 600px; }
 
+.serviced-areas {
+  color: var(--gray-light);
+  line-height: 1.4;
+  font-size: 13px;
+  text-align: left;
+  padding-bottom: 3%;
+}
+
 
 
