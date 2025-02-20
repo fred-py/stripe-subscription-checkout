@@ -7,7 +7,8 @@ combined into one application"""
 
 from flask import Flask
 from config import config
-from app.extensions import db, bootstrap, moment, migrate, mail, login_manager, CORS
+from app.extensions import db, bootstrap, moment, \
+    migrate, mail, login_manager, CORS
 # cus_query, bin_query
 from dotenv import load_dotenv, find_dotenv
 
@@ -47,6 +48,7 @@ def create_app(config_name='production'):  # Note: this should work without conf
     migrate.init_app(app, db)
     mail.init_app(app)
     login_manager.init_app(app)
+
     # Enable CORS for the entire app
     # localhost:5173 is vue default port
     # https://united-dashboard.web.app/ is the firebase app
@@ -66,7 +68,6 @@ def create_app(config_name='production'):  # Note: this should work without conf
         'supports_credentials': True
     }})
         # Enables CORS for the entire app - can be changed to allow only specific routes
-
 
     # Register blueprints here
     from .main import main as main_bp  # Main refers to Stripe BP

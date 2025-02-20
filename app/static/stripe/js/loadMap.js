@@ -126,6 +126,10 @@ var latlngs = [
         [-34.026254, 115.095241],
         [-34.031909, 115.095155],
         [-34.03182, 115.087602],
+
+        // NOTE: ADD ZOOM IN WITH FINGERS 
+        // OPTION FOR MOBILE USERS OR ADD
+        // NOTE SAYING ZOOM IN WITH + sign instead.
     ]
     
 

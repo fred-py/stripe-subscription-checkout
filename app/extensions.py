@@ -1,6 +1,10 @@
 # https://www.digitalocean.com/community/tutorials/how-to-structure-a-large-flask-application-with-flask-blueprints-and-flask-sqlalchemy#creating-a-file-for-managing-flask-extensions-and-integrating-flask-sqlalchemy
 """
 Extensions are created in this file.
+
+NOTE: Only initialse extentions interecting primarily 
+with backend components to avoid RunTimeError.
+
 The db object will be used to integrate SQLAlchemy with the 
 Flask application constructed in the factory function in:
 app/__init__.py """

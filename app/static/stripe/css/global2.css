@@ -173,6 +173,8 @@ html {
     align-items: center;
     text-align: center; 
   }
+
+  
   
   .pricing-plan {
     border-bottom: 1px solid var(--green-transparent);
@@ -494,8 +496,9 @@ Adds padding to the top and bottom, Also makes its cursor a pointer */
 
 .accordion .label {
     position: relative;
-    padding: 5% 0;
+    /*padding: 5% 0;*/
     cursor: pointer;
+    padding-right: 30px; /* UPDATED 18Feb 2025 Add padding to accommodate the +/- icon */
   }
 
 /* Positions the plus sign 5px from the right. 
@@ -522,19 +525,46 @@ justifies text and adds transition */
     max-width: 100%;
     overflow: hidden;
     transition: 0.5s;
+    pointer-events: auto; /*UPDATED 18Feb 2025*/
   }
+
+
 
 /* Unhides the content part when active. Sets the height */
 .accordion .container-accord.active .content {
     height: auto;
     margin-bottom: 44px;
   }
+
+/* UPDATED 18Feb 2025 Make sure form elements are interactive */
+.accordion .content form,
+.accordion .content form * {
+    pointer-events: auto;
+}
+
+/* Targets all text inside form (register interest form)*/
+.form-text form * {
+  text-align: left;
+  margin: 0 auto; /* Centers horizontally */
   
+}
+
+/* UPDATED 18Feb 2025 Ensure form fields are full width */
+.accordion .content .form-group {
+  width: 100%;
+}
+
+/*UPDATED 18Feb 2025*/
+.accordion .label:hover {
+  background-color: #f5f5f5;
+  transition: background-color 0.3s ease;
+}
   /* Changes from plus sign to negative sign once active */
   
   .accordion .container-accord.active .label::before {
     content: '-';
     font-size: 30px;
+    padding: 15px; /* UPDATED 18Feb 2025 Add some padding for better form appearance */
   }
 
   /*Two-Dimensional Pricing Table under FAQs*/

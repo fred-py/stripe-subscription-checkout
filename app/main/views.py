@@ -11,6 +11,7 @@ import traceback
 #from flask_sqlalchemy import get_debug_queries
 from . import main
 from dotenv import load_dotenv, find_dotenv
+from ..forms.interest_form import RegisterInterestForm
 #from ..db_operations.servicem8_operations.data_transfer import data_transfer as d
 from ..db_operations.prepare_data import prepare_session_data, Customer
 from ..db_operations.crud_operations import add_user
@@ -23,10 +24,12 @@ stripe.api_version = '2020-08-27'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 
+
 @main.route('/', methods=['GET', 'OPTIONS'])
 def get_sub_page():
+    form = RegisterInterestForm()
     # Passing favicon en var to render on deployment
-    return render_template('stripe/index.html', favicon=os.getenv('FAVICON'))
+    return render_template('stripe/index.html', form=form, favicon=os.getenv('FAVICON'))
 
 @main.route('/bootstrap', methods=['GET', 'OPTIONS'])
 def get_bootstrap_test():
