@@ -47,6 +47,7 @@ def coming_soon():
         }
         recipients = 'rezende.f@outlook.com'
         send_email(recipients, sbj, template, **data)
+        flash('Thank you for registering your interest!', 'success')  # Add a success message
         return redirect(url_for('main.coming_soon'))  # redirects to registration received page
     # Passing favicon en var to render on deployment
     return render_template('stripe/coming_soon.html', form=form, name=session.get('name'), favicon=os.getenv('FAVICON'))
