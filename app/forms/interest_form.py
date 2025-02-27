@@ -20,7 +20,7 @@ class RegisterInterestForm(FlaskForm):  # Flask WebDev p. 114
     # 4. DataRequired checks that the field is not submitted empty
     # 5. If the field is submitted empty, the validator will prevent
     #    the form from being submitted and prompt the used to complete required fields
-    name = StringField('Full Name', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
     email = StringField('Email Address', validators=[DataRequired(), Email()])
     mobile = StringField('Mobile', validators=[DataRequired()])
     address = StringField('Address', validators=[DataRequired()])

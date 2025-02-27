@@ -1,0 +1,6 @@
+Someone has registered their interest in Wheelie Wash:
+
+Name: {{ name }}
+Email: {{ email }}
+Mobile: {{ mobile }}
+Address: {{ address }}

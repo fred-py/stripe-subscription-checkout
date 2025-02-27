@@ -1,1 +1,0 @@
-User {{ user.username }} has registered for access to db.

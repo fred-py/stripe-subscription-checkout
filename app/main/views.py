@@ -5,7 +5,7 @@ import stripe
 import json
 import os
 from flask import render_template, redirect, url_for, abort, \
-    flash, request, current_app, make_response, send_from_directory, jsonify
+    flash, request, current_app, session, make_response, send_from_directory, jsonify
 import traceback
 #from flask_login import login_required, current_user
 #from flask_sqlalchemy import get_debug_queries
@@ -16,7 +16,7 @@ from ..forms.interest_form import RegisterInterestForm
 from ..db_operations.prepare_data import prepare_session_data, Customer
 from ..db_operations.crud_operations import add_user
 #from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
-
+from ..emails import send_email
 
 load_dotenv(find_dotenv())
 
@@ -24,12 +24,54 @@ stripe.api_version = '2020-08-27'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 
+@main.route('/', methods=['GET', 'POST', 'OPTIONS'])
+def coming_soon():
+    form = RegisterInterestForm()
 
-@main.route('/', methods=['GET', 'OPTIONS'])
+    if form.validate_on_submit():
+        # User data is assigned to Flask's session to be
+        # to be remembered beyond the request. 
+        session['name'] = form.name.data
+        name = form.name.data
+        form.name.data = ''  # If name unknown, the variable is initialised to None
+        email = form.email.data
+        mobile = form.mobile.data
+        address = form.address.data
+        sbj = 'Someone has registered their interest in Wheelie Wash'
+        template = 'database/mail/user_interest'
+        data = {
+            'name': name,
+            'email': email,
+            'mobile': mobile,
+            'address': address
+        }
+        recipients = 'info@wheeliewash.au'
+        send_email(recipients, sbj, template, **data)
+        return redirect(url_for('main.coming_soon'))  # redirects to registration received page
+    # Passing favicon en var to render on deployment
+    return render_template('stripe/coming_soon.html', form=form, name=session.get('name'), favicon=os.getenv('FAVICON'))
+
+"""
+@main.route('/', methods=['GET', 'POST', 'OPTIONS'])
 def get_sub_page():
     form = RegisterInterestForm()
+
+    if form.validate_on_submit():
+        # User data is assigned to Flask's session to be
+        # to be remembered beyond the request. 
+        session['name'] = form.name.data
+        form.name.data = ''  # If name unknown, the variable is initialised to None
+        return redirect(url_for('registered-interest'))  # redirects to registration received page
     # Passing favicon en var to render on deployment
-    return render_template('stripe/index.html', form=form, favicon=os.getenv('FAVICON'))
+    return render_template('stripe/index.html', form=form, name=session.get('name'), favicon=os.getenv('FAVICON'))
+"""
+
+@main.route('/registered-interest', methods=['GET'])
+def submitted_page():
+    """Renders page after interest form
+    is submitted succesfully"""
+    name = session.get('name')
+    return render_template('stripe/submitted.html', name=name, favicon=os.getenv('FAVICON'))
 
 @main.route('/bootstrap', methods=['GET', 'OPTIONS'])
 def get_bootstrap_test():
