@@ -45,7 +45,7 @@ def coming_soon():
             'mobile': mobile,
             'address': address
         }
-        recipients = 'info@wheeliewash.au'
+        recipients = 'rezende.f@outlook.com'
         send_email(recipients, sbj, template, **data)
         return redirect(url_for('main.coming_soon'))  # redirects to registration received page
     # Passing favicon en var to render on deployment

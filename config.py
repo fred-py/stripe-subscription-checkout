@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv, find_dotenv
+from datetime import timedelta
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -11,6 +12,11 @@ load_dotenv(find_dotenv())
 
 class Config:
     SECRET_KEY = os.getenv('SECRET_KEY')  # flask-wtf 
+    SESSION_COOKIE_HTTPONLY = True  # For cookie session on the cloud
+    SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    PERMANENT_SESSION_LIFETIME = timedelta(days=3)
+    
     MAIL_SERVER = os.getenv('MAIL_SERVER', 'smtp.googlemail.com')
     MAIL_PORT = int(os.getenv('MAIL_PORT', '587'))
     MAIL_USE_TLS = os.getenv('MAIL_USE_TLS', 'true').lower() in \
