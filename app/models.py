@@ -203,6 +203,9 @@ class Address(db.Model):
     # ForeignKey() provides a low-level database constraint that ensures data integrity.
     customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'))
 
+    leads: Mapped['Lead'] = db.relationship(back_populates='addresses', lazy=True)
+    lead_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('leads.id'))
+
     def to_dict(self) -> dict:
         return {
             'id': self.id,
