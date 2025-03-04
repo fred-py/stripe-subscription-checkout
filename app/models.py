@@ -149,6 +149,47 @@ class CustomerDB(db.Model):
                f'Order Date: {self.order_date}'
 
 
+class Lead(db.Model):
+    """This model contains information from
+    leads who have registered their interest."""
+    __tablename__ = 'leads'
+    id: Mapped[int] = db.Column(db.Integer, primary_key=True)
+    name: Mapped[str] = db.Column(db.String)
+    phone: Mapped[str] = db.Column(db.String, nullable=False)
+    email: Mapped[str] = db.Column(db.String, nullable=False, unique=True)
+    active: Mapped[bool] = db.Column(db.Boolean, default=True)
+    test: Mapped[bool] = db.Column(db.Boolean, default=False)
+    registration_date: Mapped[datetime] = db.Column(db.DateTime,
+            nullable=False, default=datetime.now(timezone.utc))
+    # One to one relationship
+    # uselist=False means that the relationship will return a 
+    # single item(scalar) instead of a list of items(collection)
+    addresses: Mapped['Address'] = db.relationship(
+            back_populates='leads', uselist=False, lazy=True) # Lazy is true by default
+
+    def to_json(self) -> dict:
+        """Serialise the Lead object to JSON"""
+        json_lead = {
+            # lead columns
+            # api.get_lead is used on get_lead method
+            # by id on api/users.py
+            'url': url_for('api.get_lead', id=self.id),
+            'name': self.name,
+            'phone': self.phone,
+            'email': self.email,
+            'active': self.active,
+            'test': self.test,
+            'registration_date': self.registration_date,
+            # Address
+            # Address contains the full address
+            'address': self.addresses.to_dict_full_address() if self.addresses else None,
+            'street': self.addresses.street_dict() if self.addresses else None,
+            'city': self.addresses.city_dict() if self.addresses else None,
+            'postcode': self.addresses.postcode_dict() if self.addresses else None,
+        }
+        return json_lead
+
+
 class Address(db.Model):
     __tablename__ = 'addresses'
     id: Mapped[int] = db.Column(db.Integer, primary_key=True)

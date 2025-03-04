@@ -2,7 +2,7 @@ import sqlalchemy as sa
 from flask import jsonify, url_for, request, current_app
 from app.api import api
 from app.api.errors import bad_request
-from ..models import User, CustomerDB, Address, Bin
+from ..models import User, CustomerDB, Lead, Address, Bin
 from app.extensions import db
 from app.api.auth import token_auth, auth
 from app.decorators import permission_required, admin_required
@@ -84,6 +84,28 @@ def get_customer(id):
     customer = CustomerDB.query.get_or_404(id)
     return jsonify(customer.to_json())
 
+
+@api.route('/leads/')
+#@admin_required  # NOTE; when running is_administrator() on adm user still returns false Look into it Chap.9
+@token_auth.login_required
+def get_leads():
+    """Test with HTTPie:
+    $ http -A bearer --auth "<token>" GET
+    http://localhost:5000/api/v1/leads/"""
+    leads = Lead.query.all()
+    return jsonify({
+        'leads': [
+            lead.to_json() for lead in leads
+        ]
+    })
+
+@api.route('/leads/<int:id>')
+def get_lead(id):
+    """Returns a single lead.
+    If name it not found in the database,
+    a 404 error is returned."""
+    lead = Lead.query.get_or_404(id)
+    return jsonify(lead.to_json())
 
 
 @api.route('/edit-customer/<int:id>/', methods=['GET', 'PUT'])
