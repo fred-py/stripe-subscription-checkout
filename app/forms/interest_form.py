@@ -23,6 +23,8 @@ class RegisterInterestForm(FlaskForm):  # Flask WebDev p. 114
     name = StringField('Name', validators=[DataRequired()])
     email = StringField('Email Address', validators=[DataRequired(), Email()])
     mobile = StringField('Mobile', validators=[DataRequired()])
-    address = StringField('Address', validators=[DataRequired()])
+    street = StringField('Street', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired()])
+    postcode = StringField('Postcode', validators=[DataRequired()])
     # SubmitField class represents a HTML <input type="submit"> in the rendered form
     submit = SubmitField('Submit')

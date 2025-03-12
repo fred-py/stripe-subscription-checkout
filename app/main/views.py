@@ -12,9 +12,10 @@ import traceback
 from . import main
 from dotenv import load_dotenv, find_dotenv
 from ..forms.interest_form import RegisterInterestForm
-#from ..db_operations.servicem8_operations.data_transfer import data_transfer as d
+from ..db_operations.servicem8_operations import data_transfer as d
 from ..db_operations.prepare_data import prepare_session_data, Customer
-from ..db_operations.crud_operations import add_user
+from ..db_operations.crud_operations import add_user, add_lead
+#from ..models import Lead
 #from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
 from ..emails import send_email
 
@@ -24,35 +25,48 @@ stripe.api_version = '2020-08-27'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 
-@main.route('/', methods=['GET', 'POST', 'OPTIONS'])
+@main.route('/REGISTER-interst', methods=['GET', 'POST', 'OPTIONS'])
 def coming_soon():
     form = RegisterInterestForm()
-
+    
     if form.validate_on_submit():
-        # User data is assigned to Flask's session to be
-        # to be remembered beyond the request. 
-        session['name'] = form.name.data
-        name = form.name.data
-        form.name.data = ''  # If name unknown, the variable is initialised to None
-        email = form.email.data
-        mobile = form.mobile.data
-        address = form.address.data
-        sbj = 'Someone has registered their interest in Wheelie Wash'
-        template = 'database/mail/user_interest'
-        data = {
-            'name': name,
-            'email': email,
-            'mobile': mobile,
-            'address': address
-        }
-        recipients = 'rezende.f@outlook.com'
-        send_email(recipients, sbj, template, **data)
-        flash('Thank you for registering your interest!', 'success')  # Add a success message
-        return redirect(url_for('main.coming_soon'))  # redirects to registration received page
-    # Passing favicon en var to render on deployment
-    return render_template('stripe/coming_soon.html', form=form, name=session.get('name'), favicon=os.getenv('FAVICON'))
+        pass
+        """
+        lead = Lead.query.filter_by(email=form.email.data).first()
+        if lead is None:
+            data = {
+                'name': form.name.data,
+                'email': form.email.data,
+                'mobile': form.mobile.data,
+                'street': form.street.data,
+                'city': form.city.data,
+                'postcode': form.city.data,
+            }
+            add_lead(data)  # Save to database
 
-"""
+            # Send internal notification email
+            sbj = 'Someone has registered their interest in Wheelie Wash'
+            template = 'database/mail/user_interest'
+            recipients = 'rezende.f@outlook.com'
+            send_email(recipients, sbj, template, **data)
+            flash('Thank you for registering your interest!', 'success')  # Add a success message 
+            
+            session['known'] = False
+        else:
+            session['known'] = True
+            flash('Email address already in use', 'success')  # Add a success message 
+            # User data is assigned to Flask's session to be
+            # to be remembered beyond the request. 
+            session['name'] = form.name.data
+
+            form.name.data = ''  # If name unknown, the variable is initialised to None
+        return redirect(url_for('main.coming_soon', name=session.get('name'), favicon=os.getenv('FAVICON')))  # redirects to registration received page
+    # Passing favicon en var to render on deployment
+    """
+    return render_template('stripe/coming_soon.html', favicon=os.getenv('FAVICON'))
+    #return render_template('stripe/coming_soon.html', form=form, name=session.get('name'), favicon=os.getenv('FAVICON'))
+
+
 @main.route('/', methods=['GET', 'POST', 'OPTIONS'])
 def get_sub_page():
     form = RegisterInterestForm()
@@ -65,7 +79,7 @@ def get_sub_page():
         return redirect(url_for('registered-interest'))  # redirects to registration received page
     # Passing favicon en var to render on deployment
     return render_template('stripe/index.html', form=form, name=session.get('name'), favicon=os.getenv('FAVICON'))
-"""
+
 
 @main.route('/registered-interest', methods=['GET'])
 def submitted_page():
@@ -163,8 +177,21 @@ def create_checkout_session():
                                 {'label': 'All bins', 'value': 'All'},
                             ]
                         }
-                    }
+                    },
+                    {
+                        'key': 'confirm_service_area',
+                        'optional': False,
+                        'label': {'type': 'custom', 'custom': 'Have you confirmed we service your area?'},
+                        'type': 'dropdown',
+                        'dropdown': {
+                            'options': [
+                                {'label': 'Yes, I have checked that my street is within the serviced area', 'value': 'yes'},
+                                {'label': 'No, I have not checked the map. Check map before proceeding', 'value': 'no'},
+                            ],
+                        },
+                    },
                 ],
+                
                 custom_text={
                     'submit': {'message': 'NOTE: Currently we only service the Margaret River region.'},
                 },
@@ -217,7 +244,19 @@ def create_checkout_session():
                                 {'label': 'Green bin', 'value': 'G'},
                             ]
                         }
-                    }
+                    },
+                    {
+                        'key': 'confirm_service_area',
+                        'optional': False,
+                        'label': {'type': 'custom', 'custom': 'Have you confirmed we service your area?'},
+                        'type': 'dropdown',
+                        'dropdown': {
+                            'options': [
+                                {'label': 'Yes, I have checked that my street is within the serviced area', 'value': 'yes'},
+                                {'label': 'No, I have not checked the map. Check map before proceeding', 'value': 'no'},
+                            ],
+                        },
+                    },
                 ],
                 custom_text={
                     'submit': {'message': 'NOTE: We will get in touch to confirm a date.'}
@@ -270,7 +309,19 @@ def create_checkout_session():
                                 {'label': 'Yellow and Green bins', 'value': 'YG'},
                             ]
                         }
-                    }
+                    },
+                    {
+                        'key': 'confirm_service_area',
+                        'optional': False, 
+                        'label': {'type': 'custom', 'custom': 'Have you confirmed we service your area?'},
+                        'type': 'dropdown',
+                        'dropdown': {
+                            'options': [
+                                {'label': 'Yes, I have checked that my street is within the serviced area', 'value': 'yes'},
+                                {'label': 'No, I have not checked the map. Check map before proceeding', 'value': 'no'},
+                            ],
+                        },
+                    },
                 ],
                 custom_text={
                     'submit': {'message': 'NOTE: We will get in touch to confirm a date.'}
@@ -310,8 +361,20 @@ def create_checkout_session():
                             ],
                         },
                     },
-
+                    {
+                        'key': 'confirm_service_area',
+                        'optional': False,    
+                        'label': {'type': 'custom', 'custom': 'Have you confirmed we service your area?'},
+                        'type': 'dropdown',
+                        'dropdown': {
+                            'options': [
+                                {'label': 'Yes, I have checked that my street is within the serviced area', 'value': 'yes'},
+                                {'label': 'No, I have not checked the map. Check map before proceeding', 'value': 'no'},
+                            ],
+                        },
+                    },
                 ],
+
                 custom_text={
                     'submit': {'message': 'NOTE: Currently we only service the Margaret River region.'}
                 },
@@ -346,7 +409,6 @@ def webhook_received():
     # https://stripe.com/docs/payments/checkout/fulfill-orders#create-event-handler
     webhook_secret = os.getenv('STRIPE_WEBHOOK_SECRET')
     request_data = json.loads(request.data)
-
 
     if webhook_secret:
         # Retrieve the event by verifying the signature using 
@@ -383,7 +445,7 @@ def webhook_received():
     #print('event ' + event_type)
 
     #uww = os.getenv('UWW_KEY')  # ServiceM8 Wheelie Wash Keys
-    #ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
+    ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
 
     # NOTE: PaymentIntent is created automatically however it is not
     # automatically attached to cus_id\
@@ -410,6 +472,9 @@ def webhook_received():
         amount_paid = data_object['amount_paid']
         invoice_url = data_object['hosted_invoice_url']
         inv_description = data_object['lines']['data'][0]['description']
+        intent_id = data_object['id']  # Get PaymentIntent_id from data_object
+
+        print(f"THIS HERE !!!! >>>>> {intent_id}")
         # Add invoice information to customer metadata
         stripe.Customer.modify(
             cus_id,
@@ -418,6 +483,7 @@ def webhook_received():
                 'amount_paid': amount_paid,
                 'invoice_url': invoice_url,
                 'inv_description': inv_description,
+                'paymentintent_id': intent_id
             }
         )
 
@@ -432,6 +498,7 @@ def webhook_received():
             )
 
         line_items = session.line_items
+
         for line_items in line_items.data:
             info = line_items.amount_total, line_items.description
             customer = session.customer
@@ -444,13 +511,15 @@ def webhook_received():
                         'plan_type': info[1],
                     },
                     'booking_details': custom_field,
-                }
+            }
+
+            print(data)
 
             session_info = prepare_session_data(data)
             user = Customer(**session_info)  # Dataclass Unpacks Dict
             # Add customer to the database
             add_user(user, test=True)
-            print(user.name)
+            #print(user.name)
             #add_customer(**)
             # Convert, combine and pass data to ServiceM8
             # Asyncio ensures the function runs in parallel with the main program
@@ -465,9 +534,9 @@ def webhook_received():
             TO GO ON DOCUMENTATION eg. x seconds faster y% improvement"""
 
             """NOTHING TO BE SENT TO UPS UNTIL FURTHER NOTICE"""
-            #ups_acc = d.ServiceM8(data, ups)
-            #uuid = ups_acc.create_job()  # Create job returns uuid
-            #ups_acc.create_contact(uuid)
+            ups_acc = d.ServiceM8(data, ups)
+            uuid = ups_acc.create_job()  # Create job returns uuid
+            ups_acc.create_contact(uuid)
     # Handle the event
     elif event_type == 'customer.subscription.updated':
         subscription = event['data']['object']

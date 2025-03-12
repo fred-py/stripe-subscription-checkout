@@ -1,4 +1,4 @@
-from app.models import CustomerDB, Address, Bin, Subscription, Invoice
+from app.models import CustomerDB, Address, Bin, Subscription, Invoice, Lead
 from app.extensions import db
 
 
@@ -73,5 +73,27 @@ def add_user(data, test=False):
     db.session.add(new_plan)
     db.session.add(new_invoice)
     db.session.add(new_bin)
+
+    db.session.commit()
+
+
+def add_lead(data, test=False):
+    """Add leads to the database.
+    Those who register their interest"""
+    new_lead = Lead(
+        name=data.name,
+        email=data.email,
+        phone=data.mobile,
+        test=test
+    )
+    address = Address(
+        street=data.street,
+        city=data.city,
+        state=data.state,
+        postcode=data.postcode,
+        customers=new_lead,  # customer param links the address/lead relationship
+    )
+    db.session.add(new_lead)
+    db.session.add(address)
 
     db.session.commit()
