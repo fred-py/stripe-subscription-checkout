@@ -2,7 +2,7 @@
 # so it is imported from flask_wtf. The fields and validators
 # however, are imported directly from the WTForms package.”
 from flask_wtf import FlaskForm  # Flask WebDev p. 114
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField
 # Information on validators on Flask WebDev p. 212
 from wtforms.validators import DataRequired, Email
 
@@ -26,5 +26,16 @@ class RegisterInterestForm(FlaskForm):  # Flask WebDev p. 114
     street = StringField('Street', validators=[DataRequired()])
     city = StringField('City', validators=[DataRequired()])
     postcode = StringField('Postcode', validators=[DataRequired()])
+    service = SelectField(
+        'Which Plan or Service are you interested in?',
+        choices=[
+            ('gold', 'Gold Subscription'),
+            ('silver', 'Silver Subscription'),
+            ('bronze', 'Bronze Subscription'),
+            ('one_off_res', 'One-Off residential'),
+            ('one_off_comm', 'One-Off Commercial'),
+            ('custom_comm', 'Customised Cleaning(Commercial)')
+        ]
+    )
     # SubmitField class represents a HTML <input type="submit"> in the rendered form
     submit = SubmitField('Submit')

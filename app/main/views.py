@@ -14,8 +14,8 @@ from dotenv import load_dotenv, find_dotenv
 from ..forms.interest_form import RegisterInterestForm
 from ..db_operations.servicem8_operations import data_transfer as d
 from ..db_operations.prepare_data import prepare_session_data, Customer
-from ..db_operations.crud_operations import add_user, add_lead
-#from ..models import Lead
+from ..db_operations.crud_operations import add_user, add_lead, get_email
+from ..models import Lead
 #from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
 from ..emails import send_email
 
@@ -72,20 +72,47 @@ def get_sub_page():
     form = RegisterInterestForm()
 
     if form.validate_on_submit():
-        # User data is assigned to Flask's session to be
-        # to be remembered beyond the request. 
-        session['name'] = form.name.data
-        form.name.data = ''  # If name unknown, the variable is initialised to None
-        return redirect(url_for('registered-interest'))  # redirects to registration received page
-    # Passing favicon en var to render on deployment
-    return render_template('stripe/index.html', form=form, name=session.get('name'), favicon=os.getenv('FAVICON'))
+        email = form.email.data
+        lead = get_email(email)
+        if lead is None:
+            data = {
+                'name': form.name.data,
+                'email': form.email.data,
+                'mobile': form.mobile.data,
+                'street': form.street.data,
+                'city': form.city.data,
+                'postcode': form.postcode.data,
+                'service': form.service.data,
+            }
+            # Saves to database
+            # Returns lead object that is passed to 
+            # name parameter on redirect to retrieve Lead name
+            # This reduces database queries
+            add_lead(data, test=True)
+            
+            # Sends internal email notification
+            sbj = 'Someone has registered their interest in Wheelie Wash'
+            template = 'database/mail/user_interest'
+            recipients = 'rezende.f@outlook.com'
+            send_email(recipients, sbj, template, **data)
+            flash('Thank you for registering your interest!', 'success')  # Add a success message 
+            session['known'] = False
+            return redirect(url_for('main.submitted_page', name=lead.name, favicon=os.getenv('FAVICON')))  # redirects to registration received page
+        else:
+            session['known'] = True
+            flash('Email address already in use', 'success')  # Add a success message 
+            # User data is assigned to Flask's session to be
+            # to be remembered beyond the request. 
+            #session['name'] = form.name.data
+            #form.name.data = ''  # If name unknown, the variable is initialised to None
+    return render_template('stripe/index.html', form=form, favicon=os.getenv('FAVICON'))
 
 
 @main.route('/registered-interest', methods=['GET'])
 def submitted_page():
     """Renders page after interest form
     is submitted succesfully"""
-    name = session.get('name')
+    name = request.args.get('name')
     return render_template('stripe/submitted.html', name=name, favicon=os.getenv('FAVICON'))
 
 @main.route('/bootstrap', methods=['GET', 'OPTIONS'])

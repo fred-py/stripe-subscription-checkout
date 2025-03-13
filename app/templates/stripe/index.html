@@ -49,6 +49,18 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                 <p>Fresh Bins, Happy Home!</p>
                 <p>Eco-Friendly Cleaning: Wash, Sanitise, Deodorise. No Residue.</p>
             </div>
+            <div class="container">
+              <div class="panel pricing-table">
+                <h1>Serviced Areas For Subscription Customers Only</h1>
+                <hr>
+                  <div class="serviced-areas">
+                    Note: Serviced areas apply to subscription customers only. For commercial and one-off cleans, areas not highlighted below can still be serviced.
+                  </div>
+                </hr>
+                <div id="map"></div>
+                <script src="/stripe/js/loadMap.js"></script>
+              </div>  
+            </div>    
             <div class="header__title">Choose a plan</div>
         </header>
         <form action="/create-checkout-session" method="POST">
@@ -58,7 +70,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
               <div class="pricing-plan">
               <div id="anchor-gold"></div> <!-- Anchor Point -->
                 <img src="/stripe/img/gold.png" alt="" class="pricing-img">
-                      <h2 class="pricing-header">Gold</h2>
+                      <h2 class="pricing-header">Gold Subscription</h2>
                       <ul class="pricing-features">
                         <div class="container.description">
                           <li class="pricing-features-item">3 Bins Cleaned Monthly</li>
@@ -78,7 +90,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                   <div class="panel pricing-table">
                       <div class="pricing-plan">
                       <img src="/stripe/img/silver.png" alt="" class="pricing-img">
-                      <h2 class="pricing-header">Silver</h2>
+                      <h2 class="pricing-header">Silver Subscription</h2>
                       <ul class="pricing-features">
                         <div class="container.description">
                           <li class="pricing-features-item">3 Bins Cleaned Quarterly</li>
@@ -97,7 +109,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                 <div class="panel pricing-table">
                     <div class="pricing-plan">
                         <img src="/stripe/img/bronze.png" alt="" class="pricing-img">
-                        <h2 class="pricing-header">Bronze</h2>
+                        <h2 class="pricing-header">Bronze Subscription</h2>
                         <ul class="pricing-features">
                           <div class="container.description">
                             <li class="pricing-features-item">Clean 1 to 4 bins</li>
@@ -138,18 +150,35 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
               </div>
             </div>
           </div>
-        <div class="container">
-          <div class="panel pricing-table">
-            <h1>Serviced Areas</h1>
-            <hr>
-              <div class="serviced-areas">We service all areas where your street is located within the highlighted red area. Easily check if your area is serviced by zooming onto your street.</div>
-            </hr>
-            <div id="map"></div>
-            <script src="/stripe/js/loadMap.js"></script>
-          </div>  
-        </div>
-        
-        <!-- ============== FAQs ============== -->
+        </form>
+
+          <form action="/create-checkout-session" method="POST">
+            <input type="hidden" id="oneOff" name="priceId">
+            <div class="container">
+              <div class="panel pricing-table">
+                <div class="pricing-plan">
+                  <img src="/stripe/img/one-off.png" alt="" class="pricing-img">
+                  <h2 class="pricing-header">Commercial Cleans</h2>
+                  <ul class="pricing-features">
+                    <div class="container.description">
+                      <li class="pricing-features-item">Customised Cleaning Schedule</li>
+                      <li class="pricing-features-item">One-off Deep Cleans</li>
+                      <li class="pricing-features-item">Prevent Odours and Pest Infestations</li>
+                      <li class="pricing-features-item">Ensure Compliance with Health Standards</li>
+                      <li class="pricing-features-item">Cleaning of Small to Large Commercial Waste Bins</li>
+                    </div>  
+                  </ul>
+                  <span class="pricing-price one-off from">$10</span>
+                  <!--  href="#/", it might be part of a JavaScript-based routing system
+                    in a single-page application (SPA). In such applications, changes in
+                    the part of the URL after the # are used to dynamically load different 
+                    content without refreshing the page.-->
+                  <button href="#/" class="pricing-button" id="one-off-btn" onclick="fetchPrice('oneOff')">Enquire - Set up enquire page</button>
+                </div>
+              </div>
+            </div>
+          </form>
+                <!-- ============== FAQs ============== -->
         <div class="container">
           <a id="faqs"></a> <!-- Invisible Anchor Point -->
             <div class="panel pricing-table">
@@ -194,8 +223,6 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                                     {{ form.name.label(class="form-label") }}
                                     {{ form.name(class="form-control") }}
                                   </div>
-                                  
-                                  
                                   <div class="mb-3">
                                     {{ form.email.label(class="form-label") }}
                                     {{ form.email(class="form-control") }}
@@ -203,6 +230,22 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                                   <div class="mb-3">
                                     {{ form.mobile.label(class="form-label") }}
                                     {{ form.mobile(class="form-control") }}
+                                  </div>
+                                  <div class="mb-3">
+                                    {{ form.street.label(class="form-label") }}
+                                    {{ form.street(class="form-control") }}
+                                  </div>
+                                  <div class="mb-3">
+                                    {{ form.city.label(class="form-label") }}
+                                    {{ form.city(class="form-control") }}
+                                  </div>
+                                  <div class="mb-3">
+                                    {{ form.postcode.label(class="form-label") }}
+                                    {{ form.postcode(class="form-control") }}
+                                  </div>
+                                  <div class="mb-3">
+                                    {{ form.service.label(class="form-label") }}
+                                    {{ form.service(class="form-control") }}
                                   </div>
                                 </div>
                                 

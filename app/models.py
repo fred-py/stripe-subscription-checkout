@@ -157,6 +157,7 @@ class Lead(db.Model):
     name: Mapped[str] = db.Column(db.String)
     phone: Mapped[str] = db.Column(db.String, nullable=False)
     email: Mapped[str] = db.Column(db.String, nullable=False, unique=True)
+    service: Mapped[str] = db.Column(db.String, nullable=False)
     active: Mapped[bool] = db.Column(db.Boolean, default=True)
     test: Mapped[bool] = db.Column(db.Boolean, default=False)
     registration_date: Mapped[datetime] = db.Column(db.DateTime,
@@ -164,7 +165,7 @@ class Lead(db.Model):
     # One to one relationship
     # uselist=False means that the relationship will return a 
     # single item(scalar) instead of a list of items(collection)
-    addresses: Mapped['Address'] = db.relationship(
+    addresses: Mapped['LeadAddress'] = db.relationship(
             back_populates='leads', uselist=False, lazy=True) # Lazy is true by default
 
     def to_json(self) -> dict:
@@ -203,7 +204,44 @@ class Address(db.Model):
     # ForeignKey() provides a low-level database constraint that ensures data integrity.
     customer_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('customers.id'))
 
+    def to_dict(self) -> dict:
+        return {
+            'id': self.id,
+            'street': self.street,
+            'city': self.city,
+            'state': self.state,
+            'postcode': self.postcode
+        }
+
+    def street_dict(self) -> dict:
+        return self.street
+
+    def city_dict(self) -> dict:
+        return self.city
+
+    def postcode_dict(self) -> dict:
+        return self.postcode
+
+    def to_dict_full_address(self) -> dict:
+        return self.street + ' ' + self.city \
+            + ' ' + self.state + ' ' + self.postcode
+
+    def __repr__(self) -> str:
+        return f'{self.street}, \
+            {self.city}, {self.state}, {self.postcode}'
+
+
+class LeadAddress(db.Model):
+    __tablename__ = 'lead_addresses'
+    id: Mapped[int] = db.Column(db.Integer, primary_key=True)
+    street: Mapped[str] = db.Column(db.String)
+    city: Mapped[str] = db.Column(db.String)
+    state: Mapped[str] = db.Column(db.String)
+    postcode: Mapped[str] = db.Column(db.String)
+    # One to one relationship
+    # relationship() defines the high level relationship between two tables
     leads: Mapped['Lead'] = db.relationship(back_populates='addresses', lazy=True)
+    # ForeignKey() provides a low-level database constraint that ensures data integrity.
     lead_id: Mapped[int] = db.Column(db.Integer, db.ForeignKey('leads.id'))
 
     def to_dict(self) -> dict:

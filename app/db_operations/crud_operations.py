@@ -1,4 +1,4 @@
-from app.models import CustomerDB, Address, Bin, Subscription, Invoice, Lead
+from app.models import CustomerDB, Address, LeadAddress, Bin, Subscription, Invoice, Lead
 from app.extensions import db
 
 
@@ -80,20 +80,47 @@ def add_user(data, test=False):
 def add_lead(data, test=False):
     """Add leads to the database.
     Those who register their interest"""
+    # Data refers to data dictionary from wtf form
+    # Lead Model
+    name = data['name']
+    email = data['email']
+    phone = data['mobile']
+    service = data['service']
+
+    # Address Model
+    street = data['street']
+    city = data['city']
+    postcode = data['postcode']
+
     new_lead = Lead(
-        name=data.name,
-        email=data.email,
-        phone=data.mobile,
+        name=name,
+        email=email,
+        phone=phone,
+        service=service,
         test=test
     )
-    address = Address(
-        street=data.street,
-        city=data.city,
-        state=data.state,
-        postcode=data.postcode,
-        customers=new_lead,  # customer param links the address/lead relationship
+
+    address = LeadAddress(
+        street=street,
+        city=city,
+        postcode=postcode,
+        leads=new_lead,  # customer param links the address/lead relationship
     )
     db.session.add(new_lead)
     db.session.add(address)
-
     db.session.commit()
+    return new_lead
+
+
+def get_email(email, model=None):
+    """By default this function returns Lead
+    details by querying the email
+    If model=Customer the function will return
+    email from CustomerDB Model """
+    data = email.strip()  # Remove leading/trailing spaces
+    if model is None:
+        lead = Lead.query.filter_by(email=data).first()
+        return lead
+    else:
+        e = CustomerDB.query.filter_by(email=data).first()
+        return e

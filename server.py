@@ -5,7 +5,7 @@ from app import create_app, db
 #from app.models import CustomerDB, Address, Bin, Subscription, Invoice
 from dotenv import load_dotenv, find_dotenv
 from app.models import User, Role, CustomerDB, \
-    Address, Bin, Subscription, Invoice
+    Address, Bin, Subscription, Invoice, Lead
 from app.query_ops import CustomerQuery, BinQuery
 
 # Setup Stripe python client library
@@ -26,7 +26,7 @@ def make_shell_context():
         CustomerDB=CustomerDB, Address=Address,
         Bin=Bin, Subscription=Subscription,
         Invoice=Invoice, CustomerQuery=CustomerQuery,
-        BinQuery=BinQuery
+        BinQuery=BinQuery, Lead=Lead,
     )
 
 
