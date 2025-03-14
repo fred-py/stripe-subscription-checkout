@@ -29,6 +29,7 @@ class RegisterInterestForm(FlaskForm):  # Flask WebDev p. 114
     service = SelectField(
         'Which Plan or Service are you interested in?',
         choices=[
+            ('select_option', 'Select an option from the dropdown menu'),
             ('gold', 'Gold Subscription'),
             ('silver', 'Silver Subscription'),
             ('bronze', 'Bronze Subscription'),

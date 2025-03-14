@@ -60,7 +60,7 @@ class ProductionConfig(Config):
     DEBUG = False
     # Assignment of the database URL to the SQLALCHEMY_DATABASE_URI
     # This has been moved into the __init__ method
-    # Tis class definition was running before env variables were loaded
+    # This class definition was running before env variables were loaded
     # Now in create_app() function, an instance of the Config class is created
 
     def __init__(self):

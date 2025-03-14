@@ -663,4 +663,23 @@ justifies text and adds transition */
 }
 
 
+/* FORM ALERT MESSAGES*/
+.alert {
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 5px;
+}
+.alert-success {
+    background-color: #d4edda;
+    color: var(--green-mid);
+}
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+.alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
 

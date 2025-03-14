@@ -88,7 +88,7 @@ def get_sub_page():
             # Returns lead object that is passed to 
             # name parameter on redirect to retrieve Lead name
             # This reduces database queries
-            add_lead(data, test=True)
+            lead = add_lead(data, test=True)
             
             # Sends internal email notification
             sbj = 'Someone has registered their interest in Wheelie Wash'
@@ -97,14 +97,29 @@ def get_sub_page():
             send_email(recipients, sbj, template, **data)
             flash('Thank you for registering your interest!', 'success')  # Add a success message 
             session['known'] = False
-            return redirect(url_for('main.submitted_page', name=lead.name, favicon=os.getenv('FAVICON')))  # redirects to registration received page
+            name = lead.name  # Set name for success message
+
+            # If AJAX Request, return JSON
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({
+                    'success': True,
+                    'message': f'Thank you for registering your interest, {name}!, We will be in touch as soon as our services expand to your area.',
+                    'name': name
+                })
+            # Fallback for non-AJAX
+            return render_template('stripe/index.html', form=form, favicon=os.getenv('FAVICON'))
+     
         else:
+            # If email exists
             session['known'] = True
-            flash('Email address already in use', 'success')  # Add a success message 
-            # User data is assigned to Flask's session to be
-            # to be remembered beyond the request. 
-            #session['name'] = form.name.data
-            #form.name.data = ''  # If name unknown, the variable is initialised to None
+            flash('Email address already in use', 'warning')  # Add a warning message 
+      
+            # If AJAX request, return JSON with flash message
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({
+                    'success': False,
+                    'message': 'Email address already in use'
+                })
     return render_template('stripe/index.html', form=form, favicon=os.getenv('FAVICON'))
 
 

@@ -1,0 +1,22 @@
+<!--https://realpython.com/flask-javascript-frontend-for-rest-api/#step-2-build-the-front-end-components-->
+<!--This file does not contain the <html> tag
+  as it is not intended to be used on its own-->
+<div class="debug-card">
+  <form class="debug-form">
+      <!--value refers to the endpoint where data is being collected from-->
+      <input type="text" name="endpoint" value="/" />
+      <button data-action="read">Get Data</button>
+      <button data-action="clear">Clear</button>
+  </form>
+  <pre>
+      <code>{{ config }}</code>
+  </pre>
+</div>
+<!-- wrap code instead of displaying in one long line-->
+<style>
+  pre {
+      white-space: pre-wrap;
+  }
+</style>
+<!-- Load debug.js script -->
+<script src="/stripe/js/debug.js"></script>
