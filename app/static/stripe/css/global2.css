@@ -565,8 +565,12 @@ justifies text and adds transition */
 .form-text form * {
   text-align: left;
   margin: 0 auto; /* Centers horizontally */
+  font-size: 0.8rem;
+  color: var(--gray-mid);
   
 }
+
+
 
 /* UPDATED 18Feb 2025 Ensure form fields are full width */
 .accordion .content .form-group {
@@ -691,7 +695,3 @@ justifies text and adds transition */
     color: #721c24;
 }
 
-/* This tar*/
-.form-select {
-  font-size: 6px; /* Adjust size as needed */
-}
