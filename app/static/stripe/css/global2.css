@@ -341,8 +341,17 @@ html {
     cursor: pointer;
   }
 
+
   .pricing-button:hover,
   .pricing-button:focus {
+    background-color: var(--green-transparent);
+  }
+
+  /*a.pricing-button targets anchor tag <a> 
+  this is needed to override style from bootstrap script __scss.css*/
+  a.pricing-button:hover,
+  a.pricing-button:focus {
+    color: var(--green-light);
     background-color: var(--green-transparent);
   }
   
@@ -682,4 +691,7 @@ justifies text and adds transition */
     color: #721c24;
 }
 
-
+/* This tar*/
+.form-select {
+  font-size: 6px; /* Adjust size as needed */
+}

@@ -25,14 +25,13 @@ stripe.api_version = '2020-08-27'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 
-@main.route('/REGISTER-interst', methods=['GET', 'POST', 'OPTIONS'])
+@main.route('/register-your-interest', methods=['GET', 'POST', 'OPTIONS'])
 def coming_soon():
     form = RegisterInterestForm()
-    
+
     if form.validate_on_submit():
-        pass
-        """
-        lead = Lead.query.filter_by(email=form.email.data).first()
+        email = form.email.data
+        lead = get_email(email)
         if lead is None:
             data = {
                 'name': form.name.data,
@@ -40,31 +39,47 @@ def coming_soon():
                 'mobile': form.mobile.data,
                 'street': form.street.data,
                 'city': form.city.data,
-                'postcode': form.city.data,
+                'postcode': form.postcode.data,
+                'service': form.service.data,
             }
-            add_lead(data)  # Save to database
-
-            # Send internal notification email
+            # Saves to database
+            # Returns lead object that is passed to 
+            # name parameter on redirect to retrieve Lead name
+            # This reduces database queries
+            lead = add_lead(data, test=True)
+            
+            # Sends internal email notification
             sbj = 'Someone has registered their interest in Wheelie Wash'
             template = 'database/mail/user_interest'
             recipients = 'rezende.f@outlook.com'
             send_email(recipients, sbj, template, **data)
             flash('Thank you for registering your interest!', 'success')  # Add a success message 
-            
             session['known'] = False
-        else:
-            session['known'] = True
-            flash('Email address already in use', 'success')  # Add a success message 
-            # User data is assigned to Flask's session to be
-            # to be remembered beyond the request. 
-            session['name'] = form.name.data
+            name = lead.name  # Set name for success message
 
-            form.name.data = ''  # If name unknown, the variable is initialised to None
-        return redirect(url_for('main.coming_soon', name=session.get('name'), favicon=os.getenv('FAVICON')))  # redirects to registration received page
-    # Passing favicon en var to render on deployment
-    """
-    return render_template('stripe/coming_soon.html', favicon=os.getenv('FAVICON'))
-    #return render_template('stripe/coming_soon.html', form=form, name=session.get('name'), favicon=os.getenv('FAVICON'))
+            # If AJAX Request, return JSON
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({
+                    'success': True,
+                    'message': f'Thank you for registering your interest, {name}!, We will be in touch as soon as our services expand to your area.',
+                    'name': name
+                })
+            # Fallback for non-AJAX
+            return render_template('stripe/launch.html', form=form, favicon=os.getenv('FAVICON'))
+     
+        else:
+            # If email exists
+            session['known'] = True
+            flash('Email address already in use', 'warning')  # Add a warning message 
+      
+            # If AJAX request, return JSON with flash message
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({
+                    'success': False,
+                    'message': 'Email address already in use'
+                })
+    return render_template('stripe/launch.html', form=form, favicon=os.getenv('FAVICON'))
+
 
 
 @main.route('/', methods=['GET', 'POST', 'OPTIONS'])
