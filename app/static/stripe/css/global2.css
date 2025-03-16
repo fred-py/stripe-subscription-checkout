@@ -92,6 +92,10 @@ html {
     
 }
 
+.header__title .launch {
+  color: white
+}
+
 .header__features {
     position: inherit;
     font-family: InterVariable, sans-serif;
@@ -561,13 +565,12 @@ justifies text and adds transition */
     pointer-events: auto;
 }
 
-/* Targets all text inside form (register interest form)*/
+/* Targets all text in form (register interest form)*/
 .form-text form * {
   text-align: left;
   margin: 0 auto; /* Centers horizontally */
   font-size: 0.8rem;
   color: var(--gray-mid);
-  
 }
 
 

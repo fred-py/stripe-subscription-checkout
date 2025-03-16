@@ -25,7 +25,7 @@ stripe.api_version = '2020-08-27'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 
-@main.route('/register-your-interest', methods=['GET', 'POST', 'OPTIONS'])
+@main.route('/', methods=['GET', 'POST', 'OPTIONS'])
 def coming_soon():
     form = RegisterInterestForm()
 
@@ -51,7 +51,7 @@ def coming_soon():
             # Sends internal email notification
             sbj = 'Someone has registered their interest in Wheelie Wash'
             template = 'database/mail/user_interest'
-            recipients = 'rezende.f@outlook.com'
+            recipients = ('rezende.f@outlook.com', 'info@wheeliewash.au')
             send_email(recipients, sbj, template, **data)
             flash('Thank you for registering your interest!', 'success')  # Add a success message 
             session['known'] = False
@@ -61,7 +61,7 @@ def coming_soon():
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return jsonify({
                     'success': True,
-                    'message': f'Thank you for registering your interest, {name}!, We will be in touch as soon as our services expand to your area.',
+                    'message': f'Thank you for registering your interest, {name}!, We will be in touch soon!',
                     'name': name
                 })
             # Fallback for non-AJAX
@@ -82,7 +82,7 @@ def coming_soon():
 
 
 
-@main.route('/', methods=['GET', 'POST', 'OPTIONS'])
+@main.route('/master-url', methods=['GET', 'POST', 'OPTIONS'])
 def get_sub_page():
     form = RegisterInterestForm()
 
@@ -140,7 +140,9 @@ def get_sub_page():
 
 @main.route('/registered-interest', methods=['GET'])
 def submitted_page():
-    """Renders page after interest form
+    """
+    NOTE: NOT IN USE
+    Renders page after interest form
     is submitted succesfully"""
     name = request.args.get('name')
     return render_template('stripe/submitted.html', name=name, favicon=os.getenv('FAVICON'))
