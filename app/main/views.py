@@ -655,5 +655,12 @@ def data_transfer(filename):
     return send_from_directory(main.root_path + '/app/', filename)
 
 
+@main.route('/robots.txt')
+def robots():
+    """Servers robots file for website indexing/SEO"""
+    
+    return send_from_directory(current_app.static_folder, 'robots.txt')
+
+
 if __name__ == '__main__':
     main.run(debug=True)

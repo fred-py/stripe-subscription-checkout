@@ -34,6 +34,8 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     #HOST = int(os.getenv('HOST', 4242))  # This is needed to deploy on fl0
     
+    STATIC_DIR = os.getenv('STATIC_DIR', 'static')  # Default static folder
+    
     @staticmethod
     def init_app(app):
         pass
