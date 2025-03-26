@@ -1,0 +1,92 @@
+
+  <a id="register-form"></a> <!-- Invisible Anchor Point -->
+    
+        <div class="accordion-body">
+            <div class="accordion">
+              <br>
+              <div class="form-header">Contact Us</div>
+              <br>
+                
+                    {% import "bootstrap/wtf.html" as wtf %}
+                    {% block content %}
+                    <!-- Flash message container-->
+                      <div id="flash-messages">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                          {% if messages %}
+                            {% for category, message in messages %}
+                              <div class="alert alert-{{ category }}">{{ message }}</div>
+                            {% endfor %}
+                          {% endif %}
+                        {% endwith %}
+                      </div>
+                      
+                     <!-- Form or success message-->
+                     <div class="row justify-content-center">
+                      <div class="col-md-8 col-lg-6">
+                        <div class="form-text">
+                          <div id="register-form-container">
+                            <!--BOOTSTRAP STYLING
+                                Resources: https://getbootstrap.com/docs/5.3/forms/layout/#gutters -->
+                            <form class="row g-3" id="interestForm" method="POST" action="{{ url_for('main.coming_soon') }}">
+                                {{ form.hidden_tag() }}
+                                <!-- m-3 adds bottom margin 1rem/16px -->
+                                <div class="col-md-6 mb-3">  
+                                  {{ form.email.label(class="form-label") }}
+                                  {{ form.email(class="form-control") }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                  {{ form.mobile.label(class="form-label") }}
+                                  {{ form.mobile(class="form-control") }}
+                                </div>
+                                <div class="col-12 mb-3">
+                                  {{ form.name.label(class="form-label") }}
+                                  {{ form.name(class="form-control") }}
+                                </div>
+                                <div class="col-12 mb-3">
+                                  {{ form.street.label(class="form-label") }}
+                                  {{ form.street(class="form-control") }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                  {{ form.city.label(class="form-label") }}
+                                  {{ form.city(class="form-control") }} 
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                  {{ form.postcode.label(class="form-label") }}
+                                  {{ form.postcode(class="form-control") }}
+                                </div>
+                                <div class="col-12 mb-3">      
+                                  {{ form.service.label(class="form-label") }}
+                                  {{ form.service(class="form-select") }}    
+                                </div>
+                                <div class="col-12 mb-3">      
+                                  {{ form.message.label(class="form-label") }}
+                                  {{ form.message(class="form-select") }}    
+                                </div>
+                                <div>
+                                {{ form.submit(class="pricing-button is-featured") }}
+                                </div>
+                                <div>
+                                  <br/>
+                                  <p>Got any questions? Email us at info@wheeliewash.au</p>
+                                </div>
+                                
+                            </form>
+
+                        </div>
+                      </div>
+                    </div>
+                      {% endblock %}
+                      <br/>
+                  </div>
+                  <div>
+                    <br>
+                      
+                  </div>
+              </div>
+            </div>
+              
+
+        </div>
+
+    
+    

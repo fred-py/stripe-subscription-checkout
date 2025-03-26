@@ -127,8 +127,8 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
 
         </div>
 
-        <form action="/create-checkout-session" method="POST">
-          <input type="hidden" id="oneOff" name="priceId">
+        <form action="/contact-us" method="POST">
+          <input type="hidden" name="priceId" value="oneOff">
           <div class="container">
             <div class="panel pricing-table">
               <div class="pricing-plan">
@@ -147,14 +147,14 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                   in a single-page application (SPA). In such applications, changes in
                   the part of the URL after the # are used to dynamically load different 
                   content without refreshing the page.-->
-                <button href="#/" class="pricing-button" id="one-off-btn" onclick="fetchPrice('oneOff')">Enquire - Set up enquire page</button>
+                <button type="submit"  class="pricing-button">Enquire</button>
               </div>
             </div>
           </div>
         </form>
 
-          <form action="/create-checkout-session" method="POST">
-            <input type="hidden" id="oneOff" name="priceId">
+        <form action="/contact-us" method="POST">
+          <input type="hidden" name="priceId" value="commercial">
             <div class="container">
               <div class="panel pricing-table">
                 <div class="pricing-plan">
@@ -174,11 +174,11 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                     in a single-page application (SPA). In such applications, changes in
                     the part of the URL after the # are used to dynamically load different 
                     content without refreshing the page.-->
-                  <button href="#/" class="pricing-button" id="one-off-btn" onclick="fetchPrice('oneOff')">Enquire - Set up enquire page</button>
+                  <button type="submit" class="pricing-button">Enquire</button>
                 </div>
               </div>
             </div>
-          </form>
+        </form>
                 <!-- ============== FAQs ============== -->
         <div class="container">
           <a id="faqs"></a> <!-- Invisible Anchor Point -->
@@ -195,77 +195,16 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                       <div class="container-accord">
                         <div class="label">What areas do you service?</div>
                         <div class="content">We currently service the following postcodes in the Margaret River Region: 6284, 6285, 6286, 6288, 6290. We are always expanding our service area, please register your interest by clicking here and we will keep you updated as we service area expands.
-                            </div>
+                        </div>
                       </div>
                       <hr>
                       <div class="container-accord">
                         <a id="register-interest"></a> <!--Anchor POint-->
                         <div class="label">My street is not highlighted on your map</div>
-                        <div class="content">If your street is not highlighted on our map, this means we currently do not service your street. You can register your interest below and we will be in touch as we expand.</div>
-                        
-                        <div class="content">
-                        
-                            {% import "bootstrap/wtf.html" as wtf %}
-                            {% block content %}
-                            <!-- Flash message container-->
-                              <div id="flash-messages">
-                                {% with messages = get_flashed_messages(with_categories=true) %}
-                                  {% if messages %}
-                                    {% for category, message in messages %}
-                                      <div class="alert alert-{{ category }}">{{ message }}</div>
-                                    {% endfor %}
-                                  {% endif %}
-                                {% endwith %}
-                              </div>
-                              
-                             <!-- Form or success message-->
-                              {% if name %}
-                                <div class="content success-message">
-                                  Thank you for  registering your interest {{ name }}. We will be in touch as soon as our services expand to your area.
-                                </div>
-                              {% else %}
-                                <div class="form-text">
-                                  <div id="register-form-container">
-                                    <form id="interestForm" method="POST" action="{{ url_for('main.get_sub_page') }}">
-                                        {{ form.hidden_tag() }}
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                {{ form.name.label(class="form-label") }}
-                                                {{ form.name(class="form-control") }}
-                                            </div>
-                                            <div class="mb-3">
-                                                {{ form.email.label(class="form-label") }}
-                                                {{ form.email(class="form-control") }}
-                                            </div>
-                                            <div class="mb-3">
-                                                {{ form.mobile.label(class="form-label") }}
-                                                {{ form.mobile(class="form-control") }}
-                                            </div>
-                                            <div class="mb-3">
-                                                {{ form.street.label(class="form-label") }}
-                                                {{ form.street(class="form-control") }}
-                                            </div>
-                                            <div class="mb-3">
-                                                {{ form.city.label(class="form-label") }}
-                                                {{ form.city(class="form-control") }}
-                                            </div>
-                                            <div class="mb-3">
-                                                {{ form.postcode.label(class="form-label") }}
-                                                {{ form.postcode(class="form-control") }}
-                                            </div>
-                                            <div class="mb-3">
-                                                {{ form.service.label(class="form-label") }}
-                                                {{ form.service(class="form-control") }}
-                                            </div>
-                                        </div>
-                                        {{ form.submit(class="pricing-button is-featured") }}
-                                    </form>
-                                </div>    
-                              {% endif %}
-                              {% endblock %}
-                              <br/>
-                          </div>
-                        </div>
+                        <div class="content">If your street is not highlighted on our map, this means we currently do not service your street. You can register your interest below and we will be in touch as we expand.
+                                                  
+                            {% include "/stripe/_form.html" %}
+                            
                       </div>
                       <hr>
                       <div class="container-accord">
@@ -295,7 +234,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                             <h3>One-Off Clean (Customers Choose 1-3 Bins):</h3>
                             <p>Cancellations up to 48h prior to scheduled clean, will receive full refund. if you cancel after the 48-hour window, you will be charged for the full cleaning service. </p>
                         </div>
-                        </div>
+                      </div>
 
                         <hr>
                         <div class="container-accord">

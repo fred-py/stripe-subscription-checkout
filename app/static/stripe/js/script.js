@@ -20,6 +20,9 @@ fetch("/config")
     silverPriceInput.value = silverPrice;
     const goldPriceInput = document.querySelector('#goldPrice');
     goldPriceInput.value = goldPrice;
-    const oneOffInput = document.querySelector('#oneOff');
-    oneOffInput.value = oneOff;
+    // One-off option is now on enquiry only = no direct payment option 
+    //const oneOffInput = document.querySelector('#oneOff');
+    //oneOffInput.value = oneOff;
   });
+
+
