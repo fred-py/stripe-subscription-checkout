@@ -147,6 +147,98 @@ class CustomerDB(db.Model):
                f'Test: {self.test}, In ServiceM8: {self.in_serviceM8}, ' \
                f'Customer ServiceM8 ID: {self.cus_serviceM8_id}, ' \
                f'Order Date: {self.order_date}'
+    
+
+class OneOffRes(db.Model):
+    """This model refers to
+    one-off residential enquiries."""
+    __tablename__ = 'one_off_res'
+    id: Mapped[int] = db.Column(db.Integer, primary_key=True)
+    name: Mapped[str] = db.Column(db.String, nullable=False)
+    phone: Mapped[str] = db.Column(db.String, nullable=False)
+    email: Mapped[str] = db.Column(db.String, nullable=False, unique=True)
+    service: Mapped[str] = db.Column(db.String, nullable=False)
+    message: Mapped[str] = db.Column(db.String)
+
+    street: Mapped[str] = db.Column(db.String)
+    city: Mapped[str] = db.Column(db.String)
+    state: Mapped[str] = db.Column(db.String)
+    postcode: Mapped[str] = db.Column(db.String)
+
+    active: Mapped[bool] = db.Column(db.Boolean, default=True)
+    test: Mapped[bool] = db.Column(db.Boolean, default=False)
+    registration_date: Mapped[datetime] = db.Column(db.DateTime,
+            nullable=False, default=datetime.now(timezone.utc))
+
+    def to_dict_full_address(self) -> dict:
+        return self.street + ' ' + self.city \
+            + ' ' + self.state + ' ' + self.postcode
+    
+    def to_json(self) -> dict:
+        """Serialise the Lead object to JSON"""
+        json_one_off = {
+            # lead columns
+            # api.get_one_off is used on get_one_off method
+            # by id NOTE: still to be added to api/users.py
+            'url': url_for('api.get_one_off', id=self.id),
+            'name': self.name,
+            'phone': self.phone,
+            'email': self.email,
+            'message': self.message,
+            'active': self.active,
+            'test': self.test,
+            'registration_date': self.registration_date,
+            'street': self.street,
+            'city': self.city,
+            'postcode': self.postcode,
+        }
+        return json_one_off
+
+
+class Commercial(db.Model):
+    """This model refers to
+    commercial enquiries enquiries."""
+    __tablename__ = 'commercial'
+    id: Mapped[int] = db.Column(db.Integer, primary_key=True)
+    name: Mapped[str] = db.Column(db.String, nullable=False)
+    phone: Mapped[str] = db.Column(db.String, nullable=False)
+    email: Mapped[str] = db.Column(db.String, nullable=False, unique=True)
+    service: Mapped[str] = db.Column(db.String, nullable=False)
+    message: Mapped[str] = db.Column(db.String)
+
+    street: Mapped[str] = db.Column(db.String)
+    city: Mapped[str] = db.Column(db.String)
+    state: Mapped[str] = db.Column(db.String)
+    postcode: Mapped[str] = db.Column(db.String)
+
+    active: Mapped[bool] = db.Column(db.Boolean, default=True)
+    test: Mapped[bool] = db.Column(db.Boolean, default=False)
+    registration_date: Mapped[datetime] = db.Column(db.DateTime,
+            nullable=False, default=datetime.now(timezone.utc))
+
+    def to_dict_full_address(self) -> dict:
+        return self.street + ' ' + self.city \
+            + ' ' + self.state + ' ' + self.postcode
+    
+    def to_json(self) -> dict:
+        """Serialise the Lead object to JSON"""
+        json_one_off = {
+            # lead columns
+            # api.get_commercial is used on get_commercial method
+            # by id NOTE: still to be added to api/users.py
+            'url': url_for('api.get_one_off', id=self.id),
+            'name': self.name,
+            'phone': self.phone,
+            'email': self.email,
+            'message': self.message,
+            'active': self.active,
+            'test': self.test,
+            'registration_date': self.registration_date,
+            'street': self.street,
+            'city': self.city,
+            'postcode': self.postcode,
+        }
+        return json_one_off
 
 
 class Lead(db.Model):

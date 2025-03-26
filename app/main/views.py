@@ -166,7 +166,10 @@ def contact_us():
         # Returns lead object that is passed to 
         # name parameter on redirect to retrieve Lead name
         # This reduces database queries
-        lead = add_lead(data, test=True)
+        if enquiry == 'commercial':
+            pass
+        else:
+            lead = add_lead(data, test=True)
 
         """
         # Sends internal email notification
