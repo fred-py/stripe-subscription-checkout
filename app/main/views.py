@@ -14,7 +14,7 @@ from dotenv import load_dotenv, find_dotenv
 from ..forms.interest_form import RegisterInterestForm, CommercialForm, ContactForm
 from ..db_operations.servicem8_operations import data_transfer as d
 from ..db_operations.prepare_data import prepare_session_data, Customer
-from ..db_operations.crud_operations import add_user, add_lead, get_email
+from ..db_operations.crud_operations import add_user, add_lead, add_commercial, add_one_off_user, get_email
 from ..models import Lead
 #from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
 from ..emails import send_email
@@ -149,8 +149,13 @@ def contact_us():
         form = ContactForm()
     
     if form.validate_on_submit():
+
         email = form.email.data
-        lead = get_email(email)
+        enquiry = request.form.get('priceId')
+
+        print(enquiry)
+        lead = get_email(email, model=enquiry)
+        print(lead)
         if lead is None:
             data = {
                 'name': form.name.data,
@@ -162,58 +167,60 @@ def contact_us():
                 'service': form.service.data,
                 'message': form.message.data,
             }
-        # Saves to database
-        # Returns lead object that is passed to 
-        # name parameter on redirect to retrieve Lead name
-        # This reduces database queries
-        if enquiry == 'commercial':
-            pass
+            # Saves to database
+            # Returns lead object that is passed to 
+            # name parameter on redirect to retrieve Lead name
+            # This reduces database queries
+            
+            if enquiry == 'commercial':
+                lead = add_commercial(data, test=True)
+            else:
+                lead = add_one_off_user(data, test=True)
+
+            """
+            # Sends internal WheelieWashDBWheelieWashDBemail notification
+            sbj = 'Someone has registered their interest in Wheelie Wash'
+            template = 'database/mail/user_interest'
+            recipients = 'rezende.f@outlook.com'
+            send_email(recipients, sbj, template, **data)
+            """
+
+            flash('Thank you for registering your interest!', 'success')  # Add a success message 
+            session['known'] = False
+            name = lead.name  # Set name for success message
+            
+
+            # If AJAX Request, return JSON
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({
+                    'success': True,
+                    'message': f'Thank you for reaching out, {name}!, We will be in touch shortly.',
+                    'name': name
+                })
+            # Fallback for non-AJAX
+            return render_template(
+                'stripe/contact.html',
+                form=form,
+                enquiry=enquiry,  # Pass to Jinja
+                favicon=os.getenv('FAVICON'))
+
         else:
-            lead = add_lead(data, test=True)
+            # If email exists
+            session['known'] = True
+            flash('Email address already in use', 'warning')  # Add a warning message 
 
-        """
-        # Sends internal email notification
-        sbj = 'Someone has registered their interest in Wheelie Wash'
-        template = 'database/mail/user_interest'
-        recipients = 'rezende.f@outlook.com'
-        send_email(recipients, sbj, template, **data)
-        """
-
-        flash('Thank you for registering your interest!', 'success')  # Add a success message 
-        session['known'] = False
-        name = lead.name  # Set name for success message
-        
-
-        # If AJAX Request, return JSON
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return jsonify({
-                'success': True,
-                'message': f'Thank you for reaching out, {name}!, We will be in touch shortly.',
-                'name': name
-            })
-        # Fallback for non-AJAX
-        return render_template(
-            'stripe/contact.html',
-            form=form,
-            enquiry=enquiry,  # Pass to Jinja
-            favicon=os.getenv('FAVICON'))
-
-    else:
-        # If email exists
-        session['known'] = True
-        flash('Email address already in use', 'warning')  # Add a warning message 
-
-        # If AJAX request, return JSON with flash message
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return jsonify({
-                'success': False,
-                'message': 'Email address already in use'
-            })
+            # If AJAX request, return JSON with flash message
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                return jsonify({
+                    'success': False,
+                    'message': 'Email address already in use'
+                })
     return render_template(
         'stripe/contact.html',
         enquiry=enquiry,
         form=form,
         favicon=os.getenv('FAVICON'))
+
 
 @main.route('/bootstrap', methods=['GET', 'OPTIONS'])
 def get_bootstrap_test():

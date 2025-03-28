@@ -1,4 +1,5 @@
-from app.models import CustomerDB, Address, LeadAddress, Bin, Subscription, Invoice, Lead
+from app.models import CustomerDB, Address, LeadAddress, \
+    Bin, Subscription, Invoice, Lead, OneOffRes, Commercial
 from app.extensions import db
 
 
@@ -77,8 +78,74 @@ def add_user(data, test=False):
     db.session.commit()
 
 
+def add_one_off_user(data, test=False):
+    """Add one-off residential enquiries
+    to the database."""
+    # Data refers to data dictionary from wtf form
+    # Lead Model
+    name = data['name']
+    email = data['email']
+    phone = data['mobile']
+    service = data['service']
+    message = data['message']
+
+    # Address in the same model
+    street = data['street']
+    city = data['city']
+    postcode = data['postcode']
+
+    res_enquiry = OneOffRes(
+        name=name,
+        email=email,
+        phone=phone,
+        service=service,
+        message=message,
+        street=street,
+        city=city,
+        postcode=postcode,
+        test=test
+    )
+
+    db.session.add(res_enquiry)
+    db.session.commit()
+    return res_enquiry
+
+
+def add_commercial(data, test=False):
+    """Add commercial enquiries
+    to the database."""
+    # Data refers to data dictionary from wtf form
+    # Lead Model
+    name = data['name']
+    email = data['email']
+    phone = data['mobile']
+    service = data['service']
+    message = data['message']
+
+    # Address in the same model
+    street = data['street']
+    city = data['city']
+    postcode = data['postcode']
+
+    comm_enquiry = Commercial(
+        name=name,
+        email=email,
+        phone=phone,
+        service=service,
+        message=message,
+        street=street,
+        city=city,
+        postcode=postcode,
+        test=test
+    )
+
+    db.session.add(comm_enquiry)
+    db.session.commit()
+    return comm_enquiry
+
+
 def add_lead(data, test=False):
-    """Add leads to the database.
+    """Add one-off to the database.
     Those who register their interest"""
     # Data refers to data dictionary from wtf form
     # Lead Model
@@ -86,6 +153,7 @@ def add_lead(data, test=False):
     email = data['email']
     phone = data['mobile']
     service = data['service']
+
 
     # Address Model
     street = data['street']
@@ -121,6 +189,12 @@ def get_email(email, model=None):
     if model is None:
         lead = Lead.query.filter_by(email=data).first()
         return lead
-    else:
+    elif model == 'commercial':
+        c = Commercial.query.filter_by(email=data).first()
+        return c
+    elif model == 'residential':
+        r = OneOffRes.query.filter_by(email=data).first()
+        return r
+    elif model == 'customer':
         e = CustomerDB.query.filter_by(email=data).first()
         return e

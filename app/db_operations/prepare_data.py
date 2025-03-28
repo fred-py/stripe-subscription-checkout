@@ -39,7 +39,7 @@ class Customer:
 
 def prepare_session_data(data) -> dict:
     """Prepare data from checkout session
-    Test is ommited on production, if testing, set to True"""
+    Test is omitted on production, if testing, set to True"""
     # => Customer Details
     name = data['customer']['name']
     email = data['customer']['email']

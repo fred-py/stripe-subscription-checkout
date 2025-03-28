@@ -28,7 +28,8 @@
                   <div id="register-form-container">
                     <!--BOOTSTRAP STYLING
                         Resources: https://getbootstrap.com/docs/5.3/forms/layout/#gutters -->
-                    <form class="row g-3" id="interestForm" method="POST" action="{{ url_for('main.coming_soon') }}">
+                    <form class="row g-3" id="interestForm" method="POST" action="{{ url_for('main.contact_us') }}">
+                      <input type="hidden" name="priceId" value="commercial">
                         {{ form.hidden_tag() }}
                         <!-- m-3 adds bottom margin 1rem/16px -->
                         <div class="col-md-6 mb-3">  
