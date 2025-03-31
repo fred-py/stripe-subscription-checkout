@@ -2,9 +2,13 @@
 only to users with the appropriate permissions."""
 
 from functools import wraps
-from flask import abort
+from flask import abort, Response, request
 from flask_login import current_user
 from .models import Permission
+import os
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv())
 
 
 def permission_required(permission):
@@ -23,6 +27,26 @@ def permission_required(permission):
 
 def admin_required(f):
     return permission_required(Permission.ADMIN)(f)
+
+
+
+
+def basic_auth_required(f):
+    """Temporary Basic Auth for API routes."""
+    # Temporary Basic Auth decorator (no database)
+    user = os.getenv('TEMP_USERNAME')
+    word = os.getenv('TEMP_PASSWORD')
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or auth.username != user or auth.password != word:
+            return Response(
+                "Unauthorized Access", 401,
+                {"WWW-Authenticate": 'Basic realm="Login Required"'}
+            )
+        return f(*args, **kwargs)
+    return decorated
+
 
 """As a rule of thumb, the route decorator from
 Flask should be given first when using multiple

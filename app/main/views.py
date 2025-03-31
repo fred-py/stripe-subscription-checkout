@@ -4,7 +4,7 @@ Stripe Checkout Routes"""
 import stripe
 import json
 import os
-from flask import render_template, redirect, url_for, abort, \
+from flask import Flask, render_template, redirect, url_for, abort, \
     flash, request, current_app, session, make_response, send_from_directory, jsonify
 import traceback
 #from flask_login import login_required, current_user
@@ -18,6 +18,8 @@ from ..db_operations.crud_operations import add_user, add_lead, add_commercial, 
 from ..models import Lead
 #from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
 from ..emails import send_email
+from app.api.auth import token_auth
+from ..decorators import basic_auth_required
 
 load_dotenv(find_dotenv())
 
@@ -82,7 +84,8 @@ def coming_soon():
 
 
 
-@main.route('/master-url', methods=['GET', 'POST', 'OPTIONS'])
+@main.route('/master', methods=['GET', 'POST', 'OPTIONS'])
+@basic_auth_required
 def get_sub_page():
     form = RegisterInterestForm()
 
@@ -149,13 +152,9 @@ def contact_us():
         form = ContactForm()
     
     if form.validate_on_submit():
-
         email = form.email.data
         enquiry = request.form.get('priceId')
-
-        print(enquiry)
         lead = get_email(email, model=enquiry)
-        print(lead)
         if lead is None:
             data = {
                 'name': form.name.data,
