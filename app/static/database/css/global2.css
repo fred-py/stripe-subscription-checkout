@@ -27,7 +27,7 @@ html {
   }
 
 
-*, *:before, *:after {
+* *:before, *:after {
     box-sizing: inherit;
 }
 
@@ -126,6 +126,7 @@ html {
     align-items: center;
     text-align: center; 
   }
+
   
   .pricing-plan {
     border-bottom: 1px solid var(--green-transparent);
@@ -465,6 +466,12 @@ justifies text and adds transition */
   .accordion .container-accord.active .label::before {
     content: '-';
     font-size: 30px;
+  }
+
+
+  /*FAQS NOTE THIS DOESNT WORK*/
+  .faqs-text-style {
+    font-weight: 600;
   }
 
   /*Two-Dimensional Pricing Table under FAQs*/
