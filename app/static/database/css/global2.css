@@ -118,16 +118,24 @@ html {
       flex-direction: column;
     }
 
-  }
+  } canvas 
   
   .pricing-table * {
     list-style-type: none;
     font-weight: 400;
+    text-align: left; 
+  }
+  
+  
+  .faqs {
+    box-shadow: 0px 10px 13px -6px rgba(0, 0, 0, 0.08), 0px 20px 31px 3px rgba(0, 0, 0, 0.09), 0px 8px 20px 7px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    font-weight: 400;
     align-items: center;
-    text-align: center; 
+    text-align: left; 
   }
 
-  
   .pricing-plan {
     border-bottom: 1px solid var(--green-transparent);
     padding: 25px;
@@ -320,6 +328,10 @@ html {
 
 }
 
+.form-header {
+  text-align: left !important;
+}
+
 .label {
     font-size: 19px;
     font-weight: 522;
@@ -339,11 +351,13 @@ from pricing-table as .pricing-table * is
 applying text-align: center; to all
 elements (*) within any element with 
 the class .pricing-table.  */
-.pricing-table .content p {
+/*.pricing-table .content p {
     text-align: left;
     max-width: 100%;
     line-height: 1.2;
 }
+*/
+
 
 /*h3 is in the cancellation policy*/
 .pricing-table .content h3 {
@@ -454,6 +468,9 @@ justifies text and adds transition */
     overflow: hidden;
     transition: 0.5s;
   }
+
+
+
 
 /* Unhides the content part when active. Sets the height */
 .accordion .container-accord.active .content {

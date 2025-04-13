@@ -47,6 +47,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
           <p>Eco-Friendly Cleaning: Wash, Sanitise, Deodorise. No Residue.</p>
         </div>
         <div class="container">
+          <div id="anchor-map"></div> <!-- Anchor Point -->
           <div class="panel pricing-table">
             <h1>Serviced Areas For Subscription Customers Only</h1>
             <hr>
@@ -178,22 +179,42 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
         <!-- ============== FAQs ============== -->
         <div class="container">
           <a id="faqs"></a> <!-- Invisible Anchor Point -->
-          <div class="panel pricing-table">
+          <div class="panel faqs">
             <div class="accordion-body">
               <div class="accordion">
                 <h1>Frequently Asked Questions</h1>
                 <hr>
                 <div class="container-accord">
                   <div class="label">What is United Wheelie Wash?</div>
-                  <div class="content">United Wheelie Wash is a professional wheelie bin cleaning service for residential and commercial customers. United Wheelie Wash has worked with a local fabricator to build a custom unit that carries and recycles its own water. Utilising high-pressure with biodegradable, environmentally safe solutions to clean, sanitise and deodorise your bins</div>
+                  <div class="content">United Wheelie Wash is a professional wheelie bin cleaning service for residential and commercial customers. 
+                    United Wheelie Wash has worked with a local fabricator to build a custom unit that carries and recycles its own water. 
+                    Utilising high-pressure with biodegradable, environmentally safe solutions to clean, sanitise and deodorise your bins</div>
                 </div>
                 <hr>
                 <div class="container-accord">
                   <div class="label">Service Limitations</div>
-                  <div class="content">Our service is a roadside service. Our aim is to eventually provide service to all properties however, due to operational constraints and the safety of our team and road users, some locations may be deemed unsuitable. We have provided a map that highlights our current service area. You can find that here MAP. If your property does not show in our service area, please fill out our register your interest form and we will follow up with you. Whatever your situation we encourage you to contact us if you have any questions or concerns about the suitability of your property for our service.
-                    If you have mistakenly made an order without confirming the service area and your payment has already been processed, we will issue a full refund. You will be notified within seven days about the service limitation and the refund process.
+                  <div class="content">Our service is a roadside service. Our aim is to eventually provide service to all properties however, 
+                    due to operational constraints and the safety of our team and road users, some locations may be deemed unsuitable. 
+                    We have provided a map that highlights our current service area. You can find that <a href="#anchor-map">here</a>.
+                    If your property does not show in our service area, please fill out our <a href="#anchor-interest">register your interest form</a> and we will follow up with you.
+                    Whatever your situation we encourage you to contact us if you have any questions or concerns about the suitability of your property for our service.
+                    If you have mistakenly made an order without confirming the service area and your payment has already been processed, we will issue a full refund. 
+                    You will be notified within seven days about the service limitation and the refund process.
                   </div>
                 </div>
+
+                <hr>
+                <div class="container-accord">
+                  <div class="label">Register your interest</div>
+                  <div id="anchor-interest"></div> <!--Anchor Point-->
+                  <div class="content">
+                    If your street is not highlighted on our map, this means we currently do not service your street under our subscription.
+                    You can register your interest below and we will be in touch as we expand.
+                    
+                    {% include "/stripe/_form.html" %}
+                    
+                  </div>
+                <!--Closing this div keeps the accordion below open-->
 
                 <hr>
                 <div class="container-accord">
@@ -241,57 +262,57 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                 
                 
 
-                <hr>
-                <div class="container-accord">
-                  <a id="register-interest"></a> <!--Anchor POint-->
-                  <div class="label">My street is not highlighted on your map</div>
-                  <div class="content">
-                    If your street is not highlighted on our map, this means we currently do not service your street under our subscription. You can register your interest below and we will be in touch as we expand.
-                    
-                    {% include "/stripe/_form.html" %}
-                    
-                  </div>
                 
               
                 <hr>
                 <div class="container-accord">
                   <div class="label">Service Cancellation Policies</div>
                   <div class="content">
-                    <p>We strive to offer flexible and transparent cancellation policies tailored to meet the needs of all our customers. Please review the details for each type of service below:</p>
+                    <p>We strive to offer flexible and transparent cancellation policies tailored to meet the needs of all our customers.
+                      Please review the details for each type of service below:</p>
                     <p><b>Gold Subscription</b></p>
                     <ul>
                       <li>Details: $36 per month, billed every six months at $216, covering 12 services annually.</li>
-                      <li>Cancellation: You may cancel anytime. The cancellation takes effect immediately upon confirmation. LINK STRIPE DASHBOARD</li>
+                      <li>Cancellation: You may cancel anytime. The cancellation takes effect immediately upon confirmation.</li>
                       <li>Refunds: Eligible pro rata refunds are available after receiving six services. Refunds for unused months will be processed within 14 days.</li>
                       <li>Renewal: Automatically renews at the end of the annual billing cycle unless cancelled before the renewal date.</li>
                     </ul>
-                    <p><strong>Silver Subscription</strong></p>
+                    <p><b>Silver Subscription</b></p>
                     <ul>
                       <li>Details: $45 per quarter, billed annually at $180, covering four quarterly services.</li>
-                      <li>Cancellation: You may cancel anytime. The cancellation takes effect immediately upon confirmation. LINK STRIPE DASHBOARD </a></li>
+                      <li>Cancellation: You may cancel anytime. The cancellation takes effect immediately upon confirmation.</li>
                       <li>Refunds: Eligible pro rata refunds are available after receiving two services. Refunds for unused services will be processed within 14 days.</li>
                       <li>Renewal: Automatically renews at the end of the annual billing cycle unless cancelled before the renewal date.</li>
                     </ul>
-                    <p><strong>Bronze Subscription</strong></p>
+                    <p><b>Bronze Subscription</b></p>
                     <ul>
-                      <li>Details: Recurring monthly service priced between $15 and $18 per bin, depending on the number of bins required. A minimum subscription period of two months is required, and subscribers are obligated to fulfill this commitment before cancellation is permitted.</li>
-                      <li>Cancellation: You may cancel only after completing the two-month minimum subscription period. The cancellation takes effect at the end of the current monthly billing cycle. LINK STRIPE DASHBOARD</a></li>
+                      <li>Details: Recurring monthly service priced between $15 and $18 per bin, depending on the number of bins required. 
+                        A minimum subscription period of two months is required, and subscribers are obligated to fulfill this commitment before cancellation is permitted.</li>
+                      <li>Cancellation: You may cancel only after completing the two-month minimum subscription period.
+                        The cancellation takes effect at the end of the current monthly billing cycle.
+                      </li>
                       <li>Renewal: Automatically renews monthly unless cancelled before the renewal date.</li>
                     </ul>
-                    <p><strong>One-Off Services</strong></p>
+                    <p><b>One-Off Services</b></p>
                     <ul>
-                      <li>Cancellation: Cancellations made up to 48 hours before the scheduled service time will receive a full refund. Cancellations within 48 hours are not eligible for a refund. LINK STRIPE DASHBOARD</a></li>
+                      <li>Cancellation: Cancellations made up to 48 hours before the scheduled service time will receive a full refund. Cancellations within 48 hours are not eligible for a refund.</li>
                       <li>Refund Processing: Refunds for eligible cancellations will be processed within 14 days.</li>
                       <li>Rescheduling: Rescheduling requests up to 48 hours before the scheduled service are penalty-free. Late rescheduling requests may incur additional fees.</li>
                     </ul>
-                    <p><strong>Exceptions</strong></p>
+                    <p><b>Exceptions</b></p>
                     <ul>
                       <li>Exceptional cases will be reviewed individually for resolution.</li>
                     </ul>
+                    <p><b>How to cancel my subscription or service?</b></p>
+                      <p>You can manage your account including cancellation by accessing our 
+                        <a href="https://billing.stripe.com/p/login/00g7sU5kQ0ga5tS8ww" target="_blank" rel="noopener">Customer Portal</a>
+                      </p>
                   </div>
                 </div>
                 <hr>
-                <a href="#anchor-gold" class="pricing-button">Choose a plan</a><br />
+                
+                <a href="#anchor-gold" class="pricing-button">Choose a plan</a>
+                
               </div>
             </div>
             <script src="/stripe/js/faqs.js" type="text/javascript"></script>
