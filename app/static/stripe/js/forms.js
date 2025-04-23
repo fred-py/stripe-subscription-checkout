@@ -24,6 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 flashMessages.innerHTML = '';
 
                 if (data.success) {
+                    // Update URL to include ?status=submitted
+                    history.pushState({}, '', '/?status=submitted'); // No reload
                     // Hide form and show success message
                     formContainer.style.display = 'none';
                     flashMessages.innerHTML = `<div class="alert alert-success">${data.message}</div>`;

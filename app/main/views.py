@@ -68,7 +68,7 @@ def coming_soon():
                 })
             # Fallback for non-AJAX
             return render_template('stripe/launch.html', form=form, favicon=os.getenv('FAVICON'))
-     
+
         else:
             # If email exists
             session['known'] = True
