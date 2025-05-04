@@ -255,7 +255,6 @@ def get_checkout_session():
 
 @main.route('/create-checkout-session', methods=['POST', 'OPTIONS'])
 def create_checkout_session():
-    price = request.form.get('priceId')
     domain_url = os.getenv('DOMAIN')  # Domain if fetched by back arrow icon on stripe hoted
     try:
         # Create new Checkout Session for the order
@@ -265,6 +264,7 @@ def create_checkout_session():
         # and once adjustable_quantity is included even if set to false,
         # it fails to return products with no adjustable quantity
         # Hence the creation of two checkout sessions
+        price = request.form.get('priceId')
         if price == os.getenv('ANY_COMBO_PRICE_ID'):
             checkout_session = stripe.checkout.Session.create(
                 #success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
@@ -337,140 +337,9 @@ def create_checkout_session():
                 },
             )
 
-        elif price == os.getenv('ONE_OFF_PRICE_ID'):
-            checkout_session = stripe.checkout.Session.create(
-                success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=domain_url, # + '/canceled.html',
-                mode='payment',
-                customer_creation='always',  # Create a new customer if one is not provided. Only used in payment mode
-                billing_address_collection='required',
-                allow_promotion_codes=True,
-                #discounts=[{
-                #    'coupon': 'test_coupon',
-                #}],
-                line_items=[
-                    {
-                        'price': price,
-                        'adjustable_quantity':
-                            {'enabled': True, 'minimum': 1, 'maximum': 3},
-                            'quantity': 1
-                    }
-                ],
-                phone_number_collection={'enabled': True},
-                custom_fields=[
-                    {
-                        'key': 'tentative-day',
-                        'label': {'type': 'custom', 'custom': 'When would you like your bin(s) cleaned?'},
-                        'type': 'dropdown',
-                        'dropdown': {
-                            'options': [
-                                {'label': 'Monday', 'value': 'monday'},
-                                {'label': 'Tuesday', 'value': 'tuesday'},
-                                {'label': 'Wednesday', 'value': 'wednesday'},
-                                {'label': 'Thursday', 'value': 'thursday'},
-                                {'label': 'Friday', 'value': 'friday'},
-                            ],
-                        },
-                    },
-
-                    {
-                        'key': 'select_bins',
-                        'label': {'type': 'custom', 'custom': 'Select bin to be cleaned.'},
-                        'type': 'dropdown',
-                        'dropdown': {
-                            'options': [
-                                {'label': 'Red bin', 'value': 'R'},
-                                {'label': 'Yellow bin', 'value': 'Y'},
-                                {'label': 'Green bin', 'value': 'G'},
-                            ]
-                        }
-                    },
-                    {
-                        'key': 'confirm_service_area',
-                        'optional': False,
-                        'label': {'type': 'custom', 'custom': 'Have you confirmed we service your area?'},
-                        'type': 'dropdown',
-                        'dropdown': {
-                            'options': [
-                                {'label': 'Yes, I have checked that my street is within the serviced area', 'value': 'yes'},
-                                {'label': 'No, I have not checked the map. Check map before proceeding', 'value': 'no'},
-                            ],
-                        },
-                    },
-                ],
-                custom_text={
-                    'submit': {'message': 'NOTE: We will get in touch to confirm a date.'}
-                },
-
-            )
-        
-        elif price == os.getenv('ONE_OFF_X2_PRICE_ID'):
-            checkout_session = stripe.checkout.Session.create(
-                success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
-                cancel_url=domain_url, # + '/canceled.html',
-                mode='payment',
-                customer_creation='always',  # Create a new customer if one is not provided. Only used in payment mode
-                billing_address_collection='required',
-                allow_promotion_codes=True,
-                #discounts=[{
-                #    'coupon': 'test_coupon',
-                #}],
-                line_items=[
-                    {
-                        'price': price,
-                        'quantity': 2,
-                    }
-                ],
-                phone_number_collection={'enabled': True},
-                custom_fields=[
-                    {
-                        'key': 'tentative-day',
-                        'label': {'type': 'custom', 'custom': 'When would you like your bin(s) cleaned?'},
-                        'type': 'dropdown',
-                        'dropdown': {
-                            'options': [
-                                {'label': 'Monday', 'value': 'monday'},
-                                {'label': 'Tuesday', 'value': 'tuesday'},
-                                {'label': 'Wednesday', 'value': 'wednesday'},
-                                {'label': 'Thursday', 'value': 'thursday'},
-                                {'label': 'Friday', 'value': 'friday'},
-                            ],
-                        },
-                    },
-
-                    {
-                        'key': 'select_bins',
-                        'label': {'type': 'custom', 'custom': 'Select the bin(s) to be cleaned.'},
-                        'type': 'dropdown',
-                        'dropdown': {
-                            'options': [
-                                {'label': 'Red and Green bins', 'value': 'RG'},
-                                {'label': 'Red and Yellow bins', 'value': 'RY'},
-                                {'label': 'Yellow and Green bins', 'value': 'YG'},
-                            ]
-                        }
-                    },
-                    {
-                        'key': 'confirm_service_area',
-                        'optional': False, 
-                        'label': {'type': 'custom', 'custom': 'Have you confirmed we service your area?'},
-                        'type': 'dropdown',
-                        'dropdown': {
-                            'options': [
-                                {'label': 'Yes, I have checked that my street is within the serviced area', 'value': 'yes'},
-                                {'label': 'No, I have not checked the map. Check map before proceeding', 'value': 'no'},
-                            ],
-                        },
-                    },
-                ],
-                custom_text={
-                    'submit': {'message': 'NOTE: We will get in touch to confirm a date.'}
-                },
-
-            )
-
         else:
             # Loads both Gold and Silver price
+            price = request.form.get('priceId')
             checkout_session = stripe.checkout.Session.create(
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
                 cancel_url=domain_url,  # + '/canceled.html',
