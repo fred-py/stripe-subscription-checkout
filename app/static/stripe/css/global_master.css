@@ -30,20 +30,33 @@ html {
     box-sizing: inherit;
 }
 
-
+#map {
+  height: 50em;
+}
 .heading-1 {
   color: white;
   /*font-size: calc(1.375rem + 1.5vw);*/
-  font-size: large; 
+  font-size: 2em; 
   z-index: 999999;
   text-align: center;
 }
 
 @media (min-width: 900px) {
   .heading-1{
-    font-size: xx-large;
+    font-size: x-large;
   }
 }
+
+/*MOBILE SETTING*/
+@media (max-width: 600px) {
+  .heading-1{
+    font-size: 1.2em;
+  }
+  #map {
+    height: 40em;
+  }
+}
+
 
 .add-margin {
   margin-bottom: 10%;
@@ -107,9 +120,8 @@ html {
     background-repeat: no-repeat;
     width: 140px;
     height: 140px;
-    padding-bottom: 10%;
     z-index: 9999;
-    margin-bottom: 5%;
+    margin-bottom: 3em;
 }
 
 .header__title {

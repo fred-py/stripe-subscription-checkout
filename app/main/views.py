@@ -711,7 +711,6 @@ def webhook_received():
 
             # Refund Logic - Check website for details!!!!!!!
             if plan_id == os.getenv('GOLD_PRICE_ID'):
-
                 amount = 8000
             elif plan_id == os.getenv('SILVER_PRICE_ID'):
                 amount = 5000
@@ -740,9 +739,8 @@ def data_transfer(filename):
 @main.route('/robots.txt')
 def robots():
     """Servers robots file for website indexing/SEO"""
-    
     return send_from_directory(current_app.static_folder, 'robots.txt')
 
 
 if __name__ == '__main__':
-    main.run(debug=True)
+    main.run()
