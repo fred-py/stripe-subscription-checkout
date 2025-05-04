@@ -85,7 +85,7 @@ def coming_soon():
 
 
 @main.route('/master', methods=['GET', 'POST', 'OPTIONS'])
-@basic_auth_required
+#@basic_auth_required
 def get_sub_page():
     form = RegisterInterestForm()
 

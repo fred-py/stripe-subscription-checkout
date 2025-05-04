@@ -11,6 +11,7 @@ import re
 
 # Flask-WTF web forms is represented in the server by a class
 # The class inherits from FlaskForm
+# NOTE: this form is not in use
 class RegisterInterestForm(FlaskForm):  # Flask WebDev p. 114
     """This class defines a list of fields in the form,
         each field obj can have one of more validators attached."""
