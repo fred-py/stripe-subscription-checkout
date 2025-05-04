@@ -217,13 +217,15 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
         </div>
       </form>
       <!-- ============== FAQs ============== -->
-      <div class="service-container">
+      <div class="service-container-1">
         <a id="faqs"></a> <!-- Invisible Anchor Point -->
         <div class="panel faqs">
           <div class="accordion-body">
-            <div class="accordion">
-              <h1>Frequently Asked Questions</h1>
-              <hr>
+            <div class="accordion paragraph-1">
+              
+                <div class="sub-heading-1">Frequently Asked Questions</div>
+              
+                <hr>
               <div class="container-accord">
                 <div class="label">What is United Wheelie Wash?</div>
                 <div class="content">United Wheelie Wash is a professional wheelie bin cleaning service for residential and commercial customers. 
@@ -236,7 +238,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                 <div class="content">Our service is a roadside service. Our aim is to eventually provide service to all properties however, 
                   due to operational constraints and the safety of our team and road users, some locations may be deemed unsuitable. 
                   We have provided a map that highlights our current service area. You can find that <a href="#anchor-map">here</a>.
-                  If your property does not show in our service area, please fill out our <a href="#anchor-interest">register your interest form</a> and we will follow up with you.
+                  If your property does not show in our service area, please fill out our register your interest form below and we will follow up with you.
                   Whatever your situation we encourage you to contact us if you have any questions or concerns about the suitability of your property for our service.
                   If you have mistakenly made an order without confirming the service area and your payment has already been processed, we will issue a full refund. 
                   You will be notified within seven days about the service limitation and the refund process.
@@ -246,7 +248,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
               <hr>
               <div class="container-accord">
                 <div class="label">Register your interest</div>
-                <div id="anchor-interest"></div> <!--Anchor Point-->
+                
                 <div class="content">
                   If your street is not highlighted on our map, this means we currently do not service your street under our subscription.
                   You can register your interest below and we will be in touch as we expand.
@@ -254,6 +256,8 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                   {% include "/stripe/_form.html" %}
                   
                 </div>
+                <div id="anchor-interest"></div> <!--Anchor Point-->
+
               <!--Closing this div keeps the accordion below open-->
 
               <hr>

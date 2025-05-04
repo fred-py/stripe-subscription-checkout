@@ -47,7 +47,6 @@ html {
   }
 }
 
-
 .add-margin {
   margin-bottom: 10%;
 }
@@ -59,8 +58,10 @@ html {
 
 .sub-heading-1 {
   font-weight: 600;
-  font-size: medium;
+  font-size: 2em;
 }
+
+
 .sub-style {
   font-weight: 600;
 }
@@ -69,6 +70,7 @@ html {
   color: var(--gray-light);
   margin: 3em;
 }
+
 
 .p-text {
   font-size: medium;
@@ -88,6 +90,10 @@ html {
   #map {
     height: 40em;
   }
+
+  .sub-heading-1 {
+    font-size: 1.2em;
+}
   .paragraph-1 {
     margin: 0.5em;
   }
