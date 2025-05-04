@@ -173,7 +173,12 @@ html {
     position: relative;
     width: 100%;
     z-index: 10;
+  }
 
+  @media (max-width: 600px) {
+    .panel {
+      padding: 15px 5px;
+    }
   }
 
 
@@ -228,7 +233,7 @@ html {
     }
 
     .pricing-features-item{
-        width: 100%;
+      width: 100%;
     }
   
     .pricing-plan:last-child {
@@ -272,23 +277,28 @@ html {
     justify-content: center; /* Center items horizontally */
     font-weight: 350;
     letter-spacing: 1px;
-    margin: 50px 0 25px;
+    margin: 4em 15em; /* param #1 top and bottom, param #2 left/right */
+  }
+
+  @media (max-width: 600px) {
+    .pricing-header {
+      font-size: 1.5em;
+    }
+    .pricing-features {
+      margin: 3em 0em; /* param #1 top and bottom, param #2 left/right */
+    }
   }
   
 .pricing-features-item {
     list-style-type: none;
     font-family: sans-serif;
-    border-top: .7px solid var(--gray-transparent);
+    
     width: 100%;
     font-size: 12px;
     line-height: 1.5;
     padding: 12px 0;
-    margin-right: 33px; /* Margin needed to offset random left margin and be able to align items correctly*/
 }
-  
-  .pricing-features-item:last-child {
-    border-bottom: .7px solid var(--gray-transparent);
-  }
+
 
   .pricing-features-item:before {
     content: "✔";
