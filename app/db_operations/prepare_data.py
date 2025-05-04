@@ -19,7 +19,7 @@ class Customer:
     email: str
     phone: str
     cus_id: str
-    paymentintent_id: str
+    #paymentintent_id: str
     # => Address Details
     street: str
     city: str
@@ -28,10 +28,10 @@ class Customer:
     # => Subscription Details
     plan: str
     # => Invoice Details
-    invoice_id: str
-    amount_paid: int
-    inv_description: str
-    invoice_url: str
+    #invoice_id: str
+    #amount_paid: int
+    #inv_description: str
+    #invoice_url: str
     # => Bin details
     bin_collection: str
     selected_bins: str
@@ -45,7 +45,7 @@ def prepare_session_data(data) -> dict:
     email = data['customer']['email']
     phone = data['customer']['phone']
     cus_id = data['customer']['id']
-    paymentintent_id = data['customer']['metadata']['paymentintent_id']
+    #paymentintent_id = data['customer']['metadata']['paymentintent_id']
     # => Address Details
     street = data['customer']['address']['line1']
     city = data['customer']['address']['city']
@@ -54,11 +54,11 @@ def prepare_session_data(data) -> dict:
     # => Subscription Details
     plan = data['subscription']['plan_type']
     # => Invoice Details
-    invoice_id = data['customer']['metadata']['invoice_id']
-    amount_paid = int(data['customer']['metadata']['amount_paid'])
-    amount_paid = (amount_paid / 100) # Convert cents to dollars
-    inv_description = data['customer']['metadata']['inv_description']
-    invoice_url = data['customer']['metadata']['invoice_url']
+    #invoice_id = data['customer']['metadata']['invoice_id']
+    #amount_paid = int(data['customer']['metadata']['amount_paid'])
+    #amount_paid = (amount_paid / 100) # Convert cents to dollars
+    #inv_description = data['customer']['metadata']['inv_description']
+    #invoice_url = data['customer']['metadata']['invoice_url']
     # => Bin details
     bin_collection = data['booking_details'][0]['dropdown']['value']
     """Check plan type, if Bronze or Any Combo (One-Off),
@@ -74,7 +74,7 @@ def prepare_session_data(data) -> dict:
         'email': email,
         'phone': phone,
         'cus_id': cus_id,
-        'paymentintent_id': paymentintent_id,
+        #'paymentintent_id': paymentintent_id,
         # Address Model
         'street': street,
         'city': city,
@@ -83,10 +83,10 @@ def prepare_session_data(data) -> dict:
         # Subscription Model
         'plan': plan,
         # Invoice Model
-        'invoice_id': invoice_id,
-        'amount_paid': amount_paid,
-        'inv_description': inv_description,
-        'invoice_url': invoice_url,
+        #'invoice_id': invoice_id,
+        #'amount_paid': amount_paid,
+        #'inv_description': inv_description,
+        #'invoice_url': invoice_url,
         # Bin Model
         'bin_collection': bin_collection,
         'selected_bins': selected_bins,

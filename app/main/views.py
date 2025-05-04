@@ -594,9 +594,10 @@ def webhook_received():
     # To attached PaymentIntent customer metadata
     if event_type == 'payment_intent.created' and 'payment_intend.payment_failed':
         # Follow up abandoned carts
-        print('Use this to follow up abandoned carts? add to the db under a new table?')
+        # add to the db under a new table? or send email?
+        pass
 
-    elif event_type == 'payment_intent.succeeded':
+    elif event_type == 'payment_intent.created':
         cus_id = data_object['customer']  # Get cus_id from data_object
         intent_id = data_object['id']  # Get PaymentIntent_id from data_object
         # https://stripe.com/docs/api/metadata
@@ -605,6 +606,7 @@ def webhook_received():
             cus_id,
             metadata={'paymentintent_id': intent_id}
         )
+
 
     elif event_type == 'invoice.paid':
         cus_id = data_object['customer']
@@ -615,7 +617,6 @@ def webhook_received():
         inv_description = data_object['lines']['data'][0]['description']
         intent_id = data_object['id']  # Get PaymentIntent_id from data_object
 
-        print(f"THIS HERE !!!! >>>>> {intent_id}")
         # Add invoice information to customer metadata
         stripe.Customer.modify(
             cus_id,
@@ -627,6 +628,9 @@ def webhook_received():
                 'paymentintent_id': intent_id
             }
         )
+        #print(f"THIS HERE !!!! >>>>> {data_object}")
+        #print(f"THIS HERE !!!! >>>>> {intent_id}")
+
 
     elif event_type == 'checkout.session.completed':
         session = stripe.checkout.Session.retrieve(
@@ -639,12 +643,13 @@ def webhook_received():
             )
 
         line_items = session.line_items
-
+        
         for line_items in line_items.data:
             info = line_items.amount_total, line_items.description
             customer = session.customer
             custom_field = session.custom_fields
             # Create data object to pass to ServiceM8
+            #print(f'SESSION COMPLETED =>>> {customer}')
             data = {
                     'customer': customer,
                     'subscription': {
@@ -653,13 +658,20 @@ def webhook_received():
                     },
                     'booking_details': custom_field,
             }
-
+            
             print(data)
 
             session_info = prepare_session_data(data)
             user = Customer(**session_info)  # Dataclass Unpacks Dict
-            # Add customer to the database
-            add_user(user, test=True)
+            
+            try:
+                # Add customer to the database
+                add_user(user, test=True)
+            except Exception as e:
+                return jsonify(
+                    status=500,
+                    content=f'Unexpected error adding user to the database: {e}\n{traceback_str}')
+
             #print(user.name)
             #add_customer(**)
             # Convert, combine and pass data to ServiceM8

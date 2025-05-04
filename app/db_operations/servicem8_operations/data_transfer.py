@@ -129,7 +129,7 @@ class ServiceM8:
         try:
             response = requests.post(url, json=payload, headers=headers)
             print(f'create_contact: {response.text}')
-            return self.mobile, self.email, job_uuid
+            return mobile, email, job_uuid
         except Exception as e:
             raise (e)
 

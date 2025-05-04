@@ -11,7 +11,7 @@ def add_user(data, test=False):
     email = data.email
     phone = data.phone
     cus_id = data.cus_id
-    paymentintent_id = data.paymentintent_id
+    #paymentintent_id = data.paymentintent_id
     test = test
     
     # Address
@@ -24,10 +24,10 @@ def add_user(data, test=False):
     plan = data.plan
 
     # Invoice Details
-    invoice_id = data.invoice_id,
-    amount_paid = data.amount_paid
-    inv_description = data.inv_description,
-    invoice_url = data.invoice_url,
+    #invoice_id = data.invoice_id,
+    #amount_paid = data.amount_paid
+    #inv_description = data.inv_description,
+    #invoice_url = data.invoice_url,
 
     # Bin information
     bin_collection = data.bin_collection
@@ -38,7 +38,7 @@ def add_user(data, test=False):
         email=email,
         phone=phone,
         cus_id=cus_id,
-        paymentintent_id=paymentintent_id,
+        #paymentintent_id=paymentintent_id,
         test=test,
     )
 
@@ -56,10 +56,10 @@ def add_user(data, test=False):
     )
 
     new_invoice = Invoice(
-        invoice_id=invoice_id,
-        amount_paid=amount_paid,
-        inv_description=inv_description,
-        invoice_url=invoice_url,
+        #invoice_id=invoice_id,
+        #amount_paid=amount_paid,
+        #inv_description=inv_description,
+        #invoice_url=invoice_url,
         customers=new_user,
     )
 

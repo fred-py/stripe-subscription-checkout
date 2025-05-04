@@ -46,7 +46,7 @@ class CustomerDB(db.Model):
     phone: Mapped[str] = db.Column(db.String, nullable=False)
     email: Mapped[str] = db.Column(db.String, nullable=False, unique=True)
     cus_id: Mapped[str] = db.Column(db.String, nullable=False)
-    paymentintent_id: Mapped[str] = db.Column(db.String, nullable=False)
+    paymentintent_id: Mapped[str] = db.Column(db.String)
     active: Mapped[bool] = db.Column(db.Boolean, default=True)
     test: Mapped[bool] = db.Column(db.Boolean, default=False)
     in_serviceM8: Mapped[bool] = db.Column(db.Boolean, default=False)
