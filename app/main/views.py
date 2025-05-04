@@ -27,7 +27,7 @@ stripe.api_version = '2020-08-27'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
 
-@main.route('/', methods=['GET', 'POST', 'OPTIONS'])
+@main.route('/pre-launch', methods=['GET', 'POST', 'OPTIONS'])
 def coming_soon():
     form = RegisterInterestForm()
 
@@ -84,8 +84,7 @@ def coming_soon():
 
 
 
-@main.route('/master', methods=['GET', 'POST', 'OPTIONS'])
-#@basic_auth_required
+@main.route('/', methods=['GET', 'POST', 'OPTIONS'])
 def get_sub_page():
     form = RegisterInterestForm()
 
@@ -659,7 +658,7 @@ def webhook_received():
                     'booking_details': custom_field,
             }
             
-            print(data)
+            #print(data)
 
             session_info = prepare_session_data(data)
             user = Customer(**session_info)  # Dataclass Unpacks Dict
