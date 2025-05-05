@@ -254,6 +254,13 @@ def get_checkout_session():
 
 @main.route('/create-checkout-session', methods=['POST', 'OPTIONS'])
 def create_checkout_session():
+    import logging
+    price = request.form.get('priceId')
+    logging.info(f"Received priceId: {price}, User-Agent: {request.headers.get('User-Agent')}")
+    if not price:
+        logging.error("priceId is empty or missing")
+        return jsonify({'error': {'message': 'Missing priceId'}}), 400
+
     domain_url = os.getenv('DOMAIN')  # Domain if fetched by back arrow icon on stripe hoted
     try:
         # Create new Checkout Session for the order
@@ -263,7 +270,6 @@ def create_checkout_session():
         # and once adjustable_quantity is included even if set to false,
         # it fails to return products with no adjustable quantity
         # Hence the creation of two checkout sessions
-        price = request.form.get('priceId')
         if price == os.getenv('ANY_COMBO_PRICE_ID'):
             checkout_session = stripe.checkout.Session.create(
                 #success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
@@ -388,6 +394,7 @@ def create_checkout_session():
             )
         return redirect(checkout_session.url, code=303)
     except Exception as e:
+        logging.error(f"Stripe error: {str(e)}")
         return jsonify({'error': {'message': str(e)}}), 400
 
 
