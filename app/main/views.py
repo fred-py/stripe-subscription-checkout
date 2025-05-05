@@ -241,7 +241,6 @@ def get_publishable_key():
         'comboPrice': os.getenv('ANY_COMBO_PRICE_ID'),
         'silverPrice': os.getenv('SILVER_PRICE_ID'),
         'goldPrice': os.getenv('GOLD_PRICE_ID'),
-        'oneOff': os.getenv('ONE_OFF_PRICE_ID'),
     })
 
 
