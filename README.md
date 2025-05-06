@@ -208,6 +208,9 @@ https://testdriven.io/blog/docker-best-practices/
 >Configure CI/CD for your Python application
   https://docs.docker.com/language/python/configure-ci-cd/
 
+>Delete build cache older than foo
+--> $ docker builder prune --filter "until=24h"
+
 >Yes, you would need to run `docker-compose up -d --build` again after running `docker-compose down -v`.
 
 >Here's what the command does:

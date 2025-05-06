@@ -358,6 +358,16 @@ html {
 	display: inline-block;
 	color:var(--gray-light);
   }
+
+  .pricing-price.from:before {
+    content: "From ";
+    font-family: sans-serif;
+    transform: translateY(-22px) translateX(-2px);
+    font-size: 12px;
+    font-weight: 300;
+	display: inline-block;
+	color:var(--gray-light);
+  }
   
   .billing-frequency {
     font-size: 12px;
