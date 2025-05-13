@@ -82,7 +82,7 @@ document.querySelectorAll('.pricing-button').forEach(button => {
     const form = button.closest('form');
     const priceInput = form.querySelector('input[name="priceId"]');
     if (!priceInput.value) {
-      e.preventDefault();
+      //e.preventDefault(); this disables button if priceID is missin
       console.error('Price ID missing for form:', form);
       document.querySelector('#error-message').textContent = 'Error: Price not loaded. Please wait and try again.';
     } else {

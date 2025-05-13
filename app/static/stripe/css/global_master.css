@@ -33,9 +33,17 @@ html {
 #map {
   height: 40em;
 }
+
 .heading-1 {
   color: white;
   /*font-size: calc(1.375rem + 1.5vw);*/
+  font-size: 2em; 
+  z-index: 999999;
+  text-align: center;
+}
+
+.heading-2 {
+  color: var(--gray-mid);
   font-size: 2em; 
   z-index: 999999;
   text-align: center;
@@ -45,6 +53,10 @@ html {
   .heading-1{
     font-size: x-large;
   }
+}
+
+.add-margin-top {
+  margin-top: 3em;
 }
 
 .add-margin {
@@ -70,6 +82,23 @@ html {
   color: var(--gray-light);
   margin: 3em;
 }
+
+.p-text-2 {
+  font-size: x-large;
+  color: var(--gray-light);
+  text-align: center;
+  padding-left: 4em;
+  padding-right: 4em;
+}
+
+.p-text-3 {
+  font-size: x-large;
+  color: var(--gray-light);
+  text-align: center;
+  padding-left: 4em;
+  padding-right: 4em;
+}
+
 
 
 .p-text {
@@ -97,6 +126,29 @@ html {
   .paragraph-1 {
     margin: 0.5em;
   }
+}
+
+/*MOBILE SETTING FOR 400 ERROR PAGE*/
+@media (max-width: 600px) {
+  .heading-2 {
+    font-size: 1.5em;
+    text-align: left; 
+  }
+  .p-text-2{
+    font-size: large;
+    text-align: left;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+  }
+  .p-text-3 {
+    font-size: large;
+    text-align: left;
+    padding-left: 0em;
+    padding-right: 0em;
+  }
+  
+
+
 }
 .background::after {
     content: '';
@@ -132,6 +184,23 @@ html {
     z-index: 9999;
     margin-bottom: 3em;
 }
+
+.error_400_img {
+  display: block; /* Ensure it’s a block-level element (already the default for div, but added for clarity) */
+  margin: 0 auto; /* Center the div horizontally */
+  position: inherit;
+  transform: translateY(37%);
+  background-image: url('/stripe/img/error_400.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; /* Center the background image within the div */
+  width: 300px;
+  height: 300px;
+  z-index: 9999;
+  margin-bottom: 3em;
+  padding-bottom: 2em;
+}
+
 
 .header__title {
     position: inherit;

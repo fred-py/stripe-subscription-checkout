@@ -257,9 +257,9 @@ def create_checkout_session():
     import logging
     price = request.form.get('priceId')
     logging.info(f"Received priceId: {price}, User-Agent: {request.headers.get('User-Agent')}")
-    if not price:
-        logging.error("priceId is empty or missing")
-        return jsonify({'error': {'message': 'Missing priceId'}}), 400
+    #if not price:
+    #    logging.error("priceId is empty or missing")
+    #   return jsonify({'error': {'message': 'Missing priceId'}}), 400
 
     domain_url = os.getenv('DOMAIN')  # Domain if fetched by back arrow icon on stripe hoted
     try:
@@ -395,13 +395,15 @@ def create_checkout_session():
         return redirect(checkout_session.url, code=303)
     except Exception as e:
         logging.error(f"Stripe error: {str(e)}")
-        return jsonify({'error': {'message': str(e)}}), 400
+        return render_template('errors/400.html')
 
+
+@main.route('/error_test')
+def test_error():
+    return render_template('errors/400.html')
 
 @main.route('/customer-portal', methods=['POST'])
 def customer_portal():
-    # For demonstration purposes, we're using the Checkout session to retrieve the customer ID.
-    # Typically this is stored alongside the authenticated user in your database.
     checkout_session_id = request.form.get('sessionId')
     checkout_session = stripe.checkout.Session.retrieve(checkout_session_id)
 
