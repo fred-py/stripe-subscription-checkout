@@ -241,6 +241,12 @@ Set project
 Authenticate gcloud CLI
 - $ gcloud auth application-default login
 
+List Services
+- $ gcloud run services list
+
+Get Service Configuration
+- $ gcloud run services describe <service-name>
+
 
 *--------------------------------------*
 

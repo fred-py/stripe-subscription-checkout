@@ -4,7 +4,7 @@
 from flask_wtf import FlaskForm  # Flask WebDev p. 114
 from wtforms import StringField, SubmitField, SelectField, TextAreaField, FormField
 # Information on validators on Flask WebDev p. 212
-from wtforms.validators import DataRequired, Email, Length, ValidationError
+from wtforms.validators import DataRequired, Email, AnyOf, Length, ValidationError
 import re
 
 
@@ -27,8 +27,28 @@ class RegisterInterestForm(FlaskForm):  # Flask WebDev p. 114
     email = StringField('Email Address', validators=[DataRequired(), Email()])
     mobile = StringField('Mobile', validators=[DataRequired()])
     street = StringField('Street', validators=[DataRequired()])
-    city = StringField('City', validators=[DataRequired()])
-    postcode = StringField('Postcode', validators=[DataRequired()])
+    city = StringField('City', validators=[
+        DataRequired(),
+        AnyOf(values=[
+            'Margaret River',
+            'Gracetown',
+            'Yebble',
+            'Burnside',
+            'Rosa Glen',
+            'Rosa Brook',
+            'Bramley',
+            'Whitchcliffe',
+            'Forest Grove',
+            'Redgate',
+            'Karridale',
+            'Hamelin Bay'
+            ])
+        ]
+    )
+    postcode = StringField('Postcode', validators=[
+        DataRequired(),
+        ]
+    )
     service = SelectField(
         'Which Plan or Service are you interested in?',
         choices=[
@@ -64,7 +84,10 @@ class ContactForm(FlaskForm):  # Flask WebDev p. 114
     email = StringField('Email Address', validators=[DataRequired(), Email()])
     mobile = StringField('Mobile', validators=[DataRequired()])
     street = StringField('Street', validators=[DataRequired()])
-    city = StringField('City', validators=[DataRequired()])
+    city = StringField('City', validators=[
+        DataRequired(),
+        ]
+    )
     postcode = StringField('Postcode', validators=[DataRequired()])
     service = SelectField(
         'Which Plan or Service are you interested in?',
@@ -111,3 +134,31 @@ class CommercialForm(FlaskForm):  # Flask WebDev p. 114
     message = TextAreaField('Message')
     # SubmitField class represents a HTML <input type="submit"> in the rendered form
     submit = SubmitField('Submit')
+
+    """city = StringField('City', validators=[
+        DataRequired(),
+        AnyOf(values=[
+            'Margaret River',
+            'Gracetown',
+            'Yebble',
+            'Burnside',
+            'Rosa Glen',
+            'Rosa Brook',
+            'Bramley',
+            'Whitchcliffe',
+            'Forest Grove',
+            'Redgate',
+            'Karridale',
+            'Hamelin Bay'
+            ],
+            message='You must enter a valid city',
+            )
+        ]
+    )
+    postcode = StringField('Postcode', validators=[
+        DataRequired(message='You must enter a valid postcode'),
+        AnyOf(values=[
+            '6284', '6285', '6286', '6288', '6290'],
+            message='You must enter a valid postcode')
+        ]
+    )"""

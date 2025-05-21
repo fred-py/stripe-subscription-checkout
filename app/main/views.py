@@ -110,8 +110,14 @@ def get_sub_page():
             # Sends internal email notification
             sbj = 'Someone has registered their interest in Wheelie Wash'
             template = 'database/mail/user_interest'
-            recipients = 'rezende.f@outlook.com'
-            send_email(recipients, sbj, template, **data)
+            recipient1 = 'rezende.f@outlook.com'
+            recipient2 = 'info@wheeliewash.au'
+            recipient3 = 'marketing@unitedpropertyservices.au'
+            
+            # Unable to send email to a list of addresses - temporary solution below.
+            send_email(recipient1, sbj, template, **data)
+            send_email(recipient2, sbj, template, **data)
+            send_email(recipient3, sbj, template, **data)
             flash('Thank you for registering your interest!', 'success')  # Add a success message 
             session['known'] = False
             name = lead.name  # Set name for success message
@@ -149,8 +155,9 @@ def contact_us():
         form = CommercialForm()
     else:
         form = ContactForm()
-    
+
     if form.validate_on_submit():
+
         email = form.email.data
         enquiry = request.form.get('priceId')
         lead = get_email(email, model=enquiry)
@@ -171,17 +178,22 @@ def contact_us():
             # This reduces database queries
             
             if enquiry == 'commercial':
-                lead = add_commercial(data, test=True)
+                lead = add_commercial(data)
             else:
-                lead = add_one_off_user(data, test=True)
-
-            """
+                lead = add_one_off_user(data)
+            
             # Sends internal WheelieWashDBWheelieWashDBemail notification
             sbj = 'Someone has registered their interest in Wheelie Wash'
             template = 'database/mail/user_interest'
-            recipients = 'rezende.f@outlook.com'
-            send_email(recipients, sbj, template, **data)
-            """
+            template = 'database/mail/user_interest'
+            recipient1 = 'rezende.f@outlook.com'
+            recipient2 = 'info@wheeliewash.au'
+            recipient3 = 'marketing@unitedpropertyservices.au'
+            
+            # Unable to send email to a list of addresses - temporary solution below.
+            send_email(recipient1, sbj, template, **data)
+            send_email(recipient2, sbj, template, **data)
+            send_email(recipient3, sbj, template, **data)
 
             flash('Thank you for registering your interest!', 'success')  # Add a success message 
             session['known'] = False
