@@ -16,8 +16,9 @@ from ..db_operations.servicem8_operations import data_transfer as d
 from ..db_operations.prepare_data import prepare_session_data, Customer
 from ..db_operations.crud_operations import add_user, add_lead, add_commercial, add_one_off_user, get_email
 from ..models import Lead
-#from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
-from ..emails import send_email
+#
+# from ..db_operations.query_ops import CustomerQuery as cq  # get_cus_id, get_order_date, get_payment_intent 
+from ..emails import send_email, send_error_email
 from app.api.auth import token_auth
 from ..decorators import basic_auth_required
 
@@ -184,7 +185,6 @@ def contact_us():
             
             # Sends internal WheelieWashDBWheelieWashDBemail notification
             sbj = 'Someone has registered their interest in Wheelie Wash'
-            template = 'database/mail/user_interest'
             template = 'database/mail/user_interest'
             recipient1 = 'rezende.f@outlook.com'
             recipient2 = 'info@wheeliewash.au'
@@ -552,9 +552,21 @@ def webhook_received():
             user = Customer(**session_info)  # Dataclass Unpacks Dict
             
             try:
-                # Add customer to the database
-                add_user(user, test=True)
+                ups_acc = d.ServiceM8(data, ups)
+                uuid = ups_acc.create_job()  # Create job returns uuid
+                ups_acc.create_contact(uuid)
             except Exception as e:
+                send_error_email(**e)
+                return jsonify(
+                    status=500,
+                    content=f'Unexpected error adding user to the database: {e}\n{traceback_str}')
+
+            try:
+                # Add customer to the database
+                add_user(user)
+            except Exception as e:
+                # Sends internal email notification
+                send_error_email(**e)
                 return jsonify(
                     status=500,
                     content=f'Unexpected error adding user to the database: {e}\n{traceback_str}')
@@ -572,11 +584,6 @@ def webhook_received():
             #ww_acc.create_contact(uuid)
             """USE ASYNCIO AND MEASURE PERFORMANCE AND OUTPUT TIME SAVED
             TO GO ON DOCUMENTATION eg. x seconds faster y% improvement"""
-
-            """NOTHING TO BE SENT TO UPS UNTIL FURTHER NOTICE"""
-            ups_acc = d.ServiceM8(data, ups)
-            uuid = ups_acc.create_job()  # Create job returns uuid
-            ups_acc.create_contact(uuid)
     # Handle the event
     elif event_type == 'customer.subscription.updated':
         subscription = event['data']['object']

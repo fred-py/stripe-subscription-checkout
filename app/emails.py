@@ -21,6 +21,23 @@ def send_email(to, subject, template, **kwargs):
     thr.start()
     return thr
 
+
+def send_error_email(**kwargs):
+    """This function is used to send emails asynchronously
+    Note, for bulk emails using celery task queue is recommended"""
+    subject = 'An error occurred during one of processes on the webhook'
+    template = 'database/mail/error_warning.html'
+    to = 'rezende.f@outlook.com'
+            
+    app = current_app._get_current_object()  # Get the actual Flask app object
+    msg = Message(current_app.config['UNITED_MAIL_SUBJECT_PREFIX'] + ' ' + subject,
+                  sender=current_app.config['UNITED_MAIL_SENDER'], recipients=[to])
+    msg.body = render_template(template + '.txt', **kwargs)
+    msg.html = render_template(template + '.html', **kwargs)
+    thr = Thread(target=send_async_email, args=[app, msg])
+    thr.start()
+    return thr
+
 def send_email_2(to, subject, template, **kwargs):
     """This function is used to send emails asynchronously
     Note, for bulk emails using celery task queue is recommended"""
