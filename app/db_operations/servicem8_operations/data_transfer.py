@@ -2,6 +2,7 @@
 import requests
 import os 
 from dotenv import load_dotenv, find_dotenv
+from ...emails import send_error_email
 #from .customer import add_customer  # Relative import with . as NoModuleError was being raised
 #import time
 #import asyncio
@@ -96,6 +97,7 @@ class ServiceM8:
                 job_uuid = response.headers['x-record-uuid']
                 return job_uuid
             except Exception as e:
+                send_error_email(**e)
                 raise (e)
 
     def create_contact(self, job_uuid: str) -> tuple:
@@ -131,6 +133,7 @@ class ServiceM8:
             print(f'create_contact: {response.text}')
             return mobile, email, job_uuid
         except Exception as e:
+            send_error_email(**e)
             raise (e)
 
 

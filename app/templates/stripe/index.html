@@ -81,83 +81,11 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
         </div>    
         <div class="header__title">Choose a plan</div>
       </header>
-      <form action="/create-checkout-session" method="POST">
-        <input type="hidden" id="goldPrice" name="priceId">
-        <div class="service-container">
-          <div class="panel pricing-table">
-            <div>
-              <div id="anchor-gold"></div> <!-- Anchor Point -->
-              <div class="icon-alignment">
-                <img src="/stripe/img/gold.png" alt="" class="pricing-img">
-              </div>
-              <h2 class="pricing-header">Gold Subscription</h2>
-              <ul class="pricing-features">
-                <div class="container.description">
-                  <li class="pricing-features-item">3 Bins Cleaned Monthly</li>
-                  <li class="pricing-features-item">Plus 1 Free FOGO Bin Each Clean Cycle</li>
-                  <li class="pricing-features-item">No Transaction Fee</li>
-                </div>
-              </ul>
-              <div class="p-alignment">
-                <span class="pricing-price">$36</span>
-                <div class="billing-frequency">Billed every 6 months</div>
-                <button href="#/" class="pricing-button is-featured" id="gold-plan-btn">Get Started</button>
-              </div> 
-          </div>
-        </div>
-      </form>
-      <form action="/create-checkout-session" method="POST">
-        <input type="hidden" id="silverPrice" name="priceId">
-        <div class="service-container">
-          <div class="panel pricing-table">
-            <div class="pricing-plan">
-              <div class="icon-alignment">
-                <img src="/stripe/img/silver.png" alt="" class="pricing-img">
-              </div>
-              <h2 class="pricing-header">Silver Subscription</h2>
-              <ul class="pricing-features">
-                <div class="container.description">
-                  <li class="pricing-features-item">3 Bins Cleaned Quarterly</li>
-                  <li class="pricing-features-item">Plus 1 Free FOGO Bin Each Clean Cycle</li>
-                </div>
-              </ul>
-              <div class="p-alignment">
-                <span class="pricing-price silver">$46</span>            
-                <div class="billing-frequency">Billed Annually</div>
-                <button href="#/" class="pricing-button" id="silver-plan-btn">Get Started</button>
-              </div>
-            </div>  
-          </div>
-        </div>
-      </form>      
-      <form action="/create-checkout-session" method="POST">
-        <input type="hidden" id="comboPrice" name="priceId">
-        <div class="service-container">
-          <div class="panel pricing-table">
-            <div class="pricing-plan">
-              <div class="icon-alignment">
-                <img src="/stripe/img/bronze.png" alt="" class="pricing-img">
-              </div>
-              <h2 class="pricing-header">Bronze Subscription</h2>
-              <ul class="pricing-features">
-                <div class="container.description">
-                  <li class="pricing-features-item">Clean 1 to 4 bins</li>
-                  <li class="pricing-features-item">Cancel Anytime</li>
-                </div>
-              </ul>
-              <div class="p-alignment">
-                <span class="pricing-price starts-at">$18</span>
-                <div class="billing-frequency">Billed Monthly</div>
-                <button href="#/" class="pricing-button" id="combo-plan-btn">Get Started</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
       <form action="/contact-us" method="POST">
         <input type="hidden" name="priceId" value="oneOff">
         <div class="service-container">
           <div class="panel pricing-table">
+            <div id="anchor-gold"></div> <!-- Anchor Point -->
             <div class="pricing-plan">
               <div class="icon-alignment">
                 <img src="/stripe/img/one-off.png" alt="" class="pricing-img">
@@ -189,7 +117,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
           <div class="panel pricing-table">
             <div class="pricing-plan">
               <div class="icon-alignment">
-                <img src="/stripe/img/one-off.png" alt="" class="pricing-img">
+                <img src="/stripe/img/commercial.png" alt="" class="pricing-img">
               </div> 
               <h2 class="pricing-header">Commercial Cleans</h2>
               <ul class="pricing-features">
@@ -209,6 +137,79 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                   content without refreshing the page.-->
                 <button type="submit" class="pricing-button">Enquire</button>
               </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <form action="/create-checkout-session" method="POST">
+        <input type="hidden" id="comboPrice" name="priceId">
+        <div class="service-container">
+          <div class="panel pricing-table">
+            <div class="pricing-plan">
+              <div class="icon-alignment">
+                <img src="/stripe/img/bronze.png" alt="" class="pricing-img">
+              </div>
+              <h2 class="pricing-header">Bronze Subscription</h2>
+              <ul class="pricing-features">
+                <div class="container.description">
+                  <li class="pricing-features-item">Clean 1 to 4 bins</li>
+                  <li class="pricing-features-item">Cancel Anytime</li>
+                </div>
+              </ul>
+              <div class="p-alignment">
+                <span class="pricing-price starts-at">$18</span>
+                <div class="billing-frequency">Billed Monthly</div>
+                <button href="#/" class="pricing-button" id="combo-plan-btn">Get Started</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+      <form action="/create-checkout-session" method="POST">
+        <input type="hidden" id="silverPrice" name="priceId">
+        <div class="service-container">
+          <div class="panel pricing-table">
+            <div class="pricing-plan">
+              <div class="icon-alignment">
+                <img src="/stripe/img/silver.png" alt="" class="pricing-img">
+              </div>
+              <h2 class="pricing-header">Silver Subscription</h2>
+              <ul class="pricing-features">
+                <div class="container.description">
+                  <li class="pricing-features-item">3 Bins Cleaned Quarterly</li>
+                  <li class="pricing-features-item">Plus 1 Free FOGO Bin Each Clean Cycle</li>
+                </div>
+              </ul>
+              <div class="p-alignment">
+                <span class="pricing-price silver">$46</span>            
+                <div class="billing-frequency">Billed Annually</div>
+                <button href="#/" class="pricing-button" id="silver-plan-btn">Get Started</button>
+              </div>
+            </div>  
+          </div>
+        </div>
+      </form>      
+      <form action="/create-checkout-session" method="POST">
+        <input type="hidden" id="goldPrice" name="priceId">
+        <div class="service-container">
+          <div class="panel pricing-table">
+            <div>
+              <div class="icon-alignment">
+                <img src="/stripe/img/gold.png" alt="" class="pricing-img">
+              </div>
+              <h2 class="pricing-header">Gold Subscription</h2>
+              <ul class="pricing-features">
+                <div class="container.description">
+                  <li class="pricing-features-item">3 Bins Cleaned Monthly</li>
+                  <li class="pricing-features-item">Plus 1 Free FOGO Bin Each Clean Cycle</li>
+                  <li class="pricing-features-item">No Transaction Fee</li>
+                </div>
+              </ul>
+              <div class="p-alignment">
+                <span class="pricing-price">$36</span>
+                <div class="billing-frequency">Billed every 6 months</div>
+                <button href="#/" class="pricing-button is-featured" id="gold-plan-btn">Get Started</button>
+              </div> 
             </div>
           </div>
         </div>

@@ -494,7 +494,6 @@ def webhook_received():
             metadata={'paymentintent_id': intent_id}
         )
 
-
     elif event_type == 'invoice.paid':
         cus_id = data_object['customer']
         # Data Object contains json from any given event
@@ -545,32 +544,17 @@ def webhook_received():
                     },
                     'booking_details': custom_field,
             }
-            
-            #print(data)
 
+            #print(data)
+            
             session_info = prepare_session_data(data)
             user = Customer(**session_info)  # Dataclass Unpacks Dict
+            # Add customer to the database
+            add_user(user)
+            ups_acc = d.ServiceM8(data, ups)
+            uuid = ups_acc.create_job()  # Create job returns uuid
+            ups_acc.create_contact(uuid)
             
-            try:
-                ups_acc = d.ServiceM8(data, ups)
-                uuid = ups_acc.create_job()  # Create job returns uuid
-                ups_acc.create_contact(uuid)
-            except Exception as e:
-                send_error_email(**e)
-                return jsonify(
-                    status=500,
-                    content=f'Unexpected error adding user to the database: {e}\n{traceback_str}')
-
-            try:
-                # Add customer to the database
-                add_user(user)
-            except Exception as e:
-                # Sends internal email notification
-                send_error_email(**e)
-                return jsonify(
-                    status=500,
-                    content=f'Unexpected error adding user to the database: {e}\n{traceback_str}')
-
             #print(user.name)
             #add_customer(**)
             # Convert, combine and pass data to ServiceM8
@@ -630,7 +614,7 @@ def webhook_received():
 
     elif event_type == 'subscription_schedule.canceled':
         subscription_schedule = event['data']['object']
-        print(f'This is the OTHER THING: {subscription_schedule}')
+        print(f'subscription schedule: {subscription_schedule}')
     else:
         print('Unhandled event type {}'.format(event['type']))
     return jsonify({'status': 'success'})
