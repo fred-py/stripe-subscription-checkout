@@ -18,16 +18,26 @@ class ServiceM8:
     def __init__(self, data: dict, servicem8_key: str) -> None:
         self.data = data
         self.servicem8_key = servicem8_key
-
+    
     def create_job(self) -> str:
         """Uses checkout data to create 
         new job on ServiceM8."""
         # Check which key is being used
-        plan = self.data['subscription']['plan_type']  # Subscription Plan
-        if self.servicem8_key == self.ups and plan == 'One-Off':
+        #plan = self.data['subscription']['plan_type']  # Subscription Plan
+        #if self.servicem8_key == self.ups and plan == 'One-Off':
             # This ensures One-Off jobs are not created for main ServiceM8 account
             #print('One-Off job not created for main ServiceM8 account')
-            pass
+        #    pass
+        subscription = self.data['subscription']
+        if not subscription:
+            # Concatnate address
+            address = self.data['street'] + ' ' + \
+                self.data['city'] + ' ' + \
+                self.data['postcode']
+            plan = self.data['service']  # Subscription Plan
+            msg = self.data['message']
+            total_paid = None
+            description = plan + ' | ' + msg
         else:
             # Concatnate address
             address = self.data['customer']['address']['line1'] + ' ' + \
@@ -60,55 +70,60 @@ class ServiceM8:
                     + bin_collection + ' ' \
                     + f' | Total paid: ${total_paid}'
 
-            # Create new job
-            url = "https://api.servicem8.com/api_1.0/job.json"
+        # Create new job
+        url = "https://api.servicem8.com/api_1.0/job.json"
 
-            # Ensure jobs created under ups servicem8 account
-            # are marked as unsuccessful
-            if self.servicem8_key == self.ups:
-                job_status = 'Unsuccessful'
-            else:
-                job_status = 'Quote'
+        # Ensure jobs created under ups servicem8 account
+        # are marked as unsuccessful
+        if self.servicem8_key == self.ups:
+            job_status = 'Unsuccessful'
+        else:
+            job_status = 'Quote'
 
-            payload = {
-                "active": 1,
-                "job_address": address,
-                "geo_country": "Australia",
-                "geo_state": "Western Australia",
-                "status": job_status,
-                "job_description": description,
-                "total_invoice_amount": total_paid,
-                "invoice_sent": "yes",
-                "payment_processed": "yes",
-            }
-            headers = {
-                "accept": "application/json",
-                "content-type": "application/json",
-                # Fl0 does not take Env Variables with empty spaces
-                # Therefore, Basic + ' ' + key is required
-                "authorization": 'Basic' + ' ' + self.servicem8_key,
-                "uuid": "x-record-uuid"
-            }
+        payload = {
+            "active": 1,
+            "job_address": address,
+            "geo_country": "Australia",
+            "geo_state": "Western Australia",
+            "status": job_status,
+            "job_description": description,
+            "total_invoice_amount": total_paid,
+            "invoice_sent": "yes",
+            "payment_processed": "yes",
+        }
+        headers = {
+            "accept": "application/json",
+            "content-type": "application/json",
+            # Fl0 does not take Env Variables with empty spaces
+            # Therefore, Basic + ' ' + key is required
+            "authorization": 'Basic' + ' ' + self.servicem8_key,
+            "uuid": "x-record-uuid"
+        }
 
-            try:
-                response = requests.post(url, json=payload, headers=headers)
-                print(f'create_job: {response.text}')
-                # Get job uuid to attached contact to job
-                job_uuid = response.headers['x-record-uuid']
-                return job_uuid
-            except Exception as e:
-                send_error_email(**e)
-                raise (e)
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            print(f'create_job: {response.text}')
+            # Get job uuid to attached contact to job
+            job_uuid = response.headers['x-record-uuid']
+            return job_uuid
+        except Exception as e:
+            send_error_email(**e)
+            raise (e)
 
     def create_contact(self, job_uuid: str) -> tuple:
         """Uses data from checkout session
         & job_uuid returned from create_job func
         to create new job contact on ServiceM8,
         attached to job_uuid."""
-
-        name = self.data['customer']['name']
-        email = self.data['customer']['email']
-        mobile = self.data['customer']['phone']
+        subscription = self.data['subscription']
+        if not subscription:
+            name = self.data['name']
+            email = self.data['email']
+            mobile = self.data['mobile']
+        else:
+            name = self.data['customer']['name']
+            email = self.data['customer']['email']
+            mobile = self.data['customer']['phone']
         url = "https://api.servicem8.com/api_1.0/jobcontact.json"
         # Create new job contact
         payload = {
@@ -135,6 +150,40 @@ class ServiceM8:
         except Exception as e:
             send_error_email(**e)
             raise (e)
+
+    def create_job_enquiry(self) -> str:
+        """This function is used for one-off residential and commercial enquiries"""
+        name = self.data['name']
+        email = self.data['email']
+        mobile = self.data['phone']
+        url = "https://api.servicem8.com/api_1.0/jobcontact.json"
+        # Create new job contact
+        payload = {
+            "active": 1,
+            "job_uuid": job_uuid,
+            "first": name,
+            #"last": name2,
+            "email": email,
+            "mobile": mobile,
+            "type": "Job Contact",
+            "is_primary_contact": "yes",
+        }
+        headers = {
+            "accept": "application/json",
+            "content-type": "application/json",
+            # Fl0 does not take Env Variables with empty spaces
+            # Therefore, Basic + ' ' + key is required
+            "authorization": 'Basic' + ' ' + self.servicem8_key,
+        }
+        try:
+            response = requests.post(url, json=payload, headers=headers)
+            print(f'create_contact: {response.text}')
+            return mobile, email, job_uuid
+        except Exception as e:
+            send_error_email(**e)
+            raise (e)
+
+            
 
 
 if __name__ == '__main__':

@@ -2,11 +2,13 @@ from app.models import CustomerDB, Address, LeadAddress, \
     Bin, Subscription, Invoice, Lead, OneOffRes, Commercial
 from app.extensions import db
 from ..emails import send_error_email
+import logging
 
-
-# Add new users to the Database
-""""Refer to real python for with statement or arjan """
 def add_user(data, test=False):
+    # Add new users to the Database
+    """"Refer to real python for with statement or arjan """
+    
+    #print(f'*** Data received from add_user function: => *** {data}')
     try:
         # Customer details from Customer Dataclass
         name = data.name
@@ -27,7 +29,7 @@ def add_user(data, test=False):
 
         # Invoice Details
         #invoice_id = data.invoice_id,
-        #amount_paid = data.amount_paid
+        amount_paid = data.amount_paid
         #inv_description = data.inv_description,
         #invoice_url = data.invoice_url,
 
@@ -59,7 +61,7 @@ def add_user(data, test=False):
 
         new_invoice = Invoice(
             #invoice_id=invoice_id,
-            #amount_paid=amount_paid,
+            amount_paid=amount_paid,
             #inv_description=inv_description,
             #invoice_url=invoice_url,
             customers=new_user,
@@ -77,10 +79,15 @@ def add_user(data, test=False):
         db.session.add(new_bin)
 
         db.session.commit()
+        print('All good')
     except Exception as e:
-        print(f'something is fucked{e}')
-        send_error_email(**e)
-        return f'Error adding new user to the database: {e}'
+        db.session.rollback()  # IMPORTANT: Rollback changes if an error occurs
+        logging.error(f'Error adding new user to the database: {e}', exc_info=True) # exc_info for traceback
+        try:
+            send_error_email(error_message=str(e))
+        except Exception as email_err:
+            logging.error(f'Failed to send email: {email_err}')
+            raise Exception(f'Error adding new user to the database: {e}')
 
 
 def add_one_off_user(data, test=False):

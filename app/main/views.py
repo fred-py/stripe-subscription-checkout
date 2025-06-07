@@ -2,6 +2,7 @@
 Stripe Checkout Routes"""
 
 import stripe
+import logging
 import json
 import os
 from flask import Flask, render_template, redirect, url_for, abort, \
@@ -26,6 +27,9 @@ load_dotenv(find_dotenv())
 
 stripe.api_version = '2020-08-27'
 stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
+
+ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
+
 
 
 @main.route('/pre-launch', methods=['GET', 'POST', 'OPTIONS'])
@@ -106,8 +110,12 @@ def get_sub_page():
             # Returns lead object that is passed to 
             # name parameter on redirect to retrieve Lead name
             # This reduces database queries
-            lead = add_lead(data, test=True)
-            
+            try:
+                lead = add_lead(data, test=True)
+            except Exception as e:
+                raise f'An error occurred adding lead contact to database{e}'
+
+
             # Sends internal email notification
             sbj = 'Someone has registered their interest in Wheelie Wash'
             template = 'database/mail/user_interest'
@@ -122,6 +130,8 @@ def get_sub_page():
             flash('Thank you for registering your interest!', 'success')  # Add a success message 
             session['known'] = False
             name = lead.name  # Set name for success message
+
+
 
             # If AJAX Request, return JSON
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -164,6 +174,7 @@ def contact_us():
         lead = get_email(email, model=enquiry)
         if lead is None:
             data = {
+                'subscription': False,
                 'name': form.name.data,
                 'email': form.email.data,
                 'mobile': form.mobile.data,
@@ -173,32 +184,45 @@ def contact_us():
                 'service': form.service.data,
                 'message': form.message.data,
             }
+            print(f'ONE OFF DATA STRUCTURE: ======> {data}')
             # Saves to database
             # Returns lead object that is passed to 
             # name parameter on redirect to retrieve Lead name
             # This reduces database queries
+            try:
+                if enquiry == 'commercial':
+                    lead = add_commercial(data)
+                else:
+                    lead = add_one_off_user(data)
+            except Exception as e:
+                raise f'An error occurred adding one-off enquiry to database{e}'
+
+            try:
+                # Sends internal WheelieWashDBWheelieWashDBemail notification
+                sbj = 'Someone has registered their interest in Wheelie Wash'
+                template = 'database/mail/user_interest'
+                recipient1 = 'rezende.f@outlook.com'
+                recipient2 = 'info@wheeliewash.au'
+                recipient3 = 'marketing@unitedpropertyservices.au'
+                # Unable to send email to a list of addresses - temporary solution below.
+                send_email(recipient1, sbj, template, **data)
+                send_email(recipient2, sbj, template, **data)
+                send_email(recipient3, sbj, template, **data)
+            except Exception as e:
+                raise f'An error occurred while sending one-off email notification: {e}'
             
-            if enquiry == 'commercial':
-                lead = add_commercial(data)
-            else:
-                lead = add_one_off_user(data)
+            try:
+                ups_acc = d.ServiceM8(data, ups)
+                uuid = ups_acc.create_job()  # Create job returns uuid
+                ups_acc.create_contact(uuid)
+            except Exception:
+                raise Exception('An error occurred adding user to ServiceM8')
             
-            # Sends internal WheelieWashDBWheelieWashDBemail notification
-            sbj = 'Someone has registered their interest in Wheelie Wash'
-            template = 'database/mail/user_interest'
-            recipient1 = 'rezende.f@outlook.com'
-            recipient2 = 'info@wheeliewash.au'
-            recipient3 = 'marketing@unitedpropertyservices.au'
-            
-            # Unable to send email to a list of addresses - temporary solution below.
-            send_email(recipient1, sbj, template, **data)
-            send_email(recipient2, sbj, template, **data)
-            send_email(recipient3, sbj, template, **data)
 
             flash('Thank you for registering your interest!', 'success')  # Add a success message 
             session['known'] = False
             name = lead.name  # Set name for success message
-            
+
 
             # If AJAX Request, return JSON
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
@@ -266,7 +290,6 @@ def get_checkout_session():
 
 @main.route('/create-checkout-session', methods=['POST', 'OPTIONS'])
 def create_checkout_session():
-    import logging
     price = request.form.get('priceId')
     logging.info(f"Received priceId: {price}, User-Agent: {request.headers.get('User-Agent')}")
     #if not price:
@@ -471,37 +494,25 @@ def webhook_received():
         event = request_data
 
     #print('event ' + event_type)
-
-    #uww = os.getenv('UWW_KEY')  # ServiceM8 Wheelie Wash Keys
-    ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
-
     # NOTE: PaymentIntent is created automatically however it is not
     # automatically attached to cus_id\
     # Listen to PaymentIntent events, and use stripe.Customer.modify
     # To attached PaymentIntent customer metadata
-    if event_type == 'payment_intent.created' and 'payment_intend.payment_failed':
+    if event_type == 'payment_intend.payment_failed':
         # Follow up abandoned carts
         # add to the db under a new table? or send email?
         pass
-
-    elif event_type == 'payment_intent.created':
-        cus_id = data_object['customer']  # Get cus_id from data_object
-        intent_id = data_object['id']  # Get PaymentIntent_id from data_object
-        # https://stripe.com/docs/api/metadata
-        # Attach payment intent id to customer metadata
-        stripe.Customer.modify(
-            cus_id,
-            metadata={'paymentintent_id': intent_id}
-        )
-
+    
     elif event_type == 'invoice.paid':
+        
         cus_id = data_object['customer']
         # Data Object contains json from any given event
         invoice_id = data_object['id']
         amount_paid = data_object['amount_paid']
         invoice_url = data_object['hosted_invoice_url']
         inv_description = data_object['lines']['data'][0]['description']
-        intent_id = data_object['id']  # Get PaymentIntent_id from data_object
+        pi_id = data_object.get('payment_intent')
+
 
         # Add invoice information to customer metadata
         stripe.Customer.modify(
@@ -511,14 +522,26 @@ def webhook_received():
                 'amount_paid': amount_paid,
                 'invoice_url': invoice_url,
                 'inv_description': inv_description,
-                'paymentintent_id': intent_id
+                'payment_intent': pi_id
             }
         )
-        #print(f"THIS HERE !!!! >>>>> {data_object}")
-        #print(f"THIS HERE !!!! >>>>> {intent_id}")
-
+       #return cus_obj
+        #print(f'****** Customer Updated *invoice.paid* METADATA: {cus_obj}')
 
     elif event_type == 'checkout.session.completed':
+        
+        #cus_id = data_object['customer']
+        # Data Object contains json from any given event
+        #pi_id = data_object.get('payment_intent')
+
+        # Add invoice information to customer metadata
+        #stripe.Customer.modify(
+        #    cus_id,
+        #    metadata={
+        #        'payment_intent': pi_id
+        #    }
+        #)
+        
         session = stripe.checkout.Session.retrieve(
             event['data']['object']['id'],
             # Use expand to retrieve additional details from checkout session
@@ -529,13 +552,12 @@ def webhook_received():
             )
 
         line_items = session.line_items
-        
+
         for line_items in line_items.data:
             info = line_items.amount_total, line_items.description
             customer = session.customer
             custom_field = session.custom_fields
-            # Create data object to pass to ServiceM8
-            #print(f'SESSION COMPLETED =>>> {customer}')
+
             data = {
                     'customer': customer,
                     'subscription': {
@@ -544,16 +566,25 @@ def webhook_received():
                     },
                     'booking_details': custom_field,
             }
-
-            #print(data)
+            
+            #print(f'THIS IS CHECKOUT SESSION COMPLETED EVENT: ===== >> {data}')
+            try: 
+                ups_acc = d.ServiceM8(data, ups)
+                uuid = ups_acc.create_job()  # Create job returns uuid
+                ups_acc.create_contact(uuid)
+            except Exception as e:
+                raise f'An error occurred adding user to ServiceM8{e}'
+            
+            print(data)
             
             session_info = prepare_session_data(data)
-            user = Customer(**session_info)  # Dataclass Unpacks Dict
-            # Add customer to the database
-            add_user(user)
-            ups_acc = d.ServiceM8(data, ups)
-            uuid = ups_acc.create_job()  # Create job returns uuid
-            ups_acc.create_contact(uuid)
+            print(session_info)
+            try:
+                user = Customer(**session_info)  # Dataclass Unpacks Dict
+                # Add customer to the database
+                add_user(user)
+            except Exception as e:
+                raise f'An error occurred adding user to database{e}'
             
             #print(user.name)
             #add_customer(**)
