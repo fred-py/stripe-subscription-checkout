@@ -566,26 +566,21 @@ def webhook_received():
                     },
                     'booking_details': custom_field,
             }
-            
-            #print(f'THIS IS CHECKOUT SESSION COMPLETED EVENT: ===== >> {data}')
-            try: 
+
+            try:
                 ups_acc = d.ServiceM8(data, ups)
                 uuid = ups_acc.create_job()  # Create job returns uuid
                 ups_acc.create_contact(uuid)
             except Exception as e:
                 raise f'An error occurred adding user to ServiceM8{e}'
-            
-            print(data)
-            
+
             session_info = prepare_session_data(data)
-            print(session_info)
             try:
                 user = Customer(**session_info)  # Dataclass Unpacks Dict
                 # Add customer to the database
                 add_user(user)
             except Exception as e:
                 raise f'An error occurred adding user to database{e}'
-            
             #print(user.name)
             #add_customer(**)
             # Convert, combine and pass data to ServiceM8
@@ -593,7 +588,6 @@ def webhook_received():
             # Start both tasks and gather their results
             #asyncio.create_task(create_job(data, uww))
             #asyncio.create_task(create_job(data, ups))
-            
             #ww_acc = d.ServiceM8(data, uww)
             #uuid = ww_acc.create_job()
             #ww_acc.create_contact(uuid)
@@ -604,8 +598,8 @@ def webhook_received():
         subscription = event['data']['object']
         date_canceled = subscription.canceled_at  # Date cancelation was requested
         if date_canceled is None:
-            print('Subscription is active')
-            #pass
+            #print('Subscription is active')
+            pass
         else:
             # Response value from subscription.canceled_at
             # is in seconds, convert to datetime
@@ -615,10 +609,6 @@ def webhook_received():
             #cancel_at = datetime.datetime.fromtimestamp(date_cancel_at)
             plan = subscription['items']['data'][0]['plan']['amount']  
             cus_id = subscription['customer']
-            
-
-
-
             # Cancel subscription 
             sub_id = subscription['id']
             stripe.Subscription.cancel(sub_id)
