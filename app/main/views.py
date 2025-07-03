@@ -31,9 +31,8 @@ stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
 
 
-
-@main.route('/pre-launch', methods=['GET', 'POST', 'OPTIONS'])
-def coming_soon():
+@main.route('/new', methods=['GET', 'POST', 'OPTIONS'])
+def get_sub_page_new():
     form = RegisterInterestForm()
 
     if form.validate_on_submit():
@@ -53,27 +52,39 @@ def coming_soon():
             # Returns lead object that is passed to 
             # name parameter on redirect to retrieve Lead name
             # This reduces database queries
-            lead = add_lead(data, test=True)
-            
+            try:
+                lead = add_lead(data, test=True)
+            except Exception as e:
+                raise f'An error occurred adding lead contact to database{e}'
+
+
             # Sends internal email notification
             sbj = 'Someone has registered their interest in Wheelie Wash'
             template = 'database/mail/user_interest'
-            recipients = ('rezende.f@outlook.com', 'info@wheeliewash.au')
-            send_email(recipients, sbj, template, **data)
+            recipient1 = 'rezende.f@outlook.com'
+            recipient2 = 'info@wheeliewash.au'
+            recipient3 = 'marketing@unitedpropertyservices.au'
+            
+            # Unable to send email to a list of addresses - temporary solution below.
+            send_email(recipient1, sbj, template, **data)
+            send_email(recipient2, sbj, template, **data)
+            send_email(recipient3, sbj, template, **data)
             flash('Thank you for registering your interest!', 'success')  # Add a success message 
             session['known'] = False
             name = lead.name  # Set name for success message
+
+
 
             # If AJAX Request, return JSON
             if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
                 return jsonify({
                     'success': True,
-                    'message': f'Thank you for registering your interest, {name}!, We will be in touch soon!',
+                    'message': f'Thank you for registering your interest, {name}!, We will be in touch as soon as our services expand to your area.',
                     'name': name
                 })
             # Fallback for non-AJAX
-            return render_template('stripe/launch.html', form=form, favicon=os.getenv('FAVICON'))
-
+            return render_template('stripe/index.html', form=form, favicon=os.getenv('FAVICON'))
+     
         else:
             # If email exists
             session['known'] = True
@@ -85,7 +96,7 @@ def coming_soon():
                     'success': False,
                     'message': 'Email address already in use'
                 })
-    return render_template('stripe/launch.html', form=form, favicon=os.getenv('FAVICON'))
+    return render_template('stripe/index_new.html', form=form, favicon=os.getenv('FAVICON'))
 
 
 
@@ -274,6 +285,12 @@ def get_publishable_key():
     """
     return jsonify({
         'publishableKey': os.getenv('STRIPE_PUBLISHABLE_KEY'),
+
+        'oneBin2weeks': os.getenv('ONE_BIN_2_WEEKS'),
+        'oneBin4weeks': os.getenv('ONE_BIN_4_WEEKS'),
+        'oneBin8weeks': os.getenv('ONE_BIN_8_WEEKS'),
+        'oneBinOneOff': os.getenv('ONE_BIN_ONE_OFF'),
+
         'comboPrice': os.getenv('ANY_COMBO_PRICE_ID'),
         'silverPrice': os.getenv('SILVER_PRICE_ID'),
         'goldPrice': os.getenv('GOLD_PRICE_ID'),
