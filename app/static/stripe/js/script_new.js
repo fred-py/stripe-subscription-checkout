@@ -28,24 +28,58 @@ document.querySelectorAll('.pricing-button').forEach(button => {
   button.disabled = true; // Disable buttons initially
 });
 
-function setPriceInputs({oneBin2weeks, oneBin4weeks, oneBin8weeks, oneBinOneOff, publishableKey}) {
+function setPriceInputs({
+    oneBin2weeks, oneBin4weeks, oneBin8weeks, oneBinOneOff,
+    twoBins2weeks, twoBins4weeks, twobins8weeks, twoBinsOneOff, 
+    threeBins2weeks, threeBins4weeks, threeBins8weeks, threeBinsOneOff,
+    publishableKey}) {
   const oneb2wPriceInput = document.querySelector('#oneBin2weeks');
   const oneb4wPriceInput = document.querySelector('#oneBin4weeks');
   const oneb8wPriceInput = document.querySelector('#oneBin8weeks');
-  const onebOneOffPriceInput = document.querySelector('#oneBinOneOff');
-  if (!oneb2wPriceInput || !oneb4wPriceInput || !oneb8wPriceInput || !onebOneOffPriceInput) {
+  const onebOneOffPriceInput = document.querySelector('#onesBinOneOff');
+  const twob2wPriceInput = document.querySelector('#twoBins2weeks');
+  const twob4wPriceInput = document.querySelector('#twoBins4weeks');
+  const twob8wPriceInput = document.querySelector('#twoBins8weeks');
+  const twobOneOffPriceInput = document.querySelector('#twoBinsOneOff');
+  const threeb2wPriceInput = document.querySelector('#threeBins2weeks');
+  const threeb4wPriceInput = document.querySelector('#threeBins4weeks');
+  const threeb8wPriceInput = document.querySelector('#threeBins8weeks');
+  const threebOneOffPriceInput = document.querySelector('#threeBinsOneOff');
+  if (
+    !oneb2wPriceInput || !oneb4wPriceInput || !oneb8wPriceInput || !onebOneOffPriceInput ||
+    !twob2wPriceInput || !twob4wPriceInput || !twob8wPriceInput || !twobOneOffPriceInput ||
+    !threeb2wPriceInput || !threeb4wPriceInput || !threeb8wPriceInput || !threebOneOffPriceInput
+  ) {
     console.error('Price input elements not found');
     document.querySelector('#error-message').textContent = 'Error: Pricing inputs missing.';
     return false;
   }
-  comboPriceInput.value = oneBin2weeks || '';
-  silverPriceInput.value = oneBin4weeks || '';
-  goldPriceInput.value = oneBin8weeks || '';
-  goldPriceInput.value = oneBinOneOff || '';
+  // Set input values
+  oneb2wPriceInput.value = oneBin2weeks || '';
+  oneb4wPriceInput.value = oneBin4weeks || '';
+  oneb8wPriceInput.value = oneBin8weeks || '';
+  onebOneOffPriceInput.value = oneBinOneOff || '';
+  twob2wPriceInput = twoBins2weeks || '';
+  twob4wPriceInput = twoBins4weeks || '';
+  twob8wPriceInput = twobins8weeks || '';
+  twobOneOffPriceInput = twoBinsOneOff || '';
+  threeb2wPriceInput = threeBins2weeks || '';
+  threeb4wPriceInput = threeBins4weeks || '';
+  threeb8wPriceInput = threeBins8weeks || '';
+  threebOneOffPriceInput = threeBinsOneOff || '';
   console.log('Inputs set:', {
-    combo: comboPriceInput.value,
-    silver: silverPriceInput.value,
-    gold: goldPriceInput.value
+    oneBin2weeks: oneb2wPriceInput.value,
+    oneBin4weeks: oneb4wPriceInput.value,
+    oneBin8weeks: oneb8wPriceInput.value,
+    oneBinOneOff: onebOneOffPriceInput.value,
+    twoBins2weeks: twob2wPriceInput.value,
+    twoBins4weeks: twob4wPriceInput.value,
+    twoBins8weeks: twob8wPriceInput.value,
+    twoBinsOneOff: twobOneOffPriceInput.value,
+    threeBins2weeks: threeb2wPriceInput.value,
+    threeBins4weeks: threeb4wPriceInput.value,
+    threeBins8weeks: threeb8wPriceInput.value,
+    threeBinsOneOff: threebOneOffPriceInput.value
   });
   // Initialize Stripe
   const stripe = Stripe(publishableKey);
