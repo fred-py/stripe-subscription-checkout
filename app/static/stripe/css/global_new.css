@@ -1,0 +1,741 @@
+/* Variables */
+:root {
+    --gray-offset: rgba(0, 0, 0, 0.03);
+    --gray-border: rgba(0, 0, 0, 0.15);
+    --gray-light: rgba(0, 0, 0, 0.4);
+    --gray-mid: rgba(0, 0, 0, 0.7);
+    --gray-dark: rgba(0, 0, 0, 0.9);
+    --gray-transparent: rgba(0, 0, 0, 0.12);
+    --wheelie-green: #00BF63;
+    --green-transparent: rgba(13, 246, 133, 0.113);
+    --green-light: #4ed728; 
+    --green-mid: #048D4B;
+    --green-dark: #048D4B;
+    --green-gradient: linear-gradient(to bottom, #00ff00, #008000);
+    --body-color: var(--gray-mid);
+    --headline-color: var(--gray-dark);
+    --accent-color: #0066f0;
+    --body-font-family: Noto Serif Japanese;
+    --radius: 6px;
+  }
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+html {
+    box-sizing: border-box;
+    font-family: var(--body-font-family)
+  }
+
+* *:before, *:after {
+    box-sizing: inherit;
+}
+
+#map {
+  height: 40em;
+}
+
+.heading-1 {
+  color: white;
+  /*font-size: calc(1.375rem + 1.5vw);*/
+  font-size: 2em; 
+  z-index: 999999;
+  text-align: center;
+}
+
+.heading-2 {
+  color: var(--gray-mid);
+  font-size: 2em; 
+  z-index: 999999;
+  text-align: center;
+}
+
+@media (min-width: 900px) {
+  .heading-1{
+    font-size: x-large;
+  }
+}
+
+.add-margin-top {
+  margin-top: 3em;
+}
+
+.add-margin {
+  margin-bottom: 10%;
+}
+
+.h-style {
+  font-weight: 600;
+  margin-bottom: 5%;
+}
+
+.sub-heading-1 {
+  font-weight: 600;
+  font-size: 2em;
+}
+
+
+.sub-style {
+  font-weight: 600;
+}
+
+.paragraph-0 {
+  color: var(--gray-light);
+}
+
+.paragraph-1 {
+  color: var(--gray-light);
+  margin: 3em;
+}
+
+.p-text-2 {
+  font-size: x-large;
+  color: var(--gray-light);
+  text-align: center;
+  padding-left: 4em;
+  padding-right: 4em;
+}
+
+.p-text-3 {
+  font-size: x-large;
+  color: var(--gray-light);
+  text-align: center;
+  padding-left: 4em;
+  padding-right: 4em;
+}
+
+
+
+.p-text {
+  font-size: medium;
+}
+
+.background {
+    padding: 40px 25px 25px;
+    position: relative;
+    width: 100%;
+}
+
+/*MOBILE SETTING*/
+@media (max-width: 600px) {
+  .heading-1{
+    font-size: 1.2em;
+  }
+  #map {
+    height: 40em;
+  }
+
+  .sub-heading-1 {
+    font-size: 1.2em;
+}
+  .paragraph-1 {
+    margin: 0.5em;
+  }
+}
+
+/*MOBILE SETTING FOR 400 ERROR PAGE*/
+@media (max-width: 600px) {
+  .heading-2 {
+    font-size: 1.5em;
+    text-align: left; 
+  }
+  .p-text-2{
+    font-size: large;
+    text-align: left;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+  }
+  .p-text-3 {
+    font-size: large;
+    text-align: left;
+    padding-left: 0em;
+    padding-right: 0em;
+  }
+  
+
+
+}
+.background::after {
+    content: '';
+    background: var(--green-dark);
+    background: -moz-linear-gradient(top, var(--green-light) 0%, var(--green-dark) 100%);
+    background: -webkit-linear-gradient(top, var(--green-light) 0%, var(--green-dark) 100%);
+    background: linear-gradient(to bottom, var(--green-light) 0%, var(--green-dark) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#60a9ff', endColorstr='#4394f4',GradientType=0 );
+    height: 350px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    z-index: 1;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.header__logo {
+    position: inherit;
+    transform: translateY(37%);
+    background-image: url('/stripe/img/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 140px;
+    height: 140px;
+    z-index: 9999;
+    margin-bottom: 3em;
+}
+
+.error_400_img {
+  display: block; /* Ensure it’s a block-level element (already the default for div, but added for clarity) */
+  margin: 0 auto; /* Center the div horizontally */
+  position: inherit;
+  transform: translateY(37%);
+  background-image: url('/stripe/img/error_400.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center; /* Center the background image within the div */
+  width: 300px;
+  height: 300px;
+  z-index: 9999;
+  margin-bottom: 3em;
+  padding-bottom: 2em;
+}
+
+
+.header__title {
+    position: inherit;
+    font-family: InterVariable, sans-serif;
+    font-variation-settings: 'wght' 800;
+    color: var(--wheelie-green);
+    transform: translateY(72%);
+    letter-spacing: 1px;
+    font-size: 28px;
+    z-index: 9999;
+}
+  
+  @media (min-width: 900px) {
+    .background {
+      padding: 0 0 25px;
+    }
+  }
+
+  .p-alignment {
+    text-align: center;
+    margin-top: 10%;
+  }
+
+  .service-container-1 {
+    margin: 0 auto;
+    align-items: center;
+    padding: 30px 0; /* 50px top and bottom, 0 left/right */
+    max-width: 960px;
+    width: 100%;
+  }
+
+  .service-container {
+    margin: 0 auto;
+    align-items: center;
+    padding: 30px 0; /* 50px top and bottom, 0 left/right */
+    max-width: 960px;
+    width: 100%;
+  }
+  
+  .panel {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 15px 15px;
+    position: relative;
+    width: 100%;
+    z-index: 10;
+  }
+
+  @media (max-width: 600px) {
+    .panel {
+      padding: 15px 5px;
+    }
+  }
+
+
+  .pricing-table {
+    box-shadow: 0px 10px 13px -6px rgba(0, 0, 0, 0.08), 0px 20px 31px 3px rgba(0, 0, 0, 0.09), 0px 8px 20px 7px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  @media (min-width: 900px) {
+    .pricing-table {
+      flex-direction: column;
+    }
+    .panel {
+      
+      padding: 0px 0px;
+    }
+
+  } canvas 
+  
+  .pricing-table * {
+    list-style-type: none;
+    font-weight: 400;
+    text-align: left; 
+  }
+  
+  
+  .faqs {
+    box-shadow: 0px 10px 13px -6px rgba(0, 0, 0, 0.08), 0px 20px 31px 3px rgba(0, 0, 0, 0.09), 0px 8px 20px 7px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    font-weight: 400;
+    align-items: center;
+    text-align: left; 
+  }
+
+  .pricing-plan {
+    /*This is overridden*/
+    border-bottom: 1px solid var(--green-transparent);
+  }
+  
+  .pricing-plan:last-child {
+    border-bottom: none;
+  }
+  
+  @media (min-width: 900px) {
+    .pricing-plan {
+      border-bottom: none;
+      /*border-right: 1px solid #e1f1ff;*/
+      flex-basis: 100%;
+      padding: 25px 50px;
+    }
+
+    .pricing-features-item{
+      width: 100%;
+    }
+  
+    .pricing-plan:last-child {
+      border-right: none;
+    }
+  }
+  
+  .icon-alignment{
+    text-align: center;
+  }
+
+  .pricing-img {
+
+    margin-bottom: 18px;
+    max-width: 28%;
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.5));
+  }
+
+  @media (min-width: 900px) {
+    .pricing-img {
+      filter: drop-shadow(0.4px 0.4px 0.4px rgba(0, 0, 0, 0.4));
+    }
+  }
+  
+
+  .pricing-header {
+    font-family: Noto Serif Japanese;
+    color:var(--wheelie-green);
+    /*text-transform: lowercase;*/
+    text-align: center;
+    filter: drop-shadow(.7px .7px .7px rgba(0, 0, 0, 0.5));
+    font-size: 35px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  
+  .pricing-features {
+    color:var(--gray-light);
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center items horizontally */
+    font-weight: 350;
+    letter-spacing: 1px;
+    margin: 4em 15em; /* param #1 top and bottom, param #2 left/right */
+  }
+
+  @media (max-width: 600px) {
+    .pricing-header {
+      font-size: 1.5em;
+    }
+    .pricing-features {
+      margin: 3em 0em; /* param #1 top and bottom, param #2 left/right */
+    }
+  }
+  
+.pricing-features-item {
+    list-style-type: none;
+    font-family: sans-serif;
+    
+    width: 100%;
+    font-size: 12px;
+    line-height: 1.5;
+    padding: 12px 0;
+}
+
+
+  .pricing-features-item:before {
+    content: "✔";
+    margin-right: 10px;
+    color: var(--wheelie-green);
+  }
+  
+  .pricing-price {
+    padding-top: 2%;
+    padding-bottom: 1%;
+    color: var(--wheelie-green);
+    display: block;
+    filter: drop-shadow(.7px .7px .7px rgba(0, 0, 0, 0.3));
+    font-size: 25px;
+    font-weight: 700;
+  }
+
+  .pricing-price:after {
+	content: "/per clean";
+    font-family: sans-serif;
+	font-size: 14px;
+    font-weight: 300;
+	display: inline-block;
+	color:var(--gray-light);
+}
+
+.pricing-price.silver:after {
+	content: "/per quarter";
+    font-family: sans-serif;
+	font-size: 12px;
+    font-weight: 300;
+	display: inline-block;
+	color:var(--gray-light);
+}
+
+.pricing-price.one-off:after {
+	content: "/per bin";
+    font-family: sans-serif;
+	font-size: 12px;
+    font-weight: 300;
+	display: inline-block;
+	color:var(--gray-light);
+}
+
+  .pricing-price.starts-at:before {
+    content: "Starts at ";
+    font-family: sans-serif;
+    transform: translateY(-22px) translateX(-2px);
+    font-size: 12px;
+    font-weight: 300;
+	display: inline-block;
+	color:var(--gray-light);
+  }
+
+  .pricing-price.from:before {
+    content: "From ";
+    font-family: sans-serif;
+    transform: translateY(-22px) translateX(-2px);
+    font-size: 12px;
+    font-weight: 300;
+	display: inline-block;
+	color:var(--gray-light);
+  }
+  
+  .billing-frequency {
+    font-size: 12px;
+    font-family: sans-serif;
+    transform: translateY(7px);
+    font-weight: 300;
+    color: var(--gray-light);
+}
+
+
+  .pricing-button {
+    background-color: transparent;
+    border: 1px solid var(--green-light);
+    font-family: sans-serif;
+    border-radius: 10px;
+    color: var(--green-light);
+    display: inline-block;
+    margin: 25px 0;
+    padding: 15px 35px;
+    text-decoration: none;
+    transition: all 150ms ease-in-out;
+    cursor: pointer;
+  }
+
+  .pricing-button:hover,
+  .pricing-button:focus {
+    background-color: var(--green-transparent);
+  }
+  
+  .pricing-button.is-featured {
+    background-color: var(--wheelie-green);
+    border: .5px solid var(--green-mid);
+    color: #fff;
+  }
+  
+  .pricing-button.is-featured:hover,
+  .pricing-button.is-featured:active {
+    background-color: var(--green-transparent);
+    border: 1px solid var(--wheelie-green);
+    color: var(--wheelie-green);
+  }
+
+
+.break {
+    align-content: center;
+    width: 100%;
+    border-top: .8px solid var(--gray-transparent); /* Adjust color as needed */
+    margin: 5px 5; /* Adjust as needed */
+    padding-left: 0%;
+    padding-right: 0%;
+}
+
+/* FAQs Section*/
+.accordion h1 {
+    margin-bottom: 66px;
+
+}
+
+.accordion-body {
+    font-family: sans-serif;
+    color: var(--gray-light);
+    margin: 2px auto;
+    padding: 77px 77px;
+
+}
+
+.form-header {
+  text-align: left !important;
+}
+
+.label {
+    font-size: 19px;
+    font-weight: 522;
+    margin-bottom: 12px;
+    text-align: left;
+}
+
+
+/*.content {
+    text-align: left;
+    max-width: 100%;
+    line-height: 1.2;
+}*/
+
+/* <p> tag was inheriting centred alignment
+from pricing-table as .pricing-table * is 
+applying text-align: center; to all
+elements (*) within any element with 
+the class .pricing-table.  */
+/*.pricing-table .content p {
+    text-align: left;
+    max-width: 100%;
+    line-height: 1.2;
+}
+*/
+
+
+/*h3 is in the cancellation policy*/
+.pricing-table .content h3 {
+    text-align: left;
+    font-weight: 600;
+    max-width: 100%;
+    line-height: 1.2;
+}
+
+/*Desktop Screens*/
+@media (min-width: 900px) {
+    /*FAQs Header*/
+    h1 {
+        font-size: 22px;
+    }
+    .content {
+        margin: 0px 0px;
+    }
+    
+}
+
+/*Mobile Screens*/
+@media (max-width: 600px) {
+    .accordion .content {
+        font-size: 12px;
+        width: 100%;
+    }
+    .accordion h1{
+        margin-top: 55px;
+    }
+    .accordion-body {
+        padding: 0% 0%;
+    }
+
+    /*Cannot group .label and .content 
+    as font-size is different*/
+    .label {
+        /*Sequences of whitespace will collapse into a single whitespace.
+        Text will wrap when necessary, and on line breaks.*/
+        white-space: normal;
+        font-weight: 600;
+        font-size: 12px;
+        margin-left: 0%;
+        margin-right: 0%;
+    }
+    /*FAQs Header*/
+    h1 {
+        font-size: 18px;
+        font-weight: 600;
+    }
+    /*Cancellation Policy Header*/
+    h3 {
+        font-size: 12px;
+        font-weight: 600;
+    }
+    
+}
+
+
+
+/* Break up strokes*/
+hr {
+    border-top: .7px solid var(--gray-transparent);
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*set the position property for each of the 
+containers (holding both the label and content) \
+to relative.*/
+.accordion .container-accord {
+    position: relative;
+    margin: 0% 2%;
+}
+
+/* Positions the labels relative to the .container. 
+Adds padding to the top and bottom, Also makes its cursor a pointer */
+
+.accordion .label {
+    position: relative;
+    padding: 5% 0;
+    cursor: pointer;
+  }
+
+/* Positions the plus sign 5px from the right. 
+Centers it using the transform property. */
+.accordion .label::before {
+    content: "+";
+    position: absolute;
+    top: 50%;
+    right: -5px;
+    font-size: 25px;
+    transform: translateY(-50%);
+}
+
+/* Hides the content (height: 0), decreases font size, 
+justifies text and adds transition */
+
+.accordion .content {
+    position: relative;
+    background: white;
+    line-height: 1.4;
+    height: 0;
+    font-size: 13px;
+    text-align: left;
+    max-width: 100%;
+    overflow: hidden;
+    transition: 0.5s;
+  }
+
+
+
+
+/* Unhides the content part when active. Sets the height */
+.accordion .container-accord.active .content {
+    height: auto;
+    margin-bottom: 44px;
+  }
+  
+  /* Changes from plus sign to negative sign once active */
+  
+  .accordion .container-accord.active .label::before {
+    content: '-';
+    font-size: 30px;
+  }
+
+
+  /*FAQS NOTE THIS DOESNT WORK*/
+  .faqs-text-style {
+    font-weight: 600;
+  }
+
+  /*Two-Dimensional Pricing Table under FAQs*/
+  .table-header {
+    font-weight: 600;
+    text-align: left;
+    padding: 5% 2%; 
+  }
+  
+  .table-row {
+    text-align: left;
+    font-weight: 600;
+    justify-content: space-around;
+    padding: 5px 10px;
+  }
+
+  .table-value {
+    text-align: left;
+    justify-content: space-around;
+    padding: 5px 10px;
+  }
+
+  .table-spacer {
+    padding-top: 5%;
+  }
+
+  @media (max-width: 600px) {
+
+    .accordion .label::before {
+      content: "+";
+      position: absolute;
+      top: 50%;
+      right: -5px;
+      font-size: 14px;
+      transform: translateY(-50%);
+    }
+    .accordion .container-accord.active .label::before {
+      content: '-';
+      font-size: 14px;
+    }
+    .table-header {
+      font-size: 9px;
+      font-weight: 600;
+      text-align: left;
+    }
+    
+    .table-row {
+      font-size: 9px;
+      text-align: left;
+      font-weight: 555;
+      justify-content: space-around;
+      padding-top: 1%;
+      padding-bottom: 1%;
+      padding-right: 1%;
+      padding-left: 0%;
+    }
+  
+    .table-value {
+      font-size: 9px;
+      text-align: left;
+      justify-content: space-around;
+      padding-top: 1%;
+      padding-bottom: 1%;
+      padding-right: 1%;
+    }
+  
+    .table-spacer {
+      padding-top: 3%;
+    }
+  }
+
+
