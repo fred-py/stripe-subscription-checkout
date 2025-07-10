@@ -333,81 +333,11 @@ def create_checkout_session():
         # Hence the creation of two checkout sessions
         oo_1 = os.getenv('ONE_BIN_ONE_OFF')
         oo_2 = os.getenv('TWO_BINS_ONE_OFF')
-        one_offs = [oo_1, oo_2]
+        oo_3 = os.getenv('THREE_BINS_ONE_OFF')
+        one_offs = [oo_1, oo_2, oo_3]
 
-        if price == os.getenv('ANY_COMBO_PRICE_ID'):
-            checkout_session = stripe.checkout.Session.create(
-                #success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
-                success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
-                # Neither return nor cancel URL works with embedded mode
-                cancel_url=domain_url,  # + '/canceled.html',
-                #return_url = 'https://unitedpropertyservices.au/wheelie-bin-clean/checkout/return?session_id={CHECKOUT_SESSION_ID}',
-                mode='subscription',
-                allow_promotion_codes=True,
-                #discounts=[{
-                #    'coupon': 'test_coupon',
-                #}],
-                billing_address_collection='required',
-                line_items=[{
-                    'price': price,
-                    'adjustable_quantity':
-                        # Ensure max is has the save value on stripe dashboard
-                        {'enabled': True, 'minimum': 1, 'maximum': 4},
-                    'quantity': 1
-                }],
-                phone_number_collection={'enabled': True},
-                custom_fields=[
-                    {
-                        'key': 'collection_date',
-                        'label': {'type': 'custom', 'custom': 'Bin Collection Day'},
-                        'type': 'dropdown',
-                        'dropdown': {
-                            'options': [
-                                {'label': 'Monday', 'value': 'monday'},
-                                {'label': 'Tuesday', 'value': 'tuesday'},
-                                {'label': 'Wednesday', 'value': 'wednesday'},
-                                {'label': 'Thursday', 'value': 'thursday'},
-                                {'label': 'Friday', 'value': 'friday'},
-                            ],
-                        },
-                    },
-
-                    {
-                        'key': 'select_bins',
-                        'label': {'type': 'custom', 'custom': 'Select the bin(s)to be cleaned.'},
-                        'type': 'dropdown',
-                        'dropdown': {
-                            'options': [
-                                {'label': 'Red bin', 'value': 'R'},
-                                {'label': 'Yellow bin', 'value': 'Y'},
-                                {'label': 'Green bin', 'value': 'G'},
-                                {'label': 'Red and Green bins', 'value': 'RG'},
-                                {'label': 'Red and Yellow bins', 'value': 'RY'},
-                                {'label': 'Yellow and Green bins', 'value': 'YG'},
-                                {'label': 'All bins', 'value': 'All'},
-                            ]
-                        }
-                    },
-                    {
-                        'key': 'confirm_service_area',
-                        'optional': False,
-                        'label': {'type': 'custom', 'custom': 'Have you confirmed we service your area?'},
-                        'type': 'dropdown',
-                        'dropdown': {
-                            'options': [
-                                {'label': 'Yes, I have checked that my street is within the serviced area', 'value': 'yes'},
-                                {'label': 'No, I have not checked the map. Check map before proceeding', 'value': 'no'},
-                            ],
-                        },
-                    },
-                ],
-                
-                custom_text={
-                    'submit': {'message': 'NOTE: Currently we only service the Margaret River region.'},
-                },
-            )
-
-        elif price not in one_offs:
+        
+        if price not in one_offs:
             checkout_session = stripe.checkout.Session.create(
                 
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
@@ -458,13 +388,6 @@ def create_checkout_session():
                 #    'coupon': 'test_coupon',
                 #}],
                 billing_address_collection='required',
-                line_items=[{
-                    'price': price,
-                    'adjustable_quantity':
-                        # Ensure max is has the save value on stripe dashboard
-                        {'enabled': False},
-                    'quantity': 1
-                }],
                 phone_number_collection={'enabled': True},
                 custom_fields=[
                     {
@@ -497,11 +420,6 @@ def create_checkout_session():
                 #discounts=[{
                 #    'coupon': 'test_coupon',
                 #}],
-                # automatic_tax={'enabled': True},
-                line_items=[{
-                    'price': price,
-                    'quantity': 1
-                }],
                 phone_number_collection={'enabled': True},
                 custom_fields=[
                     {

@@ -33,7 +33,7 @@ function setPriceInputs({
     twoBins2weeks, twoBins4weeks, twobins8weeks, twoBinsOneOff, 
     threeBins2weeks, threeBins4weeks, threeBins8weeks, threeBinsOneOff,
     publishableKey}) {
-  const oneb2wPriceInput.value = document.querySelector('#oneBin2weeks');
+  const oneb2wPriceInput = document.querySelector('#oneBin2weeks');
   const oneb4wPriceInput = document.querySelector('#oneBin4weeks');
   const oneb8wPriceInput = document.querySelector('#oneBin8weeks');
   const onebOneOffPriceInput = document.querySelector('#onesBinOneOff');
@@ -59,14 +59,14 @@ function setPriceInputs({
   oneb4wPriceInput.value = oneBin4weeks || '';
   oneb8wPriceInput.value = oneBin8weeks || '';
   onebOneOffPriceInput.value = oneBinOneOff || '';
-  twob2wPriceInput = twoBins2weeks || '';
-  twob4wPriceInput = twoBins4weeks || '';
-  twob8wPriceInput = twobins8weeks || '';
-  twobOneOffPriceInput = twoBinsOneOff || '';
-  threeb2wPriceInput = threeBins2weeks || '';
-  threeb4wPriceInput = threeBins4weeks || '';
-  threeb8wPriceInput = threeBins8weeks || '';
-  threebOneOffPriceInput = threeBinsOneOff || '';
+  twob2wPriceInput.value = twoBins2weeks || '';
+  twob4wPriceInput.value = twoBins4weeks || '';
+  twob8wPriceInput.value = twobins8weeks || '';
+  twobOneOffPriceInput.value = twoBinsOneOff || '';
+  threeb2wPriceInput.value = threeBins2weeks || '';
+  threeb4wPriceInput.value = threeBins4weeks || '';
+  threeb8wPriceInput.value = threeBins8weeks || '';
+  threebOneOffPriceInput.value = threeBinsOneOff || '';
   console.log('Inputs set:', {
     oneBin2weeks: oneb2wPriceInput.value,
     oneBin4weeks: oneb4wPriceInput.value,
