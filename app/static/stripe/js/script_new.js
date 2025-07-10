@@ -29,23 +29,24 @@ document.querySelectorAll('.pricing-button').forEach(button => {
 });
 
 function setPriceInputs({oneBin2weeks, oneBin4weeks, oneBin8weeks, oneBinOneOff, publishableKey}) {
-  const oneb2wPriceInput = document.querySelector('#oneBin2weeks');
-  const oneb4wPriceInput = document.querySelector('#oneBin4weeks');
-  const oneb8wPriceInput = document.querySelector('#oneBin8weeks');
-  const onebOneOffPriceInput = document.querySelector('#oneBinOneOff');
-  if (!oneb2wPriceInput || !oneb4wPriceInput || !oneb8wPriceInput || !onebOneOffPriceInput) {
+  const oneb2wInput = document.querySelector('#oneBin2weeks');
+  const oneb4wInput = document.querySelector('#oneBin4weeks');
+  const oneb8wInput = document.querySelector('#oneBin8weeks');
+  const onebOneOffInput = document.querySelector('#oneBinOneOff');
+  if (!oneb2wInput || !oneb4wInput || !oneb8wInput || !onebOneOffInput) {
     console.error('Price input elements not found');
     document.querySelector('#error-message').textContent = 'Error: Pricing inputs missing.';
     return false;
   }
-  comboPriceInput.value = oneBin2weeks || '';
-  silverPriceInput.value = oneBin4weeks || '';
-  goldPriceInput.value = oneBin8weeks || '';
-  goldPriceInput.value = oneBinOneOff || '';
+  oneb2wInput.value = oneBin2weeks || '';
+  oneb4wInput.value = oneBin4weeks || '';
+  oneb8wInput.value = oneBin8weeks || '';
+  onebOneOffInput.value = oneBinOneOff || '';
   console.log('Inputs set:', {
-    combo: comboPriceInput.value,
-    silver: silverPriceInput.value,
-    gold: goldPriceInput.value
+    oneb2w: oneb2wInput.value,
+    oneb4w: oneb4wInput.value,
+    oneb8w: oneb8wInput.value,
+    onebOneOff: onebOneOffInput.value,
   });
   // Initialize Stripe
   const stripe = Stripe(publishableKey);

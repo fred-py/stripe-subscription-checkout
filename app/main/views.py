@@ -195,7 +195,6 @@ def contact_us():
                 'service': form.service.data,
                 'message': form.message.data,
             }
-            print(f'ONE OFF DATA STRUCTURE: ======> {data}')
             # Saves to database
             # Returns lead object that is passed to 
             # name parameter on redirect to retrieve Lead name
