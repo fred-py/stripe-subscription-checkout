@@ -388,6 +388,13 @@ def create_checkout_session():
                 #    'coupon': 'test_coupon',
                 #}],
                 billing_address_collection='required',
+                line_items=[{
+                    'price': price,
+                    'adjustable_quantity':
+                        # Ensure max is has the save value on stripe dashboard
+                        {'enabled': False},
+                    'quantity': 1
+                }],
                 phone_number_collection={'enabled': True},
                 custom_fields=[
                     {
