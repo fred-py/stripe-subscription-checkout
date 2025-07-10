@@ -33,7 +33,7 @@ function setPriceInputs({
     twoBins2weeks, twoBins4weeks, twobins8weeks, twoBinsOneOff, 
     threeBins2weeks, threeBins4weeks, threeBins8weeks, threeBinsOneOff,
     publishableKey}) {
-  const oneb2wPriceInput = document.querySelector('#oneBin2weeks');
+  const oneb2wPriceInput.value = document.querySelector('#oneBin2weeks');
   const oneb4wPriceInput = document.querySelector('#oneBin4weeks');
   const oneb8wPriceInput = document.querySelector('#oneBin8weeks');
   const onebOneOffPriceInput = document.querySelector('#onesBinOneOff');
