@@ -290,6 +290,16 @@ def get_publishable_key():
         'oneBin8weeks': os.getenv('ONE_BIN_8_WEEKS'),
         'oneBinOneOff': os.getenv('ONE_BIN_ONE_OFF'),
 
+        'twoBins2weeks': os.getenv('TWO_BINS_2_WEEKS'),
+        'twoBins4weeks': os.getenv('TWO_BINS_4_WEEKS'),
+        'twoBins8weeks': os.getenv('TWO_BINS_8_WEEKS'),
+        'twoBinsOneOff': os.getenv('TWO_BINS_ONE_OFF'),
+
+        'threeBins2weeks': os.getenv('THREE_BINS_2_WEEKS'),
+        'threeBins4weeks': os.getenv('THREE_BINS_4_WEEKS'),
+        'threeBins8weeks': os.getenv('THREE_BINS_8_WEEKS'),
+        'threeBinsOneOff': os.getenv('THREE_BINS_ONE_OFF'),
+
         'comboPrice': os.getenv('ANY_COMBO_PRICE_ID'),
         'silverPrice': os.getenv('SILVER_PRICE_ID'),
         'goldPrice': os.getenv('GOLD_PRICE_ID'),
@@ -311,7 +321,6 @@ def create_checkout_session():
     #if not price:
     #    logging.error("priceId is empty or missing")
     #   return jsonify({'error': {'message': 'Missing priceId'}}), 400
-
     domain_url = os.getenv('DOMAIN')  # Domain if fetched by back arrow icon on stripe hoted
     try:
         # Create new Checkout Session for the order
@@ -321,13 +330,18 @@ def create_checkout_session():
         # and once adjustable_quantity is included even if set to false,
         # it fails to return products with no adjustable quantity
         # Hence the creation of two checkout sessions
-        if price == os.getenv('ANY_COMBO_PRICE_ID'):
+        oo_1 = os.getenv('ONE_BIN_ONE_OFF')
+        oo_2 = os.getenv('TWO_BINS_ONE_OFF')
+        oo_3 = os.getenv('THREE_BINS_ONE_OFF')
+        one_offs = [oo_1, oo_2, oo_3]
+
+        
+        if price not in one_offs:
             checkout_session = stripe.checkout.Session.create(
-                #success_url=domain_url + '/success.html?session_id={CHECKOUT_SESSION_ID}',
+                
                 success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
                 # Neither return nor cancel URL works with embedded mode
-                cancel_url=domain_url,  # + '/canceled.html',
-                #return_url = 'https://unitedpropertyservices.au/wheelie-bin-clean/checkout/return?session_id={CHECKOUT_SESSION_ID}',
+                cancel_url=domain_url,
                 mode='subscription',
                 allow_promotion_codes=True,
                 #discounts=[{
@@ -338,26 +352,11 @@ def create_checkout_session():
                     'price': price,
                     'adjustable_quantity':
                         # Ensure max is has the save value on stripe dashboard
-                        {'enabled': True, 'minimum': 1, 'maximum': 4},
+                        {'enabled': False},
                     'quantity': 1
                 }],
                 phone_number_collection={'enabled': True},
                 custom_fields=[
-                    {
-                        'key': 'collection_date',
-                        'label': {'type': 'custom', 'custom': 'Bin Collection Day'},
-                        'type': 'dropdown',
-                        'dropdown': {
-                            'options': [
-                                {'label': 'Monday', 'value': 'monday'},
-                                {'label': 'Tuesday', 'value': 'tuesday'},
-                                {'label': 'Wednesday', 'value': 'wednesday'},
-                                {'label': 'Thursday', 'value': 'thursday'},
-                                {'label': 'Friday', 'value': 'friday'},
-                            ],
-                        },
-                    },
-
                     {
                         'key': 'select_bins',
                         'label': {'type': 'custom', 'custom': 'Select the bin(s)to be cleaned.'},
@@ -370,27 +369,50 @@ def create_checkout_session():
                                 {'label': 'Red and Green bins', 'value': 'RG'},
                                 {'label': 'Red and Yellow bins', 'value': 'RY'},
                                 {'label': 'Yellow and Green bins', 'value': 'YG'},
-                                {'label': 'All bins', 'value': 'All'},
+                                {'label': 'All 3 bins', 'value': 'All'},
                             ]
                         }
                     },
+                ],
+            )
+        elif price in one_offs:
+            checkout_session = stripe.checkout.Session.create(
+                
+                success_url='https://unitedpropertyservices.au/wheelie-wash-subscribed/?session_id={CHECKOUT_SESSION_ID}',
+                # Neither return nor cancel URL works with embedded mode
+                cancel_url=domain_url,
+                mode='payment',
+                allow_promotion_codes=True,
+                #discounts=[{
+                #    'coupon': 'test_coupon',
+                #}],
+                billing_address_collection='required',
+                line_items=[{
+                    'price': price,
+                    'adjustable_quantity':
+                        # Ensure max is has the save value on stripe dashboard
+                        {'enabled': False},
+                    'quantity': 1
+                }],
+                phone_number_collection={'enabled': True},
+                custom_fields=[
                     {
-                        'key': 'confirm_service_area',
-                        'optional': False,
-                        'label': {'type': 'custom', 'custom': 'Have you confirmed we service your area?'},
+                        'key': 'select_bins',
+                        'label': {'type': 'custom', 'custom': 'Select the bin(s)to be cleaned.'},
                         'type': 'dropdown',
                         'dropdown': {
                             'options': [
-                                {'label': 'Yes, I have checked that my street is within the serviced area', 'value': 'yes'},
-                                {'label': 'No, I have not checked the map. Check map before proceeding', 'value': 'no'},
-                            ],
-                        },
+                                {'label': 'Red bin', 'value': 'R'},
+                                {'label': 'Yellow bin', 'value': 'Y'},
+                                {'label': 'Green bin', 'value': 'G'},
+                                {'label': 'Red and Green bins', 'value': 'RG'},
+                                {'label': 'Red and Yellow bins', 'value': 'RY'},
+                                {'label': 'Yellow and Green bins', 'value': 'YG'},
+                                {'label': 'All 3 bins', 'value': 'All'},
+                            ]
+                        }
                     },
                 ],
-                
-                custom_text={
-                    'submit': {'message': 'NOTE: Currently we only service the Margaret River region.'},
-                },
             )
 
         else:
@@ -404,11 +426,6 @@ def create_checkout_session():
                 #discounts=[{
                 #    'coupon': 'test_coupon',
                 #}],
-                # automatic_tax={'enabled': True},
-                line_items=[{
-                    'price': price,
-                    'quantity': 1
-                }],
                 phone_number_collection={'enabled': True},
                 custom_fields=[
                     {
