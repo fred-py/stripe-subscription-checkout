@@ -31,7 +31,7 @@ stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 ups = os.getenv('UPS_KEY')  # ServiceM8 United Property Services Keys
 
 
-@main.route('/new', methods=['GET', 'POST', 'OPTIONS'])
+@main.route('/new_test_prices_landing_page', methods=['GET', 'POST', 'OPTIONS'])
 def get_sub_page_new():
     form = RegisterInterestForm()
 
