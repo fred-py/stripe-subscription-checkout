@@ -139,7 +139,6 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
           </div>
         </div>
       </div>
-
       <div class="header__title text-center mt-3 mb-3">Two Bins Cleaned</div>
       <div class="service-container">
         <div class="panel pricing-table">
@@ -197,7 +196,6 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
           </div>
         </div>
       </div>
-      
       <div class="header__title text-center mt-3 mb-3">Three Bins Cleaned</div>
       <div class="service-container">
         <div class="panel pricing-table">
@@ -251,6 +249,47 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                   </form>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="header__title text-center mt-3 mb-3">Commercial Cleans</div>
+      <div class="service-container">
+        <div class="panel pricing-table">
+          <div class="container text-center">
+            <div class="row mt-4">
+                <div class="col-md">
+                  <div class="paragraph-0 mb-3 fs-5 fw-semibold">
+                    One-off and scheduled cleans available
+                  </div>
+                  <span class="pricing-price from">$10</span>
+                  <div>
+                    <form action="/contact-us" method="POST">
+                      <input type="hidden" name="priceId" value="commercial">
+                      <button href="#/" class="pricing-button is-featured">Book Now</button>
+                    </form>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="service-container">
+        <div class="container text-center">
+          <div class="row mt-4">
+            <div class="col-sm">
+              <div class="header__title_grey text-center mt-1 mb-3">Don't want to order your clean online?</div>
+              <form action="/contact-us" method="POST">
+                <input type="hidden" name="priceId" value="commercial">
+                <button type="submit" class="pricing-button-large">Click here to contact us for offline orders</button>
+              </form>
+            </div>
+            <div class="col-sm">
+              <div class="header__title_grey text-center mt-1 mb-3">Need more than 3 bins cleaned?</div>
+              <form action="/contact-us" method="POST">
+                <input type="hidden" name="priceId" value="commercial">
+                <button type="submit" class="pricing-button-large">Click here to contact us for a custom clean</button>
+              </form>
             </div>
           </div>
         </div>

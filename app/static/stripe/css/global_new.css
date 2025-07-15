@@ -216,7 +216,17 @@ html {
     font-size: 28px;
     z-index: 9999;
 }
-  
+
+.header__title_grey {
+  position: inherit;
+  font-family: InterVariable, sans-serif;
+  font-variation-settings: 'wght' 700;
+  color: var(--gray-light);
+  transform: translateY(72%);
+  letter-spacing: 1px;
+  font-size: 22px;
+  z-index: 9999;
+}
   @media (min-width: 900px) {
     .background {
       padding: 0 0 25px;
@@ -449,6 +459,19 @@ html {
     color: var(--gray-light);
 }
 
+.pricing-button-large {
+  background-color: transparent;
+  border: 1px solid var(--green-light);
+  font-family: sans-serif;
+  border-radius: 10px;
+  color: var(--green-light);
+  display: inline-block;
+  margin: 25px 0;
+  padding: 15px 35px;
+  text-decoration: none;
+  transition: all 150ms ease-in-out;
+  cursor: pointer;
+}
 
   .pricing-button {
     background-color: transparent;
