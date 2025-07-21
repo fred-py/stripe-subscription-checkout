@@ -376,7 +376,17 @@ html {
       margin: 3em 0em; /* param #1 top and bottom, param #2 left/right */
     }
   }
-  
+
+.mobile-line {
+  display: block; /* Default: visible */
+  border: 1px solid #dee2e6; /* Optional: matches Bootstrap border */
+}
+@media (min-width: 768px) {
+  .mobile-line {
+    display: none; /* Hide on desktop and larger */
+  }
+}
+
 .pricing-features-item {
     list-style-type: none;
     font-family: sans-serif;
@@ -461,6 +471,8 @@ html {
 
 .pricing-button-large {
   background-color: transparent;
+  font-size: 17px;
+  font-weight: 550;
   border: 1px solid var(--green-light);
   font-family: sans-serif;
   border-radius: 10px;
@@ -472,6 +484,14 @@ html {
   transition: all 150ms ease-in-out;
   cursor: pointer;
 }
+
+.pricing-button-large:hover,
+  .pricing-button-large:focus {
+    background-color: var(--green-transparent);
+  }
+
+
+
 
   .pricing-button {
     background-color: transparent;

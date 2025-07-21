@@ -93,7 +93,8 @@ class ContactForm(FlaskForm):  # Flask WebDev p. 114
         'Which Plan or Service are you interested in?',
         choices=[
             ('', 'Select...'),
-            ('one_off_res', 'One-Off residential'),
+            ('one_off_res', 'Standard one-off clean (up to 3 bins)'),
+            ('3_plus_bins', 'Clean 4 or more bins'),
         ],
         validators=[DataRequired(message='Please select a service')]
 
