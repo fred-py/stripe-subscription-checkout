@@ -68,6 +68,9 @@ html {
   margin-bottom: 5%;
 }
 
+.h-size-1 {
+  font-size: 1.5em;
+}
 .sub-heading-1 {
   font-weight: 600;
   font-size: 2em;
@@ -385,6 +388,11 @@ html {
   .mobile-line {
     display: none; /* Hide on desktop and larger */
   }
+}
+
+.custom-icon {
+  font-size: 5rem;
+  color: var(--wheelie-green);
 }
 
 .pricing-features-item {
