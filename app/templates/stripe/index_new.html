@@ -23,16 +23,6 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
     -->
     <link rel="preconnect" href="https://rsms.me/">  <!--Inter Font-->
     <link rel="stylesheet" href="https://rsms.me/inter/inter.css">  <!--Inter Font-->
-    
-    <!--Leaflet Map API-->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-     crossorigin=""/>
-    
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-     crossorigin=""></script>
-    <!--END of Leaflet Map API-->
     <!--Bootstrap WTF-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Meta Pixel Code -->
@@ -66,20 +56,6 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
           </div>
         </div>
         <div id="anchor-map"></div> <!-- Anchor Point -->
-        <div class="service-container-1">
-            <div class="panel pricing-table">
-              <div class="paragraph-1">
-                <div class="sub-heading-1">Serviced Areas For Subscription Customers Only</div>
-                <hr>
-                <div>
-                  Note: Serviced areas apply to subscription customers only. For commercial and one-off cleans, areas not highlighted below can still be serviced.
-                </div>
-              </div>
-              </hr>
-              <div id="map"></div>
-              <script src="/stripe/js/loadMap.js"></script>
-            </div>
-        </div>
       </header>
       <div class="service-container">
         <div class="panel">
@@ -127,7 +103,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                       <i class="bi bi-check2-circle custom-icon"></i>
                       <div class="h-style h-size-1 add-margin">Smells Fresh</div>
                       <div>Odours are neutralised,</div>
-                      <div>keeping bins fresh</div>
+                      <div>keeping bins fresh.</div>
                     </div>
                   </div>
                   <div class="col-md">
@@ -145,13 +121,65 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
       </div>
       <br>    
       <div id="anchor-gold"></div> <!-- Anchor Point -->
+
+      <div class="header__title text-center mt-3 mb-3">One-Off Cleans</div>
+      <div class="service-container">
+        <div class="panel pricing-table">
+          <div class="container text-center">
+            <div class="row mt-4">
+              <div class="p-text-3">Pay as you go</div>
+              <div class="col-md">
+                <div class="paragraph-0 mb-3 fs-4 fw-semibold">
+                  1 Bin
+                </div>
+                <span class="pricing-price">$33</span>
+                <div>
+                  <form action="/create-checkout-session" method="POST">
+                    <input type="hidden" id="oneBinOneOff" name="priceId">
+                    <button href="#/" class="pricing-button">Book Now</button>
+                  </form>
+                </div>
+                <hr class="mobile-line mb-5">
+              </div>
+                <div class="col-md">
+                  <div class="paragraph-0 mb-3 fs-4 fw-semibold">
+                    2 Bins
+                  </div>
+                  <span class="pricing-price">$56</span>
+                  <div>
+                    <form action="/create-checkout-session" method="POST">
+                      <input type="hidden" id="twoBinsOneOff" name="priceId">
+                      <button href="#/" class="pricing-button">Book Now</button>
+                    </form>
+                  </div>
+                  <hr class="mobile-line mb-5">
+                </div>
+              <div class="col-md">
+                <div class="paragraph-0 mb-3 fs-4 fw-semibold">
+                  3 Bins  
+                </div>
+                <span class="pricing-price">$66</span>
+                <div>
+                  <form action="/create-checkout-session" method="POST">
+                    <input type="hidden" id="threeBinsOneOff" name="priceId">
+                    <button href="#/" class="pricing-button">Book Now</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
       <div class="header__title text-center mt-3 mb-3">One Bin Cleaned</div>
       <div class="service-container">
         <div class="panel pricing-table">
           <div class="container text-center">
             <div class="row mt-4">
+                <div class="p-text-3">Save when you pre-pay 6 cleans. Cancel anytime.</div>
                 <div class="col-md">
-                  <div class="paragraph-0 mb-3 fs-5 fw-semibold">
+                  <div class="paragraph-0 mb-3 fs-4 fw-semibold">
                     Every 2 Weeks
                   </div>
                   <span class="pricing-price">$14</span>
@@ -164,7 +192,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                   <hr class="mobile-line mb-5">
                 </div>
                 <div class="col-md">
-                  <div class="paragraph-0 mb-3 fs-5 fw-semibold">
+                  <div class="paragraph-0 mb-3 fs-4 fw-semibold">
                     Every 4 Weeks
                   </div>
                   <span class="pricing-price">$18</span>
@@ -177,26 +205,13 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                   <hr class="mobile-line mb-5">
                 </div>
               <div class="col-md">
-                <div class="paragraph-0 mb-3 fs-5 fw-semibold">
+                <div class="paragraph-0 mb-3 fs-4 fw-semibold">
                   Every 8 weeks  
                 </div>
                 <span class="pricing-price">$28</span>
                 <div>
                   <form action="/create-checkout-session" method="POST">
                     <input type="hidden" id="oneBin8weeks" name="priceId">
-                    <button href="#/" class="pricing-button">Book Now</button>
-                  </form>
-                </div>
-                <hr class="mobile-line mb-5">
-              </div>
-              <div class="col-md">
-                <div class="paragraph-0 mb-3 fs-5 fw-semibold">
-                  One Off
-                </div>
-                <span class="pricing-price">$33</span>
-                <div>
-                  <form action="/create-checkout-session" method="POST">
-                    <input type="hidden" id="oneBinOneOff" name="priceId">
                     <button href="#/" class="pricing-button">Book Now</button>
                   </form>
                 </div>
@@ -210,8 +225,9 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
         <div class="panel pricing-table">
           <div class="container text-center">
             <div class="row mt-4">
+                <div class="p-text-3">Save when you pre-pay 6 cleans. Cancel anytime.</div>
                 <div class="col-md">
-                  <div class="paragraph-0 mb-3 fs-5 fw-semibold">
+                  <div class="paragraph-0 mb-3 fs-4 fw-semibold">
                     Every 2 Weeks
                   </div>
                   <span class="pricing-price">$24</span>
@@ -224,7 +240,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                   <hr class="mobile-line mb-5">
                 </div>
                 <div class="col-md">
-                  <div class="paragraph-0 mb-3 fs-5 fw-semibold">
+                  <div class="paragraph-0 mb-3 fs-4 fw-semibold">
                     Every 4 Weeks
                   </div>
                   <span class="pricing-price">$33</span>
@@ -237,26 +253,13 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                   <hr class="mobile-line mb-5">
                 </div>
               <div class="col-md">
-                <div class="paragraph-0 mb-3 fs-5 fw-semibold">
+                <div class="paragraph-0 mb-3 fs-4 fw-semibold">
                   Every 8 weeks  
                 </div>
                 <span class="pricing-price">$46</span>
                 <div>
                   <form action="/create-checkout-session" method="POST">
                     <input type="hidden" id="twoBins8weeks" name="priceId">
-                    <button href="#/" class="pricing-button">Book Now</button>
-                  </form>
-                </div>
-                <hr class="mobile-line mb-5">
-              </div>
-              <div class="col-md">
-                <div class="paragraph-0 mb-3 fs-5 fw-semibold">
-                  One Off
-                </div>
-                <span class="pricing-price">$56</span>
-                <div>
-                  <form action="/create-checkout-session" method="POST">
-                    <input type="hidden" id="twoBinsOneOff" name="priceId">
                     <button href="#/" class="pricing-button">Book Now</button>
                   </form>
                 </div>
@@ -270,8 +273,9 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
         <div class="panel pricing-table">
           <div class="container text-center">
             <div class="row mt-4">
+              <div class="p-text-3">Save when you pre-pay 6 cleans. Cancel anytime.</div>
                 <div class="col-md">
-                  <div class="paragraph-0 mb-3 fs-5 fw-semibold">
+                  <div class="paragraph-0 mb-3 fs-4 fw-semibold">
                     Every 2 Weeks
                   </div>
                   <span class="pricing-price">$33</span>
@@ -284,7 +288,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                   <hr class="mobile-line mb-5">
                 </div>
                 <div class="col-md">
-                  <div class="paragraph-0 mb-3 fs-5 fw-semibold">
+                  <div class="paragraph-0 mb-3 fs-4 fw-semibold">
                     Every 4 Weeks
                   </div>
                   <span class="pricing-price">$45</span>
@@ -297,26 +301,13 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                   <hr class="mobile-line mb-5">
                 </div>
               <div class="col-md">
-                <div class="paragraph-0 mb-3 fs-5 fw-semibold">
+                <div class="paragraph-0 mb-3 fs-4 fw-semibold">
                   Every 8 weeks  
                 </div>
                 <span class="pricing-price">$57</span>
                 <div>
                   <form action="/create-checkout-session" method="POST">
                     <input type="hidden" id="threeBins8weeks" name="priceId">
-                    <button href="#/" class="pricing-button">Book Now</button>
-                  </form>
-                </div>
-                <hr class="mobile-line mb-5">
-              </div>
-              <div class="col-md">
-                <div class="paragraph-0 mb-3 fs-5 fw-semibold">
-                  One Off
-                </div>
-                <span class="pricing-price">$66</span>
-                <div>
-                  <form action="/create-checkout-session" method="POST">
-                    <input type="hidden" id="threeBinsOneOff" name="priceId">
                     <button href="#/" class="pricing-button">Book Now</button>
                   </form>
                 </div>
@@ -331,7 +322,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
           <div class="container text-center">
             <div class="row mt-4">
                 <div class="col-md">
-                  <div class="paragraph-0 mb-3 fs-5 fw-semibold">
+                  <div class="paragraph-0 mb-3 fs-4 fw-semibold">
                     One-off and scheduled cleans available
                   </div>
                   <span class="pricing-price from">$10</span>

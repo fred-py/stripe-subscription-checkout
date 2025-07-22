@@ -98,12 +98,15 @@ html {
   padding-right: 4em;
 }
 
+
+
 .p-text-3 {
-  font-size: x-large;
+  font-size: larger;
+  font-weight: 400;
   color: var(--gray-light);
   text-align: center;
-  padding-left: 4em;
-  padding-right: 4em;
+
+  margin-bottom: 5%;
 }
 
 
@@ -149,9 +152,10 @@ html {
   }
   .p-text-3 {
     font-size: large;
-    text-align: left;
+    text-align: center;
     padding-left: 0em;
     padding-right: 0em;
+    margin-bottom: 7%;
   }
   
 
@@ -233,6 +237,10 @@ html {
   @media (min-width: 900px) {
     .background {
       padding: 0 0 25px;
+    }
+    .header__title {
+      font-size: 3em;
+      padding-bottom: 1em;
     }
   }
 
@@ -382,8 +390,10 @@ html {
 
 .mobile-line {
   display: block; /* Default: visible */
-  border: 1px solid #dee2e6; /* Optional: matches Bootstrap border */
+  border: 0.6px solid #dee2e6; /* Optional: matches Bootstrap border */
 }
+
+
 @media (min-width: 768px) {
   .mobile-line {
     display: none; /* Hide on desktop and larger */
