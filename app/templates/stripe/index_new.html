@@ -57,6 +57,9 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
         </div>
         <div id="anchor-map"></div> <!-- Anchor Point -->
       </header>
+      <div class="img-container">
+        <img src="stripe/img/ww3.png" class="img-fluid" alt="Wheelie Bin Cleaning Margaret River">
+      </div>
       <div class="service-container">
         <div class="panel">
           <div class="service-container">
@@ -322,7 +325,7 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
           <div class="container text-center">
             <div class="row mt-4">
                 <div class="col-md">
-                  <div class="paragraph-0 mb-3 fs-4 fw-semibold">
+                  <div class="p-text-3">
                     One-off and scheduled cleans available
                   </div>
                   <span class="pricing-price from">$10</span>
@@ -379,23 +382,21 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
               <hr>
               <div class="container-accord">
                 <div class="label">Service Limitations</div>
-                <div class="content">Our service is a roadside service. Our aim is to eventually provide service to all properties however, 
-                  due to operational constraints and the safety of our team and road users, some locations may be deemed unsuitable. 
-                  We have provided a map that highlights our current service area. You can find that <a href="#anchor-map">here</a>.
-                  If your property does not show in our service area, please fill out our register your interest form below and we will follow up with you.
-                  Whatever your situation we encourage you to contact us if you have any questions or concerns about the suitability of your property for our service.
-                  If you have mistakenly made an order without confirming the service area and your payment has already been processed, we will issue a full refund. 
-                  You will be notified within seven days about the service limitation and the refund process.
+                <div class="content">This service is intended for roadside provision. While it is intended to be available to all properties,
+                  operational constraints and safety considerations for staff and road users may make certain locations unsuitable.
+                  For questions regarding property suitability, please contact us. 
+                  If payment has been made and the property is determined to be unsuitable for service, a full refund will be issued.
+                  Notification of the service limitation and the refund process will be provided within seven days. 
                 </div>
               </div>
-
               <hr>
               <div class="container-accord">
-                <div class="label">Register your interest</div>
+                <div class="label">Contact Us</div>
                 
                 <div class="content">
-                  If your street is not highlighted on our map, this means we currently do not service your street under our subscription.
-                  You can register your interest below and we will be in touch as we expand.
+                  If you're unsure whether your property is eligible for our service,
+                  have any questions, or would like to request a custom clean,
+                  please fill out the form below and we’ll get back to you soon.
                   
                   {% include "/stripe/_form_faqs.html" %}
                   
@@ -403,89 +404,38 @@ FAQs Accordion: https://www.freecodecamp.org/news/build-an-accordion-menu-using-
                 <div id="anchor-interest"></div> <!--Anchor Point-->
 
               <!--Closing this div keeps the accordion below open-->
-
-              <hr>
-              <div class="container-accord">
-                <div class="label">How much does it cost?</div>
-                <div class="content">
-                  <p>Residential:</p>
-                  <p>We offer three subscription plans with the intent for it to be as easy and stress free as possible to have clean healthy bins according to your usage. Gold, Silver or Bronze.</p>
-                  <p><span class="faqs-text-style">Gold</span> subscription is the best value costing only $9 per bin with red, yellow and green bins cleaned once per month (This includes the green bin cleaned twice per month). Contact us if you would like a different combination of bins to be cleaned. This is billed every 6 months.</p>
-                  <p>Silver subscription costs $11.50 per bin with red, yellow and green bins cleaned once every 12 weeks (This includes the green bin cleaned twice every 12 weeks). This is billed annually.</p>
-                  <p>Bronze subscription costs depends on the number of bins you would like cleaned per month. This is billed monthly.</p>
-                  <table>
-                    <tr> 
-                      <th></th>
-                      <th class="table-header">Gold</th>
-                      <th class="table-header">Silver</th>
-                      <th class="table-header">Bronze</th>
-                    </tr>
-                    <tr>
-                      <td class="table-row">Cost per Bin</td>
-                      <td class="table-value">$9</td>
-                      <td class="table-value">$11.50</td>
-                      <td class="table-value">$14 - $18</td>
-                    </tr>
-                    <tr>
-                      <td class="table-row">Subscription Cost</td>
-                      <td class="table-value">$36/month</td>
-                      <td class="table-value">$46/quarter</td>
-                      <td class="table-value">$18-$56/month</td>
-                    </tr>
-                    <tr>
-                      <td class="table-row">Cleaning Frequency</td>
-                      <td class="table-value">Monthly</td>
-                      <td class="table-value">Quarterly</td>
-                      <td class="table-value">Monthly</td>
-                    </tr>
-                    <tr>
-                      <td class="table-row">Billing Frequency</td>
-                      <td class="table-value">Half-Yearly</td>
-                      <td class="table-value">Annually</td>
-                      <td class="table-value">Monthly</td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
               <hr>
               <div class="container-accord">
                 <div class="label">Service Cancellation Policies</div>
                 <div class="content">
                   <p>We strive to offer flexible and transparent cancellation policies tailored to meet the needs of all our customers.
                     Please review the details for each type of service below:</p>
-                  <p><b>Gold Subscription</b></p>
-                  <ul>
-                    <li>Details: $36 per month, billed every six months at $216, covering 12 services annually.</li>
-                    <li>Cancellation: You may cancel anytime. The cancellation takes effect immediately upon confirmation.</li>
-                    <li>Refunds: Eligible pro rata refunds are available after receiving six services. Refunds for unused months will be processed within 14 days.</li>
-                    <li>Renewal: Automatically renews at the end of the annual billing cycle unless cancelled before the renewal date.</li>
-                  </ul>
-                  <p><b>Silver Subscription</b></p>
-                  <ul>
-                    <li>Details: $46 per quarter, billed annually at $184, covering four quarterly services.</li>
-                    <li>Cancellation: You may cancel anytime. The cancellation takes effect immediately upon confirmation.</li>
-                    <li>Refunds: Eligible pro rata refunds are available after receiving two services. Refunds for unused services will be processed within 14 days.</li>
-                    <li>Renewal: Automatically renews at the end of the annual billing cycle unless cancelled before the renewal date.</li>
-                  </ul>
-                  <p><b>Bronze Subscription</b></p>
-                  <ul>
-                    <li>Details: Recurring monthly service priced between $14 and $18 per bin, depending on the number of bins required. 
-                      A minimum subscription period of two months is required, and subscribers are obligated to fulfill this commitment before cancellation is permitted.</li>
-                    <li>Cancellation: You may cancel only after completing the two-month minimum subscription period.
-                      The cancellation takes effect at the end of the current monthly billing cycle.
-                    </li>
-                    <li>Renewal: Automatically renews monthly unless cancelled before the renewal date.</li>
-                  </ul>
                   <p><b>One-Off Services</b></p>
                   <ul>
                     <li>Cancellation: Cancellations made up to 48 hours before the scheduled service time will receive a full refund. Cancellations within 48 hours are not eligible for a refund.</li>
                     <li>Refund Processing: Refunds for eligible cancellations will be processed within 14 days.</li>
                     <li>Rescheduling: Rescheduling requests up to 48 hours before the scheduled service are penalty-free. Late rescheduling requests may incur additional fees.</li>
                   </ul>
+                  <p><b>Prepaid Services </b></p>
+                  <p>Enjoy discounted rates when you prepay for 6 cleaning sessions.
+                    Pricing depends on both the number of bins and how often you schedule a clean.
+                    For a detailed breakdown, please consult our price chart above.
+                  </p>
+                  <p><b>Cancellation</b></p>
+                  <p>You can cancel your prepaid plan at any time, with the cancellation taking
+                    effect as soon as your request is confirmed.
+                  </p>
+                  <p><b>Refunds</b></p>
+                  <p>If you have completed at least 3 cleans, you are eligible for a pro-rated refund for any unused sessions.
+                    Refunds will be issued within 14 days.
+                  </p>
+                  <p><b>Renewal</b></p>
+                  <p>Your plan will automatically renew after the sixth cleaning session unless you cancel beforehand.
+                    We’ll send you a reminder prior to renewal, giving you the opportunity to adjust or
+                    discontinue your service.
+                  </p>
                   <p><b>Exceptions</b></p>
-                  <ul>
-                    <li>Exceptional cases will be reviewed individually for resolution.</li>
-                  </ul>
+                  <p>Exceptional cases will be reviewed individually for resolution.</p>
                   <p><b>How to cancel my subscription or service?</b></p>
                     <p>You can manage your account including cancellation by accessing our 
                       <a href="https://billing.stripe.com/p/login/00g7sU5kQ0ga5tS8ww" target="_blank" rel="noopener">Customer Portal</a>

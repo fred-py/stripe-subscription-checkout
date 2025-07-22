@@ -249,6 +249,22 @@ html {
     margin-top: 10%;
   }
 
+  .img-container {
+    margin-top: 2%;
+    align-items: center;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+.img-container img {
+    width: 100%;
+    max-width: 100%;
+    display: block; /* Removes any inline spacing */
+}
+  
   .service-container-1 {
     margin: 0 auto;
     align-items: center;

@@ -53,12 +53,10 @@ class RegisterInterestForm(FlaskForm):  # Flask WebDev p. 114
         'Which Plan or Service are you interested in?',
         choices=[
             ('', 'Select...'),
-            ('gold', 'Gold Subscription'),
-            ('silver', 'Silver Subscription'),
-            ('bronze', 'Bronze Subscription'),
             ('one_off_res', 'One-Off residential'),
             ('one_off_comm', 'One-Off Commercial'),
-            ('custom_comm', 'Customised Cleaning(Commercial)')
+            ('custom_comm', 'Customised Cleaning(Commercial)'),
+            ('other', 'Other')
         ],
         validators=[DataRequired(message='Please select a service')]
 
