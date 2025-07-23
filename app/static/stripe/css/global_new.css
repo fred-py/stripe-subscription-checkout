@@ -264,6 +264,14 @@ html {
     max-width: 100%;
     display: block; /* Removes any inline spacing */
 }
+
+
+@media (max-width: 900px) {
+  .img-container {
+    padding-top: 13%;
+    max-width: 100%;
+  }
+}
   
   .service-container-1 {
     margin: 0 auto;
