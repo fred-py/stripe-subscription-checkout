@@ -334,7 +334,6 @@ def create_checkout_session():
         oo_2 = os.getenv('TWO_BINS_ONE_OFF')
         oo_3 = os.getenv('THREE_BINS_ONE_OFF')
         one_offs = [oo_1, oo_2, oo_3]
-
         
         if price not in one_offs:
             checkout_session = stripe.checkout.Session.create(
@@ -468,7 +467,7 @@ def create_checkout_session():
 
 @main.route('/error_test')
 def test_error():
-    return render_template('errors/400.html')
+    return render_template('errors/404.html')
 
 @main.route('/customer-portal', methods=['POST'])
 def customer_portal():
@@ -631,15 +630,16 @@ def webhook_received():
         subscription = event['data']['object']
         date_canceled = subscription.canceled_at  # Date cancelation was requested
         if date_canceled is None:
-            #print('Subscription is active')
             pass
         else:
+            pass
             # Response value from subscription.canceled_at
             # is in seconds, convert to datetime
             #date_canceled = int(subscription.canceled_at)  # Date cancelation was requested
             #date_cancel_at = int(subscription.cancel_at)  # Date cancelation will take effect
             #cancel_req = datetime.datetime.fromtimestamp(date_canceled)
             #cancel_at = datetime.datetime.fromtimestamp(date_cancel_at)
+            """
             plan = subscription['items']['data'][0]['plan']['amount']  
             cus_id = subscription['customer']
             # Cancel subscription 
@@ -665,6 +665,7 @@ def webhook_received():
                 payment_intent=p_intent_id,
                 amount=amount
             )
+            """
 
     elif event_type == 'subscription_schedule.canceled':
         subscription_schedule = event['data']['object']

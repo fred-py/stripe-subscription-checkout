@@ -73,16 +73,17 @@ def get_customers():
     })
 
 
-@api.route('/customers/<int:id>')
+# NOTE: The below is temporarily disabled
+#@api.route('/customers/<int:id>')
 #@permission_required(Permission.DRIVER)
 #@cross_origin()
 #@token_auth.login_required
-def get_customer(id):
-    """Returns a single customer.
-    If name it not found in the database,
-    a 404 error is returned."""
-    customer = CustomerDB.query.get_or_404(id)
-    return jsonify(customer.to_json())
+#def get_customer(id):
+#    """Returns a single customer.
+#    If name it not found in the database,
+#    a 404 error is returned."""
+#    customer = CustomerDB.query.get_or_404(id)
+#    return jsonify(customer.to_json())
 
 
 @api.route('/leads/')

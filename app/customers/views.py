@@ -10,7 +10,6 @@ from . import customers
 
 
 
-
 @customers.route('/customers_test', methods=['GET', 'POST'])
 @login_required  # NOTE: First route attempeting to display all customers
 def customers_info():

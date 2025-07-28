@@ -183,10 +183,6 @@ class ServiceM8:
             send_error_email(**e)
             raise (e)
 
-            
-
 
 if __name__ == '__main__':
     ServiceM8()
-
-
