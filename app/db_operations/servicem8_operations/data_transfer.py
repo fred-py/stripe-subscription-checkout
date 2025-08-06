@@ -51,6 +51,7 @@ class ServiceM8:
             # then access the key 'dropdown' which is a dict and so forth
             # Using param custom field directly for ease of use
             bin_collection = self.data['booking_details'][0]['dropdown']['value']
+            promo_code = self.data['booking_details'][1]['text']['value']
             total_paid = self.data['subscription']['amount_paid']  # Total Amount
             # Convert cents to dollars & int to str
             total_paid = str(total_paid / 100)
@@ -68,7 +69,8 @@ class ServiceM8:
                 # Concatnate info to go on job description
                 description = plan + ' | ' \
                     + bin_collection + ' ' \
-                    + f' | Total paid: ${total_paid}'
+                    + f' | Total paid: ${total_paid}' \
+                    + f' | Promo-code: {promo_code}'
 
         # Create new job
         url = "https://api.servicem8.com/api_1.0/job.json"

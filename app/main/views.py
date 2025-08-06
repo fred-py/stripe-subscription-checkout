@@ -342,7 +342,7 @@ def create_checkout_session():
                 # Neither return nor cancel URL works with embedded mode
                 cancel_url=domain_url,
                 mode='subscription',
-                allow_promotion_codes=True,
+                allow_promotion_codes=False,
                 #discounts=[{
                 #    'coupon': 'test_coupon',
                 #}],
@@ -371,6 +371,13 @@ def create_checkout_session():
                                 {'label': 'All 3 bins', 'value': 'All'},
                             ]
                         }
+                    },
+                    {
+                        'key': 'promo-code',
+                        'label': {'type': 'custom', 'custom': 'Add promotion code'},
+                        'type': 'text',
+                        'optional': True,
+
                     },
                 ],
             )
@@ -598,6 +605,7 @@ def webhook_received():
                     },
                     'booking_details': custom_field,
             }
+            print(data)
 
             try:
                 ups_acc = d.ServiceM8(data, ups)
