@@ -388,7 +388,7 @@ def create_checkout_session():
                 # Neither return nor cancel URL works with embedded mode
                 cancel_url=domain_url,
                 mode='payment',
-                allow_promotion_codes=True,
+                allow_promotion_codes=False,
                 #discounts=[{
                 #    'coupon': 'test_coupon',
                 #}],
