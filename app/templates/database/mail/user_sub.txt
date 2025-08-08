@@ -1,0 +1,11 @@
+Someone has subscribed to Wheelie Wash:
+
+
+Name: {{ name }}
+Email: {{ email }}
+Mobile: {{ mobile }}
+Street: {{ street }}
+City: {{ city }}
+Postcode: {{ postcode }}
+Service: {{ service }}
+Promo Code: {{ promo_code }}

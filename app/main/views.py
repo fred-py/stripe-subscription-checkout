@@ -605,7 +605,6 @@ def webhook_received():
                     },
                     'booking_details': custom_field,
             }
-            print(data)
 
             try:
                 ups_acc = d.ServiceM8(data, ups)
@@ -621,6 +620,20 @@ def webhook_received():
                 add_user(user)
             except Exception as e:
                 raise f'An error occurred adding user to database{e}'
+            try:
+                # Sends internal WheelieWashDBWheelieWashDBemail notification
+                sbj = 'Someone has subscribed to Wheelie Wash'
+                template = 'database/mail/user_sub'
+                recipient1 = 'rezende.f@outlook.com'
+                recipient2 = 'info@wheeliewash.au'
+                recipient3 = 'marketing@unitedpropertyservices.au'
+                # Unable to send email to a list of addresses - temporary solution below.
+                send_email(recipient1, sbj, template, **session_info)
+                send_email(recipient2, sbj, template, **session_info)
+                send_email(recipient3, sbj, template, **session_info)
+            except Exception as e:
+                raise f'An error occurred while sending one-off email notification: {e}'
+            
             #print(user.name)
             #add_customer(**)
             # Convert, combine and pass data to ServiceM8

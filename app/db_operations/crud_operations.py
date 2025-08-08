@@ -15,6 +15,7 @@ def add_user(data, test=False):
         email = data.email
         phone = data.phone
         cus_id = data.cus_id
+        promo_code = data.promo_code
         #paymentintent_id = data.paymentintent_id
         test = test
         
@@ -42,6 +43,7 @@ def add_user(data, test=False):
             email=email,
             phone=phone,
             cus_id=cus_id,
+            promo_code=promo_code,
             #paymentintent_id=paymentintent_id,
             test=test,
         )

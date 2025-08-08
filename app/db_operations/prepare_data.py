@@ -20,6 +20,7 @@ class Customer:
     email: str
     phone: str
     cus_id: str
+    promo_code: str
     #paymentintent_id: str
     # => Address Details
     street: str
@@ -47,6 +48,7 @@ def prepare_session_data(data) -> dict:
         email = data['customer']['email']
         phone = data['customer']['phone']
         cus_id = data['customer']['id']
+        promo_code = data['booking_details'][1]['text']['value']
         #payment_intent_id = data['customer']['metadata']['payment_intent']
         # => Address Details
         street = data['customer']['address']['line1']
@@ -76,6 +78,7 @@ def prepare_session_data(data) -> dict:
             'email': email,
             'phone': phone,
             'cus_id': cus_id,
+            'promo_code': promo_code,
             #'payment_intent_id': payment_intent_id,
             # Address Model
             'street': street,

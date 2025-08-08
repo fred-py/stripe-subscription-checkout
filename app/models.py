@@ -45,6 +45,7 @@ class CustomerDB(db.Model):
     name: Mapped[str] = db.Column(db.String, nullable=False)
     phone: Mapped[str] = db.Column(db.String, nullable=False)
     email: Mapped[str] = db.Column(db.String, nullable=False, unique=True)
+    promo_code: Mapped[str] = db.Column(db.String, default=None)
     cus_id: Mapped[str] = db.Column(db.String, nullable=False)
     paymentintent_id: Mapped[str] = db.Column(db.String)
     active: Mapped[bool] = db.Column(db.Boolean, default=True)
@@ -75,6 +76,7 @@ class CustomerDB(db.Model):
             'phone': self.phone,
             'email': self.email,
             'cus_id': self.cus_id,
+            'promo_code': self.promo_code,
             'paymentintent_id': self.paymentintent_id,
             'active': self.active,
             'test': self.test,
@@ -108,6 +110,7 @@ class CustomerDB(db.Model):
             'phone': self.phone,
             'email': self.email,
             'cus_id': self.cus_id,
+            'promo_code': self.promo_code,
             'paymentintent_id': self.paymentintent_id,
             'active': self.active,
             'test': self.test,
