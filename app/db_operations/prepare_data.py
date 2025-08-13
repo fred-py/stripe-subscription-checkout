@@ -35,20 +35,23 @@ class Customer:
     #inv_description: str
     #invoice_url: str
     # => Bin details
-    bin_collection: str
     selected_bins: str
 
 
 def prepare_session_data(data) -> dict:
     """Prepare data from checkout session
     Test is omitted on production, if testing, set to True"""
+    oo1 = 'One Off (1 bin)'
+    oo2 = 'One Off (2 bins)'
+    oo3 = 'One Off (3 bins)'
+    one_offs = [oo1, oo2, oo3]
+    
     try:
         # => Customer Details
         name = data['customer']['name']
         email = data['customer']['email']
         phone = data['customer']['phone']
         cus_id = data['customer']['id']
-        promo_code = data['booking_details'][1]['text']['value']
         #payment_intent_id = data['customer']['metadata']['payment_intent']
         # => Address Details
         street = data['customer']['address']['line1']
@@ -64,13 +67,13 @@ def prepare_session_data(data) -> dict:
         #inv_description = data['customer']['metadata']['inv_description']
         #invoice_url = data['customer']['metadata']['invoice_url']
         # => Bin details
-        bin_collection = data['booking_details'][0]['dropdown']['value']
+        selected_bins = data['booking_details'][0]['dropdown']['value']
         """Check plan type, if Bronze or Any Combo (One-Off),
         bin selection is passed to Servicem8 description"""
-        if plan == 'Bronze' or plan == 'One-Off':
-            selected_bins = data['booking_details'][0]['dropdown']['value']
+        if plan not in one_offs:
+            promo_code = data['booking_details'][1]['text']['value']
         else:
-            selected_bins = 'N/A'
+            promo_code = 'N/A'
 
         return {
             # Customer model
@@ -93,7 +96,6 @@ def prepare_session_data(data) -> dict:
             #'inv_description': inv_description,
             #'invoice_url': invoice_url,
             # Bin Model
-            'bin_collection': bin_collection,
             'selected_bins': selected_bins,
         }
     except Exception as e:

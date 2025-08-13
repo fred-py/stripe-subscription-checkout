@@ -35,7 +35,6 @@ def add_user(data, test=False):
         #invoice_url = data.invoice_url,
 
         # Bin information
-        bin_collection = data.bin_collection
         selected_bins = data.selected_bins
         
         new_user = CustomerDB(
@@ -70,7 +69,6 @@ def add_user(data, test=False):
         )
 
         new_bin = Bin(
-            bin_collection=bin_collection,
             selected_bins=selected_bins,
             customers=new_user,
         )

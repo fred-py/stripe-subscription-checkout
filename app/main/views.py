@@ -219,7 +219,7 @@ def contact_us():
                 send_email(recipient2, sbj, template, **data)
                 send_email(recipient3, sbj, template, **data)
             except Exception as e:
-                raise f'An error occurred while sending one-off email notification: {e}'
+                raise Exception('An error occurred while sending one-off email notification: {e}')
             
             try:
                 ups_acc = d.ServiceM8(data, ups)
@@ -606,31 +606,32 @@ def webhook_received():
                     'booking_details': custom_field,
             }
 
+            clean_data = prepare_session_data(data)
+            
             try:
+                
                 ups_acc = d.ServiceM8(data, ups)
                 uuid = ups_acc.create_job()  # Create job returns uuid
                 ups_acc.create_contact(uuid)
             except Exception as e:
-                raise f'An error occurred adding user to ServiceM8{e}'
-
-            session_info = prepare_session_data(data)
+                return f'An error occurred adding user to ServiceM8{e}'
             try:
-                user = Customer(**session_info)  # Dataclass Unpacks Dict
+                user = Customer(**clean_data)  # Dataclass Unpacks Dict
                 # Add customer to the database
                 add_user(user)
             except Exception as e:
-                raise f'An error occurred adding user to database{e}'
+                return f'An error occurred adding user to database{e}'
             try:
                 # Sends internal WheelieWashDBWheelieWashDBemail notification
-                sbj = 'Someone has subscribed to Wheelie Wash'
+                sbj = 'Wheelie Wash Payment Notification'
                 template = 'database/mail/user_sub'
                 recipient1 = 'rezende.f@outlook.com'
                 recipient2 = 'info@wheeliewash.au'
                 recipient3 = 'marketing@unitedpropertyservices.au'
                 # Unable to send email to a list of addresses - temporary solution below.
-                send_email(recipient1, sbj, template, **session_info)
-                send_email(recipient2, sbj, template, **session_info)
-                send_email(recipient3, sbj, template, **session_info)
+                send_email(recipient1, sbj, template, **clean_data)
+                send_email(recipient2, sbj, template, **clean_data)
+                send_email(recipient3, sbj, template, **clean_data)
             except Exception as e:
                 raise f'An error occurred while sending one-off email notification: {e}'
             

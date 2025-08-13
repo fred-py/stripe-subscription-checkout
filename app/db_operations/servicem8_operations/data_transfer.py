@@ -18,7 +18,7 @@ class ServiceM8:
     def __init__(self, data: dict, servicem8_key: str) -> None:
         self.data = data
         self.servicem8_key = servicem8_key
-    
+
     def create_job(self) -> str:
         """Uses checkout data to create 
         new job on ServiceM8."""
@@ -28,13 +28,18 @@ class ServiceM8:
             # This ensures One-Off jobs are not created for main ServiceM8 account
             #print('One-Off job not created for main ServiceM8 account')
         #    pass
-        subscription = self.data['subscription']
-        if not subscription:
+        subscription = self.data['subscription']  # Data from contact us form
+        oo1 = 'One Off (1 bin)'
+        oo2 = 'One Off (2 bins)'
+        oo3 = 'One Off (3 bins)'
+        one_offs = [oo1, oo2, oo3]
+        # This 
+        if not subscription:  # This is used for data coming from contact us form
             # Concatnate address
             address = self.data['street'] + ' ' + \
                 self.data['city'] + ' ' + \
                 self.data['postcode']
-            plan = self.data['service']  # Subscription Plan
+            plan = self.data['service']
             msg = self.data['message']
             total_paid = None
             description = plan + ' | ' + msg
@@ -50,27 +55,20 @@ class ServiceM8:
             # therefore 0 index is required to access the dict
             # then access the key 'dropdown' which is a dict and so forth
             # Using param custom field directly for ease of use
-            bin_collection = self.data['booking_details'][0]['dropdown']['value']
-            promo_code = self.data['booking_details'][1]['text']['value']
             total_paid = self.data['subscription']['amount_paid']  # Total Amount
             # Convert cents to dollars & int to str
             total_paid = str(total_paid / 100)
             """Check plan type, if Bronze or Any Combo (One-Off),
             bin selection is passed to Servicem8 description"""
-            plan = self.data['subscription']['plan_type']  # Subscription Plan
-            if plan == 'Bronze' or plan == 'One-Off':
-                selected_bins = self.data['booking_details'][1]['dropdown']['value']
-                description = plan + ' | ' + \
-                    bin_collection + '  ' +  \
-                    f'| Total paid: ${total_paid}' + ' ' + \
-                    f'| Selected Bin(s): {selected_bins}'
-
+            selected_bins = self.data['booking_details'][0]['dropdown']['value']
+            if one_offs:
+                promo_code = None
             else:
-                # Concatnate info to go on job description
-                description = plan + ' | ' \
-                    + bin_collection + ' ' \
-                    + f' | Total paid: ${total_paid}' \
-                    + f' | Promo-code: {promo_code}'
+                promo_code = self.data['booking_details'][1]['text']['value']
+            description = plan + ' | ' + \
+                f'| Total paid: ${total_paid}' + ' ' + \
+                f'| Selected Bin(s): {selected_bins}' + ' ' + \
+                f'| Promo_code: {promo_code}'     
 
         # Create new job
         url = "https://api.servicem8.com/api_1.0/job.json"
@@ -153,7 +151,7 @@ class ServiceM8:
             send_error_email(**e)
             raise (e)
 
-    def create_job_enquiry(self) -> str:
+    def create_job_enquiry(self, job_uuid) -> str:
         """This function is used for one-off residential and commercial enquiries"""
         name = self.data['name']
         email = self.data['email']
